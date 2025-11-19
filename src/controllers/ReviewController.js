@@ -1,13 +1,27 @@
-const Review = require('../models/Review');
-const Movie = require('../models/Movie');
+const db = require("../config/db");
 
-exports.create = async (req, res) => {
-  try {
-    const { movie: movieId, rating, comment } = req.body;
-    const review = await Review.create({ user: req.userId, movie: movieId, rating, comment });
-    await Movie.findByIdAndUpdate(movieId, { $push: { reviews: review._id } });
-    res.status(201).json(review);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+module.exports = {
+    add: (req, res) => {
+        const { movie_id, classificacao, critica } = req.body;
+
+        db.query(
+            "INSERT INTO reviews (user_id, movie_id, data, classificacao, critica) VALUES (?,?,NOW(),?,?)",
+            [req.user.id, movie_id, classificacao, critica],
+            (err) => {
+                if (err) return res.status(500).json(err);
+                res.json({ message: "Review adicionada" });
+            }
+        );
+    },
+
+    vote: (req, res) => {
+        db.query(
+            "UPDATE reviews SET votos_util = votos_util + 1 WHERE id = ?",
+            [req.params.id],
+            (err) => {
+                if (err) return res.status(500).json(err);
+                res.json({ message: "Voto registado" });
+            }
+        );
+    }
 };
