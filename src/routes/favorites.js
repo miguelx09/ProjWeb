@@ -2,6 +2,7 @@ import express from 'express';
 import db from '../db.js';
 import { authMiddleware } from '../middleware/auth.js';
 
+
 const router = express.Router();
 
 // POST /api/favorites/:id_movie
