@@ -5,8 +5,11 @@ import favoritesRouter from './routes/favorites.js';
 import watchlistRouter from './routes/watchlist.js';
 import reviewsRouter from './routes/reviews.js';
 import tmdbRouter from './routes/tmdb.js';
+import dotenv from 'dotenv';
+
 
 const app = express();
+dotenv.config();
 
 app.use(express.json());
 app.use('/api/watchlist', watchlistRouter);
