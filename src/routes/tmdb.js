@@ -46,7 +46,7 @@ router.post('/tmdb/import/:id', (req, res) => {
 
     try {
       const [result] = await pool.query(
-        'INSERT INTO movies (title, overview, release_year, tmdb_id) VALUES (?, ?, ?, ?)',
+        'INSERT INTO movies (title, synopsis, release_year, tmdb_id) VALUES (?, ?, ?, ?)',
         [
           movie.title,
           movie.overview,
