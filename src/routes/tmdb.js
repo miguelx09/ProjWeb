@@ -1,5 +1,5 @@
 import express from 'express';
-import { searchMovies } from '../services/tmdb.js';
+import { searchMovies, getMovieDetails } from '../services/tmdb.js';
 
 const router = express.Router();
 
@@ -13,8 +13,21 @@ router.get('/tmdb/search', (req, res) => {
 
   searchMovies(query, (err, result) => {
     if (err) {
-      console.error(err);
-      return res.status(500).json({ message: 'Erro ao pesquisar na TMDB' });
+      console.error('TMDB search error:', err);
+      return res.status(500).json({ message: 'Erro ao pesquisar na TMDB', error: err });
+    }
+    res.json(result);
+  });
+});
+
+// GET /api/tmdb/movie/603
+router.get('/tmdb/movie/:id', (req, res) => {
+  const { id } = req.params;
+
+  getMovieDetails(id, (err, result) => {
+    if (err) {
+      console.error('TMDB movie error:', err);
+      return res.status(500).json({ message: 'Erro ao obter detalhes na TMDB', error: err });
     }
     res.json(result);
   });

@@ -3,6 +3,9 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+// só para confirmar que a key está a vir do .env (podes apagar depois)
+console.log('TMDB KEY:', process.env.TMDB_API_KEY);
+
 const tmdb = tmdbv3.init(process.env.TMDB_API_KEY);
 
 // pesquisar filmes por texto

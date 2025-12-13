@@ -15,7 +15,7 @@ app.use(express.json());
 app.use('/api/watchlist', watchlistRouter);
 app.use('/api/movies', moviesRouter);
 app.use('/api/auth', authRouter);
-app.use('/api/favorites', favoritesRouter); // <-- esta linha
+app.use('/api/favorites', favoritesRouter); 
 app.use('/api', reviewsRouter);
 app.use('/api', tmdbRouter);
 
