@@ -6,9 +6,13 @@ import db from '../db.js';
 const router = express.Router();
 const JWT_SECRET = 'segredo_super_simples'; // depois podes meter no .env
 
-// POST /api/auth/register
 router.post('/register', async (req, res) => {
+  console.log('BODY RECEBIDO:', req.body); // <-- linha nova
+
   const { username, email, password } = req.body;
+
+
+
 
   try {
     // verificar se já existe email
