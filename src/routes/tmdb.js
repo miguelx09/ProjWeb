@@ -45,15 +45,17 @@ router.post('/tmdb/import/:id', (req, res) => {
     }
 
     try {
-      const [result] = await pool.query(
-        'INSERT INTO movies (title, synopsis, release_year, tmdb_id) VALUES (?, ?, ?, ?)',
+     const [result] = await pool.query(
+  'INSERT INTO movies (title, synopsis, release_year, tmdb_id, poster_path) VALUES (?, ?, ?, ?, ?)',
         [
-          movie.title,
-          movie.overview,
-          movie.release_date ? movie.release_date.slice(0, 4) : null,
-          movie.id
+            movie.title,
+            movie.overview,
+            movie.release_date ? movie.release_date.slice(0, 4) : null,
+            movie.id,
+            movie.poster_path 
         ]
-      );
+        );
+
 
       res.status(201).json({
         message: 'Filme importado com sucesso',

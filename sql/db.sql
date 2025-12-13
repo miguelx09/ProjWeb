@@ -73,3 +73,6 @@ CREATE TABLE reviews (
   FOREIGN KEY (user_id) REFERENCES users(id_user) ON DELETE CASCADE,
   FOREIGN KEY (movie_id) REFERENCES movies(id_movie) ON DELETE CASCADE
 );
+
+ALTER TABLE movies
+ADD COLUMN poster_path VARCHAR(255) NULL;
