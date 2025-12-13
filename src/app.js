@@ -3,7 +3,8 @@ import moviesRouter from './routes/movies.js';
 import authRouter from './routes/auth.js';
 
 const app = express();
-app.use(express.json());
+
+app.use(express.json()); // isto é obrigatório
 
 app.use('/api/movies', moviesRouter);
 app.use('/api/auth', authRouter);
