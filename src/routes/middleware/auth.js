@@ -1,7 +1,6 @@
-// src/middleware/auth.js
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = 'segredo_super_simples'; // idealmente igual ao do auth.js
+const JWT_SECRET = 'segredo_super_simples';
 
 export function authMiddleware(req, res, next) {
   const authHeader = req.headers.authorization;

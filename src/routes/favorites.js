@@ -1,11 +1,10 @@
-// src/routes/favorites.js
 import express from 'express';
 import db from '../db.js';
 import { authMiddleware } from '../middleware/auth.js';
 
 const router = express.Router();
 
-// Adicionar filme aos favoritos do utilizador autenticado
+// POST /api/favorites/:id_movie
 router.post('/:id_movie', authMiddleware, async (req, res) => {
   const { id_movie } = req.params;
   const { id_user } = req.user;
