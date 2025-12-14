@@ -45,21 +45,34 @@ router.post('/tmdb/import/:id', (req, res) => {
     }
 
     try {
-     const [result] = await pool.query(
-  'INSERT INTO movies (title, synopsis, release_year, tmdb_id, poster_path) VALUES (?, ?, ?, ?, ?)',
-        [
-            movie.title,
-            movie.overview,
-            movie.release_date ? movie.release_date.slice(0, 4) : null,
-            movie.id,
-            movie.poster_path 
-        ]
-        );
+      // 1) Ver se já existe na BD
+      const [existing] = await db.query(
+        'SELECT id_movie FROM movies WHERE tmdb_id = ?',
+        [movie.id]
+      );
 
+      if (existing.length > 0) {
+        return res.status(200).json({
+          message: 'Filme já existia na BD',
+          movieId: existing[0].id_movie
+        });
+      }
+
+      // 2) Se não existir, inserir
+      const [result] = await db.query(
+        'INSERT INTO movies (title, synopsis, release_year, tmdb_id, poster_path) VALUES (?, ?, ?, ?, ?)',
+        [
+          movie.title,
+          movie.overview,
+          movie.release_date ? movie.release_date.slice(0, 4) : null,
+          movie.id,
+          movie.poster_path
+        ]
+      );
 
       res.status(201).json({
         message: 'Filme importado com sucesso',
-        movieId: result.insertId
+        movieId: result.insertId       // este é o id_movie
       });
     } catch (dbErr) {
       console.error('DB error:', dbErr);
@@ -67,5 +80,6 @@ router.post('/tmdb/import/:id', (req, res) => {
     }
   });
 });
+
 
 export default router;

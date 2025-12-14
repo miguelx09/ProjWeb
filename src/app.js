@@ -23,4 +23,9 @@ app.use('/api', tmdbRouter);
 app.use('/api', moviesRouter);
 app.use('/', adminRouter);
 
+
+app.get('/', (req, res) => {
+  res.sendFile('index.html', { root: 'src/views' });
+});
+
 export default app;
