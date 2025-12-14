@@ -18,5 +18,6 @@ app.use('/api/auth', authRouter);
 app.use('/api/favorites', favoritesRouter); 
 app.use('/api', reviewsRouter);
 app.use('/api', tmdbRouter);
+app.use('/api', moviesRouter);
 
 export default app;
