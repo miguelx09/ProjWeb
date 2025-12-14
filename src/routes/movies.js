@@ -72,12 +72,12 @@ router.get('/movies/:id', async (req, res) => {
 
 // PUT /api/movies/:id  -> atualizar filme
 router.put('/movies/:id', async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.params; // continua a chamar-se id na rota
   const { title, synopsis, release_year, poster_path } = req.body;
 
   try {
     const [result] = await db.query(
-      'UPDATE movies SET title = ?, synopsis = ?, release_year = ?, poster_path = ? WHERE id = ?',
+      'UPDATE movies SET title = ?, synopsis = ?, release_year = ?, poster_path = ? WHERE id_movie = ?',
       [title, synopsis, release_year, poster_path, id]
     );
 
@@ -91,5 +91,6 @@ router.put('/movies/:id', async (req, res) => {
     res.status(500).json({ message: 'Erro ao atualizar filme' });
   }
 });
+
 
 export default router;

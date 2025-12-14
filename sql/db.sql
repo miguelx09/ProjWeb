@@ -76,3 +76,6 @@ CREATE TABLE reviews (
 
 ALTER TABLE movies
 ADD COLUMN poster_path VARCHAR(255) NULL;
+
+
+SELECT id_movie, title, synopsis, release_year, tmdb_id, poster_path FROM movies WHERE id_movie = ?
