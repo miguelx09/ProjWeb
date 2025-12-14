@@ -98,7 +98,7 @@ router.delete('/movies/:id', async (req, res) => {
 
   try {
     const [result] = await db.query(
-      'DELETE FROM movies WHERE id = ?',
+      'DELETE FROM movies WHERE id_movie = ?',   // <-- usa id_movie
       [id]
     );
 
@@ -112,6 +112,7 @@ router.delete('/movies/:id', async (req, res) => {
     res.status(500).json({ message: 'Erro ao apagar filme' });
   }
 });
+
 
 
 
