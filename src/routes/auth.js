@@ -7,13 +7,17 @@ const router = express.Router();
 const JWT_SECRET = 'segredo_super_simples'; // depois podes meter no .env
 
 router.post('/register', async (req, res) => {
-  console.log('BODY RECEBIDO:', req.body); // <-- linha nova
+  console.log('BODY RECEBIDO:', req.body);
 
-  const { username, email, password } = req.body;
+  // aqui usas name, não username
+  const { name, email, password } = req.body;
 
   try {
     // verificar se já existe email
-    const [existing] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+    const [existing] = await db.query(
+      'SELECT * FROM users WHERE email = ?',
+      [email]
+    );
     if (existing.length > 0) {
       return res.status(400).json({ message: 'Email já registado' });
     }
@@ -22,15 +26,16 @@ router.post('/register', async (req, res) => {
 
     const [result] = await db.query(
       'INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)',
-      [username, email, password_hash]
+      [name, email, password_hash] // <-- aqui passas name
     );
 
-    res.status(201).json({ id_user: result.insertId, username, email });
+    res.status(201).json({ id_user: result.insertId, username: name, email });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Erro no registo' });
   }
 });
+
 
 // POST /api/auth/login
 router.post('/login', async (req, res) => {
