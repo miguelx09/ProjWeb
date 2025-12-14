@@ -1,7 +1,8 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-
+import path from 'path';
+import mustacheExpress from 'mustache-express';
 import moviesRouter from './routes/movies.js';
 import authRouter from './routes/auth.js';
 import favoritesRouter from './routes/favorites.js';
@@ -49,5 +50,19 @@ app.get('/register.html', (req, res) => {
 app.get('/search.html', (req, res) => {
   res.sendFile('search.html', { root: path.join(__dirname, 'views') });
 });
+
+app.engine('mustache', mustacheExpress());
+app.set('view engine', 'mustache');
+app.set('views', path.join(__dirname, 'views'));
+
+app.get('/login', (req, res) => {
+  res.render('login', { isLogin: true });
+});
+
+app.get('/register', (req, res) => {
+  res.render('register', { isRegister: true });
+});
+
+
 
 export default app;
