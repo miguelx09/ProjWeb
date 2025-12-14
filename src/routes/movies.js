@@ -92,5 +92,27 @@ router.put('/movies/:id', async (req, res) => {
   }
 });
 
+// DELETE /api/movies/2
+router.delete('/movies/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const [result] = await pool.query(
+      'DELETE FROM movies WHERE id = ?',
+      [id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Filme não encontrado' });
+    }
+
+    res.json({ message: 'Filme apagado com sucesso' });
+  } catch (err) {
+    console.error('DB delete movie error:', err);
+    res.status(500).json({ message: 'Erro ao apagar filme' });
+  }
+});
+
+
 
 export default router;
