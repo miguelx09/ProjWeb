@@ -66,5 +66,13 @@ app.get('/register', (req, res) => {
 app.set('view engine', 'mustache');
 app.set('views', path.join(__dirname, 'views'));
 
+app.get('/login', (req, res) => res.render('login', { isLogin: true }));
+app.get('/register', (req, res) => res.render('register', { isRegister: true }));
+
+//app.get('/profile', (req, res) => {
+
+ // res.render('profile', { isAuthenticated: true, username: 'Utilizador' });
+//});
+
 
 export default app;

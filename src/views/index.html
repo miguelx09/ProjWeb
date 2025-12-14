@@ -86,31 +86,23 @@
   </nav>
 
   <!-- Hero -->
-  <section class="hero-section text-white">
-    <div class="hero-overlay"></div>
-    <div class="container hero-content">
-      <div class="row">
-        <div class="col-md-7">
-          <h1 class="display-4 fw-bold mb-3" id="hero-title">
-            Descobre os melhores filmes
-          </h1>
-          <p class="lead mb-4" id="hero-overview">
-            Explora catálogos, cria listas de favoritos e acompanha o que já viste.
-          </p>
-          <div class="d-flex gap-3">
-            <button class="btn btn-danger btn-lg" id="hero-play">
-              Ver detalhes
-            </button>
-            <button class="btn btn-outline-light btn-lg" id="hero-watchlist">
-              Adicionar à watchlist
-            </button>
-          </div>
-        </div>
-      </div>
+<section class="mt-5 pt-4">
+  <div id="featuredCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+    <div class="carousel-inner" id="featured-inner">
+      <!-- slides gerados em JS -->
     </div>
-  </section>
+    <button class="carousel-control-prev" type="button" data-bs-target="#featuredCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#featuredCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon"></span>
+    </button>
+  </div>
+</section>
+
 
   <main class="container-fluid px-4 py-4">
+    
 
     <!-- Populares -->
     <section class="mb-4">
@@ -143,6 +135,30 @@
     </section>
 
   </main>
+  <div class="modal fade" id="movieModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header border-0">
+        <h5 class="modal-title" id="movieModalTitle"></h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row gy-3">
+          <div class="col-md-4">
+            <img id="movieModalPoster" class="img-fluid rounded" alt="">
+          </div>
+          <div class="col-md-8">
+            <p id="movieModalOverview"></p>
+            <p><strong>Rating:</strong> <span id="movieModalRating"></span></p>
+            <p><strong>Data lançamento:</strong> <span id="movieModalDate"></span></p>
+            <button class="btn btn-danger me-2" id="modalFavBtn">Adicionar aos favoritos</button>
+            <button class="btn btn-outline-light" id="modalWatchBtn">Adicionar à watchlist</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -150,6 +166,45 @@
   <!-- Script para ligar à tua API -->
   <script>
     const API_BASE = '/api';
+    const movieModal = new bootstrap.Modal(document.getElementById('movieModal'));
+
+async function openDetails(id) {
+  try {
+    const res = await fetch(`/api/movies/${id}`);
+    if (!res.ok) return;
+    const m = await res.json();
+
+    document.getElementById('movieModalTitle').textContent = m.title;
+    document.getElementById('movieModalPoster').src = m.poster_path;
+    document.getElementById('movieModalOverview').textContent = m.overview || '';
+    document.getElementById('movieModalRating').textContent = m.vote_average ?? 'N/A';
+    document.getElementById('movieModalDate').textContent = m.release_date || '-';
+
+    document.getElementById('modalFavBtn').onclick = () => addToFavorites(m.id);
+    document.getElementById('modalWatchBtn').onclick = () => addToWatchlist(m.id);
+
+    movieModal.show();
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+    async function addToFavorites(id) {
+    const token = localStorage.getItem('token');
+    try {
+        await fetch('/api/favorites', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token ? 'Bearer ' + token : ''
+        },
+        body: JSON.stringify({ movieId: id })
+        });
+    } catch (e) {
+        console.error(e);
+    }
+    }
+
 
     function createMovieCard(movie) {
       const col = document.createElement('div');
@@ -225,14 +280,57 @@
         console.error('Erro ao adicionar à watchlist', err);
       }
     }
+    async function loadFeatured() {
+  try {
+    const res = await fetch('/api/movies/top-rated'); // ajusta se tiver outro endpoint
+    if (!res.ok) return;
+    const movies = await res.json();
+
+    const inner = document.getElementById('featured-inner');
+    inner.innerHTML = '';
+
+    movies.slice(0, 5).forEach((m, idx) => {
+      const item = document.createElement('div');
+      item.className = 'carousel-item' + (idx === 0 ? ' active' : '');
+      item.innerHTML = `
+        <div class="hero-section d-flex align-items-end" style="background-image:url(${m.backdrop_path || m.poster_path});">
+          <div class="hero-overlay"></div>
+          <div class="container hero-content">
+            <h1 class="display-5 fw-bold mb-3">${m.title}</h1>
+            <p class="lead mb-4">${m.overview || ''}</p>
+            <button class="btn btn-danger btn-lg me-2" onclick="openDetails(${m.id})">Ver detalhes</button>
+            <button class="btn btn-outline-light btn-lg" onclick="addToWatchlist(${m.id})">Adicionar à watchlist</button>
+          </div>
+        </div>`;
+      inner.appendChild(item);
+    });
+  } catch (e) {
+    console.error(e);
+  }
+}
+    document.addEventListener('DOMContentLoaded', () => {
+    const username = localStorage.getItem('username');
+    if (!username) return;
+
+    document.querySelectorAll('.nav-link-login, .nav-link-register')
+        .forEach(el => el.classList.add('d-none'));
+
+    const slot = document.getElementById('nav-user-slot');
+    if (slot) {
+        slot.innerHTML = `<a class="nav-link" href="/profile">Bem-vindo, ${username}</a>`;
+    }
+    });
+
+
 
     // Ao carregar a página
     document.addEventListener('DOMContentLoaded', () => {
-      loadHero();
-      loadSection('/movies/popular', 'popular-row');
-      loadSection('/movies/top-rated', 'top-rated-row');
-      loadSection('/watchlist', 'watchlist-row');
+    loadFeatured();
+    loadSection('/api/movies/popular', 'popular-row');
+    loadSection('/api/movies/top-rated', 'top-rated-row');
+    loadSection('/api/watchlist', 'watchlist-row');
     });
+
   </script>
 </body>
 </html>

@@ -18,25 +18,19 @@
         <li class="nav-item">
           <a class="nav-link {{#isHome}}active{{/isHome}}" href="/">Início</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link {{#isWatchlist}}active{{/isWatchlist}}" href="/watchlist">Watchlist</a>
+
+        <!-- Slot que será preenchido com “Bem-vindo, Nome” -->
+        <li class="nav-item d-flex align-items-center" id="nav-user-slot">
+          {{#isAuthenticated}}
+            <a class="nav-link" href="/profile">Bem-vindo, {{username}}</a>
+          {{/isAuthenticated}}
         </li>
-        <li class="nav-item">
-          <a class="nav-link {{#isFavorites}}active{{/isFavorites}}" href="/favorites">Favoritos</a>
-        </li>
-        {{#isAuthenticated}}
-          <li class="nav-item">
-            <a class="nav-link" href="/profile">{{username}}</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/logout">Sair</a>
-          </li>
-        {{/isAuthenticated}}
+
         {{^isAuthenticated}}
-          <li class="nav-item">
+          <li class="nav-item nav-link-login">
             <a class="nav-link {{#isLogin}}active{{/isLogin}}" href="/login">Entrar</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item nav-link-register">
             <a class="nav-link {{#isRegister}}active{{/isRegister}}" href="/register">Registar</a>
           </li>
         {{/isAuthenticated}}
