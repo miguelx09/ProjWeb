@@ -97,7 +97,7 @@ router.delete('/movies/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    const [result] = await pool.query(
+    const [result] = await db.query(
       'DELETE FROM movies WHERE id = ?',
       [id]
     );
