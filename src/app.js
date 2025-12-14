@@ -63,6 +63,8 @@ app.get('/register', (req, res) => {
   res.render('register', { isRegister: true });
 });
 
+app.set('view engine', 'mustache');
+app.set('views', path.join(__dirname, 'views'));
 
 
 export default app;
