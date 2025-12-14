@@ -1,8 +1,10 @@
+// src/routes/movies.js
 import express from 'express';
 import db from '../db.js';
 
 const router = express.Router();
 
+// (opcional) GET /api/movies-base -> SELECT * FROM movies
 router.get('/', async (req, res) => {
   try {
     const [rows] = await db.query('SELECT * FROM movies');
@@ -13,6 +15,7 @@ router.get('/', async (req, res) => {
   }
 });
 
+// GET /api/movies/:id_movie  (se quiseres manter esta rota antiga)
 router.get('/:id_movie', async (req, res) => {
   const { id_movie } = req.params;
 
@@ -33,7 +36,7 @@ router.get('/:id_movie', async (req, res) => {
   }
 });
 
-// GET /api/movies  -> lista todos os filmes da BD
+// GET /api/movies  -> lista todos os filmes com campos selecionados
 router.get('/movies', async (req, res) => {
   try {
     const [rows] = await db.query(
@@ -46,6 +49,7 @@ router.get('/movies', async (req, res) => {
   }
 });
 
+// GET /api/movies/:id  -> detalhe (versão nova)
 router.get('/movies/:id', async (req, res) => {
   const { id } = req.params;
 
@@ -66,6 +70,7 @@ router.get('/movies/:id', async (req, res) => {
   }
 });
 
+// PUT /api/movies/:id  -> atualizar filme
 router.put('/movies/:id', async (req, res) => {
   const { id } = req.params;
   const { title, synopsis, release_year, poster_path } = req.body;
@@ -86,6 +91,5 @@ router.put('/movies/:id', async (req, res) => {
     res.status(500).json({ message: 'Erro ao atualizar filme' });
   }
 });
-
 
 export default router;
