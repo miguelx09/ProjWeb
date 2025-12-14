@@ -1,7 +1,7 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import path from 'path';
+
 import mustacheExpress from 'mustache-express';
 import moviesRouter from './routes/movies.js';
 import authRouter from './routes/auth.js';
