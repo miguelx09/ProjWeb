@@ -50,7 +50,7 @@ router.get('/movies/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    const [rows] = await pool.query(
+    const [rows] = await db.query(
       'SELECT id, title, synopsis, release_year, tmdb_id, poster_path FROM movies WHERE id = ?',
       [id]
     );
@@ -71,7 +71,7 @@ router.put('/movies/:id', async (req, res) => {
   const { title, synopsis, release_year, poster_path } = req.body;
 
   try {
-    const [result] = await pool.query(
+    const [result] = await db.query(
       'UPDATE movies SET title = ?, synopsis = ?, release_year = ?, poster_path = ? WHERE id = ?',
       [title, synopsis, release_year, poster_path, id]
     );
