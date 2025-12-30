@@ -185,6 +185,7 @@
         }
 
         const data = await res.json();
+        console.log('LOGIN DATA', data);
         // supõe que a tua API devolve { token, username }
         localStorage.setItem('token', data.token);
         localStorage.setItem('username', data.username || data.name || 'Utilizador');
