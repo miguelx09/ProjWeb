@@ -47,6 +47,17 @@
       font-size: 1.4rem;
       font-weight: 600;
     }
+    .logout-icon {
+      color: #e50914;
+      font-size: 1.2rem;
+      transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    .logout-icon:hover {
+      color: #ff4b5c;
+      transform: scale(1.2) rotate(-5deg);
+    }
+
   </style>
 </head>
 <body>
@@ -57,6 +68,7 @@
     <a class="navbar-brand" href="/">
       ProjWeb<span>Movies</span>
     </a>
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -66,22 +78,38 @@
         <li class="nav-item">
           <a class="nav-link" href="/">Início</a>
         </li>
+
+        <!-- Só visíveis quando estiver logado (via JS) -->
         <li class="nav-item" id="nav-watchlist">
           <a class="nav-link" href="/watchlist.html">Watchlist</a>
         </li>
         <li class="nav-item" id="nav-favorites">
           <a class="nav-link" href="/favorites.html">Favoritos</a>
         </li>
+
+        <!-- Link Entrar (esconde quando estiver logado) -->
         <li class="nav-item" id="nav-login">
           <a class="nav-link" href="/login.html">Entrar</a>
         </li>
+
+        <!-- Texto Bem-vindo, nome (só aparece logado) -->
         <li class="nav-item d-none" id="nav-user">
-          <span class="nav-link">Bem‑vindo, <span id="nav-username"></span></span>
+          <span class="nav-link">
+            Bem‑vindo, <span id="nav-username"></span>
+          </span>
+        </li>
+
+        <!-- Botão sair (ícone porta vermelha, só aparece logado) -->
+        <li class="nav-item d-none" id="nav-logout">
+          <button class="btn btn-link nav-link p-0 logout-icon" id="logoutBtn" title="Sair">
+            🚪
+          </button>
         </li>
       </ul>
     </div>
   </div>
 </nav>
+
 
 
 
@@ -365,6 +393,7 @@ loadSection('/tmdb/top-rated', 'top-rated-row');
     const loginItem = document.getElementById('nav-login');
     const userItem = document.getElementById('nav-user');
     const userNameSpan = document.getElementById('nav-username');
+    const logoutItem = document.getElementById('nav-logout');
 
     const isLoggedIn = !!token;
 
@@ -379,10 +408,31 @@ loadSection('/tmdb/top-rated', 'top-rated-row');
         userNameSpan.textContent = username || 'Utilizador';
       }
     }
+
+    if (logoutItem) {
+      logoutItem.classList.toggle('d-none', !isLoggedIn);
+    }
   }
 
-  document.addEventListener('DOMContentLoaded', updateNavbarAuthState);
+  function setupLogout() {
+    const btn = document.getElementById('logoutBtn');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      // limpar info de autenticação
+      localStorage.removeItem('token');
+      localStorage.removeItem('username');
+      // opcional: também limpa outras coisas relacionadas ao user
+      // redirecionar para a página inicial ou login
+      window.location.href = '/';
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    updateNavbarAuthState();
+    setupLogout();
+  });
 </script>
+
 
 </body>
 </html>
