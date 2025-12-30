@@ -355,6 +355,7 @@ async function openDetails(id) {
   if (searchForm) {
     searchForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+       console.log('SUBMIT PESQUISA FIX');
       const q = document.getElementById('searchInput').value.trim();
       if (!q) return;
 
