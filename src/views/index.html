@@ -175,6 +175,8 @@
   <!-- Script para ligar à tua API -->
   <script>
     const API_BASE = '/api';
+    console.log('INDEX JS CARREGADO');
+
     const movieModal = new bootstrap.Modal(document.getElementById('movieModal'));
 
 async function openDetails(id) {
@@ -338,6 +340,8 @@ async function openDetails(id) {
     console.error(e);
   }
 }
+  console.log('ANTES DO DOMCONTENTLOADED'); // ---------------------------- debug
+
     document.addEventListener('DOMContentLoaded', () => {
   // navbar "Bem-vindo"
   const username = localStorage.getItem('username');
