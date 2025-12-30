@@ -15,6 +15,7 @@
     body {
       background-color: #050814;
       color: #fff;
+      padding-top: 70px
     }
     .navbar-brand span {
       color: #e50914;
@@ -300,34 +301,48 @@ async function openDetails(id) {
       .forEach(el => el.classList.add('d-none'));
   }
 
+  const popularSection = document.getElementById('popular-row').closest('section');
+  const topSection = document.getElementById('top-rated-row').closest('section');
+  const searchResultsSection = document.getElementById('search-section');
+
+
   // listener do formulário de pesquisa
   const searchForm = document.getElementById('searchForm');
 if (searchForm) {
   searchForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    console.log('SUBMIT PESQUISA FIX');
-    const q = document.getElementById('searchInput').value.trim();
-    if (!q) return;
+  e.preventDefault();
+  console.log('SUBMIT PESQUISA FIX');
+  const q = document.getElementById('searchInput').value.trim();
 
-    try {
-      const res = await fetch(`/api/tmdb/search?query=${encodeURIComponent(q)}`);
-      if (!res.ok) {
-        console.error('Erro na pesquisa');
-        return;
-      }
-      const data = await res.json();
-      const movies = data.results || []; // usa o array dentro de results
+  // se pesquisa vazia, esconder resultados e voltar a mostrar populares/top
+  if (!q) {
+    if (searchResultsSection) searchResultsSection.style.display = 'none';
+    if (popularSection) popularSection.style.display = '';
+    if (topSection) topSection.style.display = '';
+    return;
+  }
 
-      const section = document.getElementById('search-section');
-      const row = document.getElementById('search-row');
-      row.innerHTML = '';
-      movies.forEach(m => row.appendChild(createMovieCard(m)));
-      section.style.display = 'block';
-        
-    } catch (err) {
-      console.error('Erro ao pesquisar', err);
+  try {
+    const res = await fetch(`/api/tmdb/search?query=${encodeURIComponent(q)}`);
+    if (!res.ok) {
+      console.error('Erro na pesquisa');
+      return;
     }
-  });
+    const data = await res.json();
+    const movies = data.results || [];
+
+    const row = document.getElementById('search-row');
+    row.innerHTML = '';
+    movies.forEach(m => row.appendChild(createMovieCard(m)));
+    searchResultsSection.style.display = 'block';
+
+    // esconder populares e melhor avaliados
+    if (popularSection) popularSection.style.display = 'none';
+    if (topSection) topSection.style.display = 'none';
+  } catch (err) {
+    console.error('Erro ao pesquisar', err);
+  }
+});
 }
 
 
