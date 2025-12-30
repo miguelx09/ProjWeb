@@ -17,10 +17,10 @@ export function getMovieDetails(tmdbId, callback) {
 
 // filmes populares
 export function getPopularMovies(callback) {
-  tmdb.movie.popular(callback);      // esta função existe na tmdbv3
+  tmdb.movie.popular(callback);        // se der erro, trocar para tmdb.movie.popular_list
 }
 
 // filmes melhor avaliados
 export function getTopRatedMovies(callback) {
-  tmdb.movie.topRated(callback);     // ou tmdb.movie.top_rated consoante a lib
+  tmdb.movie.top_rated(callback);      // este é quase sempre top_rated na tmdbv3
 }
