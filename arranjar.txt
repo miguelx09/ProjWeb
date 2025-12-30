@@ -1,2 +1,3 @@
-nao temos os filmes a serem exibidos no index, o motache do index tem favorties e watclist nao deviam
-o login e o registro sem style
+
+
+ ao fazer registro o utilizador ja fica logado nao sendo preciso fazer login 
