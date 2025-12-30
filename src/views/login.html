@@ -215,12 +215,18 @@
     if (favoritesItem) favoritesItem.style.display = isLoggedIn ? 'block' : 'none';
     if (loginItem) loginItem.style.display = isLoggedIn ? 'none' : 'block';
 
-    if (userItem) {
-      userItem.classList.toggle('d-none', !isLoggedIn);
-      if (isLoggedIn && userNameSpan) {
-        userNameSpan.textContent = username || 'Utilizador';
-      }
-    }
+   if (userItem) {
+  userItem.classList.toggle('d-none', !isLoggedIn);
+  if (isLoggedIn && userNameSpan) {
+    const rawName = username || 'utilizador';
+
+    const formattedName =
+      rawName.charAt(0).toUpperCase() + rawName.slice(1).toLowerCase();
+
+    userNameSpan.textContent = formattedName;
+  }
+}
+
 
     if (logoutItem) {
       logoutItem.classList.toggle('d-none', !isLoggedIn);
