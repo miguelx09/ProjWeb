@@ -47,16 +47,23 @@
       font-size: 1.4rem;
       font-weight: 600;
     }
-    .logout-icon {
-      color: #e50914;
-      font-size: 1.2rem;
-      transition: transform 0.2s ease, color 0.2s ease;
-    }
+   .logout-icon {
+    color: #e50914;
+    font-size: 1.2rem;
+    line-height: 1;                 /* ajuda a centrar verticalmente */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0;
+    padding-bottom: 0;
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
 
-    .logout-icon:hover {
-      color: #ff4b5c;
-      transform: scale(1.2) rotate(-5deg);
-    }
+  .logout-icon:hover {
+    color: #ff4b5c;
+    transform: scale(1.2) rotate(-5deg);
+  }
+
 
   </style>
 </head>
@@ -101,9 +108,9 @@
 
         <!-- Botão sair (ícone porta vermelha, só aparece logado) -->
         <li class="nav-item d-none" id="nav-logout">
-          <button class="btn btn-link nav-link p-0 logout-icon" id="logoutBtn" title="Sair">
+           <a href="#" class="nav-link logout-icon" id="logoutBtn" title="Sair">
             🚪
-          </button>
+          </a>
         </li>
       </ul>
     </div>
@@ -399,7 +406,6 @@ loadSection('/tmdb/top-rated', 'top-rated-row');
 
     if (watchlistItem) watchlistItem.style.display = isLoggedIn ? 'block' : 'none';
     if (favoritesItem) favoritesItem.style.display = isLoggedIn ? 'block' : 'none';
-
     if (loginItem) loginItem.style.display = isLoggedIn ? 'none' : 'block';
 
     if (userItem) {
@@ -417,12 +423,11 @@ loadSection('/tmdb/top-rated', 'top-rated-row');
   function setupLogout() {
     const btn = document.getElementById('logoutBtn');
     if (!btn) return;
-    btn.addEventListener('click', () => {
-      // limpar info de autenticação
+
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();          // <-- aqui é que usas preventDefault()
       localStorage.removeItem('token');
       localStorage.removeItem('username');
-      // opcional: também limpa outras coisas relacionadas ao user
-      // redirecionar para a página inicial ou login
       window.location.href = '/';
     });
   }
@@ -432,6 +437,7 @@ loadSection('/tmdb/top-rated', 'top-rated-row');
     setupLogout();
   });
 </script>
+
 
 
 </body>
