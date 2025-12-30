@@ -186,7 +186,7 @@ async function openDetails(id) {
     const m = await res.json();
 
     document.getElementById('movieModalTitle').textContent = m.title;
-    document.getElementById('movieModalPoster').src = m.poster_path;
+    document.getElementById('movieModalPoster').src =  movie.poster_path ? IMG_BASE + movie.poster_path : '/public/img/placeholder.jpg';
     document.getElementById('movieModalOverview').textContent = m.overview || '';
     document.getElementById('movieModalRating').textContent = m.vote_average ?? 'N/A';
     document.getElementById('movieModalDate').textContent = m.release_date || '-';
@@ -217,30 +217,35 @@ async function openDetails(id) {
     }
     }
 
+    const IMG_BASE = 'https://image.tmdb.org/t/p/w500';
 
     function createMovieCard(movie) {
-      const col = document.createElement('div');
-      col.className = 'col-6 col-sm-4 col-md-3 col-lg-2';
+    const col = document.createElement('div');
+    col.className = 'col-6 col-sm-4 col-md-3 col-lg-2';
 
-      col.innerHTML = `
-        <div class="card bg-dark text-white movie-card h-100">
-          <img src="${movie.poster_path || '/public/img/placeholder.jpg'}" class="card-img-top" alt="${movie.title}">
-          <div class="card-body p-2">
-            <h6 class="card-title mb-1 text-truncate" title="${movie.title}">${movie.title}</h6>
-            <small class="text-warning">★ ${movie.vote_average?.toFixed ? movie.vote_average.toFixed(1) : movie.vote_average || 'N/A'}</small>
-          </div>
-          <div class="card-footer border-0 d-flex justify-content-between p-2">
-            <button class="btn btn-sm btn-outline-light" onclick="openDetails(${movie.id})">
-              Detalhes
-            </button>
-            <button class="btn btn-sm btn-outline-danger" onclick="addToWatchlist(${movie.id})">
-              + Lista
-            </button>
-          </div>
+    const poster = movie.poster_path
+      ? IMG_BASE + movie.poster_path
+      : '/public/img/placeholder.jpg';
+
+    col.innerHTML = `
+      <div class="card bg-dark text-white movie-card h-100">
+        <img src="${poster}" class="card-img-top" alt="${movie.title}">
+        <div class="card-body p-2">
+          <h6 class="card-title mb-1 text-truncate" title="${movie.title}">${movie.title}</h6>
+          <small class="text-warning">★ ${movie.vote_average?.toFixed ? movie.vote_average.toFixed(1) : movie.vote_average || 'N/A'}</small>
         </div>
-      `;
-      return col;
-    }
+        <div class="card-footer border-0 d-flex justify-content-between p-2">
+          <button class="btn btn-sm btn-outline-light" onclick="openDetails(${movie.id})">
+            Detalhes
+          </button>
+          <button class="btn btn-sm btn-outline-danger" onclick="addToWatchlist(${movie.id})">
+            + Lista
+          </button>
+        </div>
+      </div>
+    `;
+    return col;
+  }
 
     async function loadSection(endpoint, containerId) {
       try {
