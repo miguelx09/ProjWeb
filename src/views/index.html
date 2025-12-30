@@ -339,27 +339,51 @@ async function openDetails(id) {
   }
 }
     document.addEventListener('DOMContentLoaded', () => {
-    const username = localStorage.getItem('username');
-    if (!username) return;
-
-    document.querySelectorAll('.nav-link-login, .nav-link-register')
-        .forEach(el => el.classList.add('d-none'));
-
+  // navbar "Bem-vindo"
+  const username = localStorage.getItem('username');
+  if (username) {
     const slot = document.getElementById('nav-user-slot');
     if (slot) {
-        slot.innerHTML = `<a class="nav-link" href="/profile">Bem-vindo, ${username}</a>`;
+      slot.innerHTML = `<a class="nav-link" href="/profile">Bem-vindo, ${username}</a>`;
     }
+    document.querySelectorAll('.nav-link-login, .nav-link-register')
+      .forEach(el => el.classList.add('d-none'));
+  }
+
+  // listener do formulário de pesquisa
+  const searchForm = document.getElementById('searchForm');
+  if (searchForm) {
+    searchForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const q = document.getElementById('searchInput').value.trim();
+      if (!q) return;
+
+      try {
+        const res = await fetch(`/api/movies/search?q=${encodeURIComponent(q)}`);
+        if (!res.ok) {
+          console.error('Erro na pesquisa');
+          return;
+        }
+        const movies = await res.json();
+
+        const section = document.getElementById('search-section');
+        const row = document.getElementById('search-row');
+        row.innerHTML = '';
+        movies.forEach(m => row.appendChild(createMovieCard(m)));
+        section.style.display = 'block';
+      } catch (err) {
+        console.error('Erro ao pesquisar', err);
+      }
     });
+  }
 
+  // carregar carrossel e secções
+  loadFeatured();
+  loadSection('/api/movies/popular', 'popular-row');
+  loadSection('/api/movies/top-rated', 'top-rated-row');
+  loadSection('/api/watchlist', 'watchlist-row');
+});
 
-
-    // Ao carregar a página
-    document.addEventListener('DOMContentLoaded', () => {
-    loadFeatured();
-    loadSection('/api/movies/popular', 'popular-row');
-    loadSection('/api/movies/top-rated', 'top-rated-row');
-    loadSection('/api/watchlist', 'watchlist-row');
-    });
 
   </script>
 </body>
