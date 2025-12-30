@@ -186,7 +186,8 @@ async function openDetails(id) {
     const m = await res.json();
 
     document.getElementById('movieModalTitle').textContent = m.title;
-    document.getElementById('movieModalPoster').src =  movie.poster_path ? IMG_BASE + movie.poster_path : '/public/img/placeholder.jpg';
+    document.getElementById('movieModalPoster').src =
+      m.poster_path ? IMG_BASE + m.poster_path : '/public/img/placeholder.jpg';
     document.getElementById('movieModalOverview').textContent = m.overview || '';
     document.getElementById('movieModalRating').textContent = m.vote_average ?? 'N/A';
     document.getElementById('movieModalDate').textContent = m.release_date || '-';
@@ -199,6 +200,7 @@ async function openDetails(id) {
     console.error(e);
   }
 }
+
 
 
     async function addToFavorites(id) {
