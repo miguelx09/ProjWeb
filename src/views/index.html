@@ -347,13 +347,15 @@ if (searchForm) {
         console.error('Erro na pesquisa');
         return;
       }
-      const movies = await res.json();
+      const data = await res.json();
+      const movies = data.results || []; // usa o array dentro de results
 
       const section = document.getElementById('search-section');
       const row = document.getElementById('search-row');
       row.innerHTML = '';
       movies.forEach(m => row.appendChild(createMovieCard(m)));
       section.style.display = 'block';
+        
     } catch (err) {
       console.error('Erro ao pesquisar', err);
     }
@@ -362,10 +364,10 @@ if (searchForm) {
 
 
   // carregar carrossel e secções
-  loadFeatured();
+  //loadFeatured();
 // loadSection usa API_BASE = '/api'
-loadSection('/tmdb/popular', 'popular-row');
-loadSection('/tmdb/top-rated', 'top-rated-row');
+//loadSection('/tmdb/popular', 'popular-row');
+//loadSection('/tmdb/top-rated', 'top-rated-row');
 // watchlist continua se for mesmo /api/watchlist
 //loadSection('/watchlist', 'watchlist-row');
 
