@@ -188,7 +188,7 @@
         console.log('LOGIN DATA', data);
         // supõe que a tua API devolve { token, username }
         localStorage.setItem('token', data.token);
-        localStorage.setItem('username', data.username || data.name || 'Utilizador');
+        localStorage.setItem('username', data.username);
         window.location.href = '/';
       } catch (err) {
         console.error('Erro no login', err);
@@ -232,7 +232,7 @@
     if (!btn) return;
 
     btn.addEventListener('click', (e) => {
-      e.preventDefault();          // <-- aqui é que usas preventDefault()
+      e.preventDefault();
       localStorage.removeItem('token');
       localStorage.removeItem('username');
       window.location.href = '/';
@@ -244,6 +244,7 @@
     setupLogout();
   });
 </script>
+
 
 
 

@@ -390,7 +390,7 @@ loadSection('/tmdb/top-rated', 'top-rated-row');
 
 
   </script>
-  <script>
+ <script>
   function updateNavbarAuthState() {
     const token = localStorage.getItem('token');
     const username = localStorage.getItem('username');
@@ -425,7 +425,7 @@ loadSection('/tmdb/top-rated', 'top-rated-row');
     if (!btn) return;
 
     btn.addEventListener('click', (e) => {
-      e.preventDefault();          // <-- aqui é que usas preventDefault()
+      e.preventDefault();
       localStorage.removeItem('token');
       localStorage.removeItem('username');
       window.location.href = '/';
@@ -437,6 +437,7 @@ loadSection('/tmdb/top-rated', 'top-rated-row');
     setupLogout();
   });
 </script>
+
 
 
 
