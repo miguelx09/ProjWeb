@@ -172,5 +172,34 @@
       }
     });
   </script>
+  <script>
+  function updateNavbarAuthState() {
+    const token = localStorage.getItem('token');
+    const username = localStorage.getItem('username');
+
+    const watchlistItem = document.getElementById('nav-watchlist');
+    const favoritesItem = document.getElementById('nav-favorites');
+    const loginItem = document.getElementById('nav-login');
+    const userItem = document.getElementById('nav-user');
+    const userNameSpan = document.getElementById('nav-username');
+
+    const isLoggedIn = !!token;
+
+    if (watchlistItem) watchlistItem.style.display = isLoggedIn ? 'block' : 'none';
+    if (favoritesItem) favoritesItem.style.display = isLoggedIn ? 'block' : 'none';
+
+    if (loginItem) loginItem.style.display = isLoggedIn ? 'none' : 'block';
+
+    if (userItem) {
+      userItem.classList.toggle('d-none', !isLoggedIn);
+      if (isLoggedIn && userNameSpan) {
+        userNameSpan.textContent = username || 'Utilizador';
+      }
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', updateNavbarAuthState);
+</script>
+
 </body>
 </html>

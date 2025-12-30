@@ -60,33 +60,38 @@
 <body>
 
   <!-- Navbar igual à do index -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-opacity-75 fixed-top">
-    <div class="container-fluid px-4">
-      <a class="navbar-brand" href="/">
-        ProjWeb<span>Movies</span>
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+ <nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-opacity-75 fixed-top">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand" href="/">
+      ProjWeb<span>Movies</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="/">Início</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/watchlist.html">Watchlist</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/favorites.html">Favoritos</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" href="/login.html">Entrar</a>
-          </li>
-        </ul>
-      </div>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Início</a>
+        </li>
+        <li class="nav-item" id="nav-watchlist">
+          <a class="nav-link" href="/watchlist.html">Watchlist</a>
+        </li>
+        <li class="nav-item" id="nav-favorites">
+          <a class="nav-link" href="/favorites.html">Favoritos</a>
+        </li>
+        <li class="nav-item" id="nav-login">
+          <a class="nav-link" href="/login.html">Entrar</a>
+        </li>
+        <li class="nav-item d-none" id="nav-user">
+          <span class="nav-link">Bem‑vindo, <span id="nav-username"></span></span>
+        </li>
+      </ul>
     </div>
-  </nav>
+  </div>
+</nav>
+
+
 
   <!-- Conteúdo -->
   <main class="container">
@@ -153,7 +158,37 @@
         console.error('Erro no login', err);
         alert('Erro ao entrar. Tenta novamente.');
       }
-    });
+    });    
   </script>
+
+  <script>
+  function updateNavbarAuthState() {
+    const token = localStorage.getItem('token');
+    const username = localStorage.getItem('username');
+
+    const watchlistItem = document.getElementById('nav-watchlist');
+    const favoritesItem = document.getElementById('nav-favorites');
+    const loginItem = document.getElementById('nav-login');
+    const userItem = document.getElementById('nav-user');
+    const userNameSpan = document.getElementById('nav-username');
+
+    const isLoggedIn = !!token;
+
+    if (watchlistItem) watchlistItem.style.display = isLoggedIn ? 'block' : 'none';
+    if (favoritesItem) favoritesItem.style.display = isLoggedIn ? 'block' : 'none';
+
+    if (loginItem) loginItem.style.display = isLoggedIn ? 'none' : 'block';
+
+    if (userItem) {
+      userItem.classList.toggle('d-none', !isLoggedIn);
+      if (isLoggedIn && userNameSpan) {
+        userNameSpan.textContent = username || 'Utilizador';
+      }
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', updateNavbarAuthState);
+</script>
+
 </body>
 </html>
