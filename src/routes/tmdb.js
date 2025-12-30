@@ -1,13 +1,16 @@
 import express from 'express';
-import { searchMovies, getMovieDetails } from '../services/tmdb.js';
-import pool from '../db.js'; // ajusta o caminho se for diferente
+import {
+  searchMovies,
+  getMovieDetails,
+  getPopularMovies,
+  getTopRatedMovies
+} from '../services/tmdb.js';
 
 const router = express.Router();
 
 // GET /api/tmdb/search?query=matrix
 router.get('/tmdb/search', (req, res) => {
   const { query } = req.query;
-
   if (!query) {
     return res.status(400).json({ message: 'Query é obrigatória' });
   }
@@ -17,11 +20,11 @@ router.get('/tmdb/search', (req, res) => {
       console.error('TMDB search error:', err);
       return res.status(500).json({ message: 'Erro ao pesquisar na TMDB', error: err });
     }
-    res.json(result);
+    res.json(result); // { page, results, ... }
   });
 });
 
-// GET /api/tmdb/movie/603
+// GET /api/tmdb/movie/:id
 router.get('/tmdb/movie/:id', (req, res) => {
   const { id } = req.params;
 
@@ -34,7 +37,29 @@ router.get('/tmdb/movie/:id', (req, res) => {
   });
 });
 
-// POST /api/tmdb/import/603  -> importa filme para a BD
+// GET /api/tmdb/popular
+router.get('/tmdb/popular', (req, res) => {
+  getPopularMovies((err, result) => {
+    if (err) {
+      console.error('TMDB popular error:', err);
+      return res.status(500).json({ message: 'Erro ao obter populares' });
+    }
+    res.json(result); // também vem como { page, results, ... }
+  });
+});
+
+// GET /api/tmdb/top-rated
+router.get('/tmdb/top-rated', (req, res) => {
+  getTopRatedMovies((err, result) => {
+    if (err) {
+      console.error('TMDB top-rated error:', err);
+      return res.status(500).json({ message: 'Erro ao obter melhor avaliados' });
+    }
+    res.json(result);
+  });
+});
+
+// POST /api/tmdb/import/:id  -> fica igual ao teu código atual
 router.post('/tmdb/import/:id', (req, res) => {
   const { id } = req.params;
 
@@ -45,7 +70,6 @@ router.post('/tmdb/import/:id', (req, res) => {
     }
 
     try {
-      // 1) Ver se já existe na BD
       const [existing] = await db.query(
         'SELECT id_movie FROM movies WHERE tmdb_id = ?',
         [movie.id]
@@ -58,7 +82,6 @@ router.post('/tmdb/import/:id', (req, res) => {
         });
       }
 
-      // 2) Se não existir, inserir
       const [result] = await db.query(
         'INSERT INTO movies (title, synopsis, release_year, tmdb_id, poster_path) VALUES (?, ?, ?, ?, ?)',
         [
@@ -72,7 +95,7 @@ router.post('/tmdb/import/:id', (req, res) => {
 
       res.status(201).json({
         message: 'Filme importado com sucesso',
-        movieId: result.insertId       // este é o id_movie
+        movieId: result.insertId
       });
     } catch (dbErr) {
       console.error('DB error:', dbErr);
@@ -80,6 +103,5 @@ router.post('/tmdb/import/:id', (req, res) => {
     }
   });
 });
-
 
 export default router;

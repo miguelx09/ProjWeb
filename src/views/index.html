@@ -86,20 +86,6 @@
     </div>
   </nav>
 
-  <!-- Hero -->
-<section class="mt-5 pt-4">
-  <div id="featuredCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
-    <div class="carousel-inner" id="featured-inner">
-      <!-- slides gerados em JS -->
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#featuredCarousel" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon"></span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#featuredCarousel" data-bs-slide="next">
-      <span class="carousel-control-next-icon"></span>
-    </button>
-  </div>
-</section>
 
 
   <main class="container-fluid px-4 py-4">
@@ -249,18 +235,20 @@ async function openDetails(id) {
     return col;
   }
 
-    async function loadSection(endpoint, containerId) {
+      async function loadSection(endpoint, containerId) {
       try {
         const res = await fetch(API_BASE + endpoint);
         if (!res.ok) return;
         const data = await res.json();
+        const movies = Array.isArray(data) ? data : data.results || [];
         const container = document.getElementById(containerId);
         container.innerHTML = '';
-        data.forEach(movie => container.appendChild(createMovieCard(movie)));
+        movies.forEach(movie => container.appendChild(createMovieCard(movie)));
       } catch (err) {
         console.error('Erro ao carregar', endpoint, err);
       }
     }
+
 
 
 
@@ -297,34 +285,7 @@ async function openDetails(id) {
         console.error('Erro ao adicionar à watchlist', err);
       }
     }
-    async function loadFeatured() {
-  try {
-    const res = await fetch('/api/tmdb/top-rated'); // ajusta se tiver outro endpoint
-    if (!res.ok) return;
-    const movies = await res.json();
-
-    const inner = document.getElementById('featured-inner');
-    inner.innerHTML = '';
-
-    movies.slice(0, 5).forEach((m, idx) => {
-      const item = document.createElement('div');
-      item.className = 'carousel-item' + (idx === 0 ? ' active' : '');
-      item.innerHTML = `
-        <div class="hero-section d-flex align-items-end" style="background-image:url(${m.backdrop_path || m.poster_path});">
-          <div class="hero-overlay"></div>
-          <div class="container hero-content">
-            <h1 class="display-5 fw-bold mb-3">${m.title}</h1>
-            <p class="lead mb-4">${m.overview || ''}</p>
-            <button class="btn btn-danger btn-lg me-2" onclick="openDetails(${m.id})">Ver detalhes</button>
-            <button class="btn btn-outline-light btn-lg" onclick="addToWatchlist(${m.id})">Adicionar à watchlist</button>
-          </div>
-        </div>`;
-      inner.appendChild(item);
-    });
-  } catch (e) {
-    console.error(e);
-  }
-}
+    
   console.log('ANTES DO DOMCONTENTLOADED'); // ---------------------------- debug
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -373,8 +334,8 @@ if (searchForm) {
   // carregar carrossel e secções
   //loadFeatured();
 // loadSection usa API_BASE = '/api'
-//loadSection('/tmdb/popular', 'popular-row');
-//loadSection('/tmdb/top-rated', 'top-rated-row');
+loadSection('/tmdb/popular', 'popular-row');
+loadSection('/tmdb/top-rated', 'top-rated-row');
 // watchlist continua se for mesmo /api/watchlist
 //loadSection('/watchlist', 'watchlist-row');
 
