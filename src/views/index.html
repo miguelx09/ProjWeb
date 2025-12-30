@@ -254,29 +254,6 @@ async function openDetails(id) {
       }
     }
 
-    // tratar submit da pesquisa na navbar
-    document.getElementById('searchForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const q = document.getElementById('searchInput').value.trim();
-      if (!q) return;
-
-      try {
-        const res = await fetch(`/api/movies/search?q=${encodeURIComponent(q)}`);
-        if (!res.ok) {
-          console.error('Erro na pesquisa');
-          return;
-        }
-        const movies = await res.json();
-
-        const section = document.getElementById('search-section');
-        const row = document.getElementById('search-row');
-        row.innerHTML = '';
-        movies.forEach(m => row.appendChild(createMovieCard(m)));
-        section.style.display = 'block'; // mostra a secção de resultados
-      } catch (err) {
-        console.error('Erro ao pesquisar', err);
-      }
-    });
 
 
     async function loadHero() {
@@ -314,7 +291,7 @@ async function openDetails(id) {
     }
     async function loadFeatured() {
   try {
-    const res = await fetch('/api/movies/top-rated'); // ajusta se tiver outro endpoint
+    const res = await fetch('/api/tmdb/top-rated'); // ajusta se tiver outro endpoint
     if (!res.ok) return;
     const movies = await res.json();
 
@@ -364,7 +341,7 @@ async function openDetails(id) {
       if (!q) return;
 
       try {
-        const res = await fetch(`/api/movies/search?q=${encodeURIComponent(q)}`);
+        const res = await fetch(`/api/tmdb/search?q=${encodeURIComponent(q)}`);
         if (!res.ok) {
           console.error('Erro na pesquisa');
           return;
@@ -384,9 +361,12 @@ async function openDetails(id) {
 
   // carregar carrossel e secções
   loadFeatured();
-  loadSection('/api/movies/popular', 'popular-row');
-  loadSection('/api/movies/top-rated', 'top-rated-row');
-  loadSection('/api/watchlist', 'watchlist-row');
+// loadSection usa API_BASE = '/api'
+loadSection('/tmdb/popular', 'popular-row');
+loadSection('/tmdb/top-rated', 'top-rated-row');
+// watchlist continua se for mesmo /api/watchlist
+loadSection('/watchlist', 'watchlist-row');
+
 });
 
 
