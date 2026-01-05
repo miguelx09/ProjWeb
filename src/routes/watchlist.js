@@ -47,4 +47,33 @@ router.get('/', requireAuth, async (req, res) => {
   }
 });
 
+router.get('/full', requireAuth, async (req, res) => {
+  const userId = req.user.id_user;
+
+  try {
+    const [rows] = await db.query(
+      `SELECT m.tmdb_id
+       FROM watchlist w
+       JOIN movies m ON w.movie_id = m.id_movie
+       WHERE w.user_id = ?`,
+      [userId]
+    );
+
+    const ids = rows.map(r => r.tmdb_id);
+
+    // buscar detalhes a partir do teu serviço TMDB
+    const movies = [];
+    for (const id of ids) {
+      const movie = await tmdb.getMovieDetails(id); // adapta ao teu serviço
+      movies.push(movie);
+    }
+
+    res.json(movies);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Erro ao obter watchlist completa' });
+  }
+});
+
+
 export default router;

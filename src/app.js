@@ -54,6 +54,15 @@ app.get('/search.html', (req, res) => {
   res.sendFile('search.html', { root: path.join(__dirname, 'views') });
 });
 
+app.get('/watchlist.html', (req, res) => {
+  res.sendFile('watchlist.html', { root: path.join(__dirname, 'views') });
+});
+
+// NOVO: página dos favoritos
+app.get('/favorites.html', (req, res) => {
+  res.sendFile('favorites.html', { root: path.join(__dirname, 'views') });
+});
+
 // se não estiveres a usar estas rotas Mustache de /login e /register, remove-as:
 // app.get('/login', (req, res) => res.render('login', { isLogin: true }));
 // app.get('/register', (req, res) => res.render('register', { isRegister: true }));

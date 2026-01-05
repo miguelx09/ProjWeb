@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Watchlist - ProjWeb Movies</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet">
+  <style>
+    body { background-color: #050814; color: #fff; padding-top: 70px; }
+    .navbar-brand span { color: #e50914; font-weight: 700; }
+    .movie-card img { height: 260px; object-fit: cover; }
+  </style>
+</head>
+<body>
+
+  <!-- mesma navbar do index -->
+  <!-- ... cola aqui a navbar que já tens com Bem-vindo / porta ... -->
+
+  <main class="container py-4">
+    <h2 class="mb-3">A tua watchlist</h2>
+    <div class="row gy-3" id="watchlist-row"></div>
+    <p id="emptyMsg" class="text-muted" style="display:none;">
+      Ainda não tens filmes na watchlist.
+    </p>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    const API_BASE = '/api';
+    const IMG_BASE = 'https://image.tmdb.org/t/p/w500';
+
+    // mesma função createMovieCard do index (podes simplificar se quiseres)
+    function createMovieCard(movie) {
+      const col = document.createElement('div');
+      col.className = 'col-6 col-sm-4 col-md-3 col-lg-2';
+
+      const poster = movie.poster_path
+        ? IMG_BASE + movie.poster_path
+        : '/public/img/placeholder.jpg';
+
+      const isAuth = !!localStorage.getItem('token');
+
+      const actionButtons = isAuth
+        ? `
+            <button class="btn btn-sm btn-outline-warning" onclick="addToFavorites(${movie.id})">
+              Favoritos
+            </button>
+            <button class="btn btn-sm btn-outline-danger" onclick="removeFromWatchlist(${movie.id})">
+              Remover
+            </button>
+          `
+        : '';
+
+      col.innerHTML = `
+        <div class="card bg-dark text-white movie-card h-100">
+          <img src="${poster}" class="card-img-top" alt="${movie.title}">
+          <div class="card-body p-2">
+            <h6 class="card-title mb-1 text-truncate" title="${movie.title}">${movie.title}</h6>
+            <small class="text-warning">★ ${
+              movie.vote_average?.toFixed ? movie.vote_average.toFixed(1) : movie.vote_average || 'N/A'
+            }</small>
+          </div>
+          <div class="card-footer border-0 d-flex justify-content-between gap-1 p-2">
+            <button class="btn btn-sm btn-outline-light flex-fill" onclick="openDetails(${movie.id})">
+              Detalhes
+            </button>
+            ${actionButtons}
+          </div>
+        </div>
+      `;
+      return col;
+    }
+
+    async function loadWatchlist() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        document.getElementById('emptyMsg').textContent =
+          'Precisas de iniciar sessão para ver a tua watchlist.';
+        document.getElementById('emptyMsg').style.display = 'block';
+        return;
+      }
+
+      try {
+        const res = await fetch(API_BASE + '/watchlist/full', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (!res.ok) {
+          console.error('Erro ao carregar watchlist');
+          return;
+        }
+        const movies = await res.json();
+        const row = document.getElementById('watchlist-row');
+        row.innerHTML = '';
+
+        if (movies.length === 0) {
+          document.getElementById('emptyMsg').style.display = 'block';
+          return;
+        }
+
+        movies.forEach(m => row.appendChild(createMovieCard(m)));
+      } catch (err) {
+        console.error('Erro ao carregar watchlist', err);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadWatchlist();
+    });
+  </script>
+</body>
+</html>
