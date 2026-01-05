@@ -331,7 +331,7 @@ async function openDetails(id) {
         const res = await fetch(API_BASE + '/watchlist', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ movieId: id })cre
+          body: JSON.stringify({ movieId: id })
         });
         if (!res.ok) {
           console.error('Erro ao adicionar à watchlist');
