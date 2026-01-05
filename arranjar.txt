@@ -3,4 +3,9 @@
  ao fazer registro o utilizador ja fica logado nao sendo preciso fazer login 
 
 
- barra de pesquisa desapareceu
+ barra de pesquisa desapareceu -- feito
+
+
+aparecer 10 filmes nos melhores avaliadoshaver
+
+

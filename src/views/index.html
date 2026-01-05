@@ -262,10 +262,17 @@ async function openDetails(id) {
     ? IMG_BASE + movie.poster_path
     : '/public/img/placeholder.jpg';
 
-  const watchlistButtonHtml = isLoggedIn()
-    ? `<button class="btn btn-sm btn-outline-danger" onclick="addToWatchlist(${movie.id})">
-         + Lista
-       </button>`
+  const isAuth = !!localStorage.getItem('token');
+
+  const actionButtons = isAuth
+    ? `
+        <button class="btn btn-sm btn-outline-warning" onclick="addToFavorites(${movie.id})">
+          Favoritos
+        </button>
+        <button class="btn btn-sm btn-outline-danger" onclick="addToWatchlist(${movie.id})">
+          + Lista
+        </button>
+      `
     : '';
 
   col.innerHTML = `
@@ -277,16 +284,17 @@ async function openDetails(id) {
           movie.vote_average?.toFixed ? movie.vote_average.toFixed(1) : movie.vote_average || 'N/A'
         }</small>
       </div>
-      <div class="card-footer border-0 d-flex justify-content-between p-2">
-        <button class="btn btn-sm btn-outline-light" onclick="openDetails(${movie.id})">
+      <div class="card-footer border-0 d-flex justify-content-between gap-1 p-2">
+        <button class="btn btn-sm btn-outline-light flex-fill" onclick="openDetails(${movie.id})">
           Detalhes
         </button>
-        ${watchlistButtonHtml}
+        ${actionButtons}
       </div>
     </div>
   `;
   return col;
 }
+
 
   
 
@@ -394,6 +402,59 @@ document.addEventListener('DOMContentLoaded', () => {
   // se mais tarde quiseres preencher a watchlist:
   // loadSection('/watchlist', 'watchlist-row');
 });
+
+async function addToFavorites(id) {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert('Precisas de iniciar sessão para adicionar favoritos.');
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/favorites', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify({ movieId: id })
+    });
+    if (!res.ok) {
+      console.error('Erro ao adicionar aos favoritos');
+      return;
+    }
+    alert('Filme adicionado aos favoritos.');
+  } catch (err) {
+    console.error('Erro ao adicionar aos favoritos', err);
+  }
+}
+
+async function addToWatchlist(id) {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert('Precisas de iniciar sessão para adicionar à watchlist.');
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/watchlist', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify({ movieId: id })
+    });
+    if (!res.ok) {
+      console.error('Erro ao adicionar à watchlist');
+      return;
+    }
+    alert('Filme adicionado à watchlist.');
+  } catch (err) {
+    console.error('Erro ao adicionar à watchlist', err);
+  }
+}
+
 
 
 

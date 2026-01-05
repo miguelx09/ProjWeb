@@ -1,18 +1,18 @@
 import express from 'express';
 import db from '../db.js';
-import { authMiddleware } from '../middleware/auth.js';
+import { requireAuth } from '../middleware/auth.js';
 
 const router = express.Router();
 
-// POST /api/watchlist/:id_movie -> adicionar à watchlist
-router.post('/:id_movie', authMiddleware, async (req, res) => {
-  const { id_movie } = req.params;
-  const { id_user } = req.user;
+// POST /api/watchlist
+router.post('/', requireAuth, async (req, res) => {
+  const { movieId } = req.body;
+  const userId = req.user.id_user;
 
   try {
     await db.query(
-      'INSERT IGNORE INTO watchlist (user_id, movie_id) VALUES (?, ?)',
-      [id_user, id_movie]
+      'INSERT IGNORE INTO watchlist (id_user, tmdb_id) VALUES (?, ?)',
+      [userId, movieId]
     );
     res.status(201).json({ message: 'Adicionado à watchlist' });
   } catch (err) {
@@ -21,19 +21,15 @@ router.post('/:id_movie', authMiddleware, async (req, res) => {
   }
 });
 
-// GET /api/watchlist -> listar watchlist do utilizador autenticado
-router.get('/', authMiddleware, async (req, res) => {
-  const { id_user } = req.user;
+// GET /api/watchlist
+router.get('/', requireAuth, async (req, res) => {
+  const userId = req.user.id_user;
 
   try {
     const [rows] = await db.query(
-      `SELECT m.*
-       FROM watchlist w
-       JOIN movies m ON m.id_movie = w.movie_id
-       WHERE w.user_id = ?`,
-      [id_user]
+      'SELECT tmdb_id FROM watchlist WHERE id_user = ?',
+      [userId]
     );
-
     res.json(rows);
   } catch (err) {
     console.error(err);

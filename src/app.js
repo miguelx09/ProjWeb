@@ -20,9 +20,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public'))); // serve src/public
+app.use(express.static(path.join(__dirname, 'public'))); // src/public
 
-// rotas API
+// ---------- API ----------
 app.use('/api/watchlist', watchlistRouter);
 app.use('/api/movies', moviesRouter);
 app.use('/api/auth', authRouter);
@@ -30,15 +30,18 @@ app.use('/api/favorites', favoritesRouter);
 app.use('/api', reviewsRouter);
 app.use('/api', tmdbRouter);
 
-// backoffice admin (usa views/admin-movies.html, etc.)
-app.use('/', adminRouter);
+// ---------- Backoffice admin (Mustache) ----------
+app.engine('mustache', mustacheExpress());
+app.set('view engine', 'mustache');
+app.set('views', path.join(__dirname, 'views'));
 
-// página inicial
+app.use('/', adminRouter); // rotas que fazem res.render('admin-movies', ...)
+
+// ---------- Frontoffice (ficheiros HTML estáticos) ----------
 app.get('/', (req, res) => {
   res.sendFile('index.html', { root: path.join(__dirname, 'views') });
 });
 
-// restantes páginas front
 app.get('/login.html', (req, res) => {
   res.sendFile('login.html', { root: path.join(__dirname, 'views') });
 });
@@ -51,30 +54,8 @@ app.get('/search.html', (req, res) => {
   res.sendFile('search.html', { root: path.join(__dirname, 'views') });
 });
 
-app.engine('mustache', mustacheExpress());
-app.set('view engine', 'mustache');
-app.set('views', path.join(__dirname, 'views'));
-
-app.get('/login', (req, res) => {
-  res.render('login', { isLogin: true });
-});
-
-app.get('/register', (req, res) => {
-  res.render('register', { isRegister: true });
-});
-
-app.set('view engine', 'mustache');
-app.set('views', path.join(__dirname, 'views'));
-
-app.get('/login', (req, res) => res.render('login', { isLogin: true }));
-app.get('/register', (req, res) => res.render('register', { isRegister: true }));
-
-//app.get('/profile', (req, res) => {
-
- // res.render('profile', { isAuthenticated: true, username: 'Utilizador' });
-//});
-
+// se não estiveres a usar estas rotas Mustache de /login e /register, remove-as:
+// app.get('/login', (req, res) => res.render('login', { isLogin: true }));
+// app.get('/register', (req, res) => res.render('register', { isRegister: true }));
 
 export default app;
-
-
