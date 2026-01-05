@@ -1,6 +1,6 @@
 import express from 'express';
 import db from '../db.js';
-import { authMiddleware } from '../middleware/auth.js';
+import { requireAuth  } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -8,7 +8,7 @@ const router = express.Router();
  * POST /api/movies/:id_movie/reviews
  * Cria uma review para um filme (user autenticado)
  */
-router.post('/movies/:id_movie/reviews', authMiddleware, async (req, res) => {
+router.post('/movies/:id_movie/reviews', requireAuth , async (req, res) => {
   const { id_movie } = req.params;
   const { rating, comment } = req.body;
   const { id_user } = req.user;
