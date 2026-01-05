@@ -2,13 +2,14 @@
 import express from 'express';
 import db from '../db.js';
 import { requireAuth } from '../middleware/auth.js';
+import { getMovieDetails } from '../services/tmdb.js';
 
 
 const router = express.Router();
 
 // POST /api/favorites
 router.post('/', requireAuth, async (req, res) => {
-  const { movieId } = req.body;        // ID do TMDB recebido do front
+  const { movieId } = req.body; // ID TMDB vindo do front
   const userId = req.user.id_user;
 
   try {
@@ -32,7 +33,7 @@ router.post('/', requireAuth, async (req, res) => {
   }
 });
 
-// GET /api/favorites  (só ids TMDB, se precisares)
+// GET /api/favorites  (só ids TMDB)
 router.get('/', requireAuth, async (req, res) => {
   const userId = req.user.id_user;
 
@@ -52,7 +53,6 @@ router.get('/', requireAuth, async (req, res) => {
 });
 
 // GET /api/favorites/full  -> filmes com detalhes TMDB
-// GET /api/favorites/full  -> por agora só devolve ids TMDB
 router.get('/full', requireAuth, async (req, res) => {
   const userId = req.user.id_user;
 
@@ -65,7 +65,20 @@ router.get('/full', requireAuth, async (req, res) => {
       [userId]
     );
 
-    res.json(rows); // ex: [ { tmdb_id: 123 }, { tmdb_id: 456 } ]
+    const ids = rows.map(r => r.tmdb_id);
+    const movies = [];
+
+    for (const id of ids) {
+      const movie = await new Promise((resolve, reject) => {
+        getMovieDetails(id, (err, data) => {
+          if (err) return reject(err);
+          resolve(data);
+        });
+      });
+      movies.push(movie);
+    }
+
+    res.json(movies);
   } catch (err) {
     console.error('ERRO /api/favorites/full:', err);
     res.status(500).json({ message: 'Erro ao obter favoritos detalhados' });
