@@ -80,6 +80,15 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
+     <form class="d-flex ms-3" id="searchForm" role="search">
+    <input class="form-control form-control-sm me-2"
+           type="search"
+           placeholder="Pesquisar filmes..."
+           aria-label="Pesquisar"
+           id="searchInput">
+    <button class="btn btn-sm btn-outline-light" type="submit">Pesquisar</button>
+  </form>
+
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
@@ -238,35 +247,47 @@ async function openDetails(id) {
     }
     }
 
-    const IMG_BASE = 'https://image.tmdb.org/t/p/w500';
+        function isLoggedIn() {
+      return !!localStorage.getItem('token');
+    }
 
     function createMovieCard(movie) {
-    const col = document.createElement('div');
-    col.className = 'col-6 col-sm-4 col-md-3 col-lg-2';
+      const col = document.createElement('div');
+      col.className = 'col-6 col-sm-4 col-md-3 col-lg-2';
 
-    const poster = movie.poster_path
-      ? IMG_BASE + movie.poster_path
-      : '/public/img/placeholder.jpg';
+      const poster = movie.poster_path
+        ? IMG_BASE + movie.poster_path
+        : '/public/img/placeholder.jpg';
 
-    col.innerHTML = `
-      <div class="card bg-dark text-white movie-card h-100">
-        <img src="${poster}" class="card-img-top" alt="${movie.title}">
-        <div class="card-body p-2">
-          <h6 class="card-title mb-1 text-truncate" title="${movie.title}">${movie.title}</h6>
-          <small class="text-warning">★ ${movie.vote_average?.toFixed ? movie.vote_average.toFixed(1) : movie.vote_average || 'N/A'}</small>
-        </div>
-        <div class="card-footer border-0 d-flex justify-content-between p-2">
-          <button class="btn btn-sm btn-outline-light" onclick="openDetails(${movie.id})">
-            Detalhes
-          </button>
-          <button class="btn btn-sm btn-outline-danger" onclick="addToWatchlist(${movie.id})">
+      // se estiver logado, gera o botão "+ Lista"; senão, fica string vazia
+      const watchlistButtonHtml = isLoggedIn()
+        ? `<button class="btn btn-sm btn-outline-danger" onclick="addToWatchlist(${movie.id})">
             + Lista
-          </button>
+          </button>`
+        : '';
+
+      col.innerHTML = `
+        <div class="card bg-dark text-white movie-card h-100">
+          <img src="${poster}" class="card-img-top" alt="${movie.title}">
+          <div class="card-body p-2">
+            <h6 class="card-title mb-1 text-truncate" title="${movie.title}">${movie.title}</h6>
+            <small class="text-warning">★ ${
+              movie.vote_average?.toFixed ? movie.vote_average.toFixed(1) : movie.vote_average || 'N/A'
+            }</small>
+          </div>
+          <div class="card-footer border-0 d-flex justify-content-between p-2">
+            <button class="btn btn-sm btn-outline-light" onclick="openDetails(${movie.id})">
+              Detalhes
+            </button>
+            ${watchlistButtonHtml}
+          </div>
         </div>
-      </div>
-    `;
-    return col;
-  }
+      `;
+      return col;
+    }
+
+
+
 
       async function loadSection(endpoint, containerId) {
       try {
