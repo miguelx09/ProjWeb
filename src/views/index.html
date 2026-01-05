@@ -247,47 +247,48 @@ async function openDetails(id) {
     }
     }
 
-        function isLoggedIn() {
+    function isLoggedIn() {
       return !!localStorage.getItem('token');
     }
 
+
+    const IMG_BASE = 'https://image.tmdb.org/t/p/w500';
+
     function createMovieCard(movie) {
-      const col = document.createElement('div');
-      col.className = 'col-6 col-sm-4 col-md-3 col-lg-2';
+  const col = document.createElement('div');
+  col.className = 'col-6 col-sm-4 col-md-3 col-lg-2';
 
-      const poster = movie.poster_path
-        ? IMG_BASE + movie.poster_path
-        : '/public/img/placeholder.jpg';
+  const poster = movie.poster_path
+    ? IMG_BASE + movie.poster_path
+    : '/public/img/placeholder.jpg';
 
-      // se estiver logado, gera o botão "+ Lista"; senão, fica string vazia
-      const watchlistButtonHtml = isLoggedIn()
-        ? `<button class="btn btn-sm btn-outline-danger" onclick="addToWatchlist(${movie.id})">
-            + Lista
-          </button>`
-        : '';
+  const watchlistButtonHtml = isLoggedIn()
+    ? `<button class="btn btn-sm btn-outline-danger" onclick="addToWatchlist(${movie.id})">
+         + Lista
+       </button>`
+    : '';
 
-      col.innerHTML = `
-        <div class="card bg-dark text-white movie-card h-100">
-          <img src="${poster}" class="card-img-top" alt="${movie.title}">
-          <div class="card-body p-2">
-            <h6 class="card-title mb-1 text-truncate" title="${movie.title}">${movie.title}</h6>
-            <small class="text-warning">★ ${
-              movie.vote_average?.toFixed ? movie.vote_average.toFixed(1) : movie.vote_average || 'N/A'
-            }</small>
-          </div>
-          <div class="card-footer border-0 d-flex justify-content-between p-2">
-            <button class="btn btn-sm btn-outline-light" onclick="openDetails(${movie.id})">
-              Detalhes
-            </button>
-            ${watchlistButtonHtml}
-          </div>
-        </div>
-      `;
-      return col;
-    }
+  col.innerHTML = `
+    <div class="card bg-dark text-white movie-card h-100">
+      <img src="${poster}" class="card-img-top" alt="${movie.title}">
+      <div class="card-body p-2">
+        <h6 class="card-title mb-1 text-truncate" title="${movie.title}">${movie.title}</h6>
+        <small class="text-warning">★ ${
+          movie.vote_average?.toFixed ? movie.vote_average.toFixed(1) : movie.vote_average || 'N/A'
+        }</small>
+      </div>
+      <div class="card-footer border-0 d-flex justify-content-between p-2">
+        <button class="btn btn-sm btn-outline-light" onclick="openDetails(${movie.id})">
+          Detalhes
+        </button>
+        ${watchlistButtonHtml}
+      </div>
+    </div>
+  `;
+  return col;
+}
 
-
-
+  
 
       async function loadSection(endpoint, containerId) {
       try {
@@ -330,7 +331,7 @@ async function openDetails(id) {
         const res = await fetch(API_BASE + '/watchlist', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ movieId: id })
+          body: JSON.stringify({ movieId: id })cre
         });
         if (!res.ok) {
           console.error('Erro ao adicionar à watchlist');
@@ -343,70 +344,7 @@ async function openDetails(id) {
   console.log('ANTES DO DOMCONTENTLOADED'); // ---------------------------- debug
 
     document.addEventListener('DOMContentLoaded', () => {
-  // navbar "Bem-vindo"
-  const username = localStorage.getItem('username');
-  if (username) {
-    const slot = document.getElementById('nav-user-slot');
-    if (slot) {
-      slot.innerHTML = `<a class="nav-link" href="/profile">Bem-vindo, ${username}</a>`;
-    }
-    document.querySelectorAll('.nav-link-login, .nav-link-register')
-      .forEach(el => el.classList.add('d-none'));
-  }
-
-  const popularSection = document.getElementById('popular-row').closest('section');
-  const topSection = document.getElementById('top-rated-row').closest('section');
-  const searchResultsSection = document.getElementById('search-section');
-
-
-  // listener do formulário de pesquisa
-  const searchForm = document.getElementById('searchForm');
-if (searchForm) {
-  searchForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  console.log('SUBMIT PESQUISA FIX');
-  const q = document.getElementById('searchInput').value.trim();
-
-  // se pesquisa vazia, esconder resultados e voltar a mostrar populares/top
-  if (!q) {
-    if (searchResultsSection) searchResultsSection.style.display = 'none';
-    if (popularSection) popularSection.style.display = '';
-    if (topSection) topSection.style.display = '';
-    return;
-  }
-
-  try {
-    const res = await fetch(`/api/tmdb/search?query=${encodeURIComponent(q)}`);
-    if (!res.ok) {
-      console.error('Erro na pesquisa');
-      return;
-    }
-    const data = await res.json();
-    const movies = data.results || [];
-
-    const row = document.getElementById('search-row');
-    row.innerHTML = '';
-    movies.forEach(m => row.appendChild(createMovieCard(m)));
-    searchResultsSection.style.display = 'block';
-
-    // esconder populares e melhor avaliados
-    if (popularSection) popularSection.style.display = 'none';
-    if (topSection) topSection.style.display = 'none';
-  } catch (err) {
-    console.error('Erro ao pesquisar', err);
-  }
-});
-}
-
-
-  // carregar carrossel e secções
-  //loadFeatured();
-// loadSection usa API_BASE = '/api'
-loadSection('/tmdb/popular', 'popular-row');
-loadSection('/tmdb/top-rated', 'top-rated-row');
-// watchlist continua se for mesmo /api/watchlist
-//loadSection('/watchlist', 'watchlist-row');
-
+  
 });
 
 
