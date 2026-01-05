@@ -343,9 +343,58 @@ async function openDetails(id) {
     
   console.log('ANTES DO DOMCONTENTLOADED'); // ---------------------------- debug
 
-    document.addEventListener('DOMContentLoaded', () => {
-  
+
+document.addEventListener('DOMContentLoaded', () => {
+  const popularSection = document.getElementById('popular-row').closest('section');
+  const topSection = document.getElementById('top-rated-row').closest('section');
+  const searchResultsSection = document.getElementById('search-section');
+
+  // listener do formulário de pesquisa
+  const searchForm = document.getElementById('searchForm');
+  if (searchForm) {
+    searchForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      console.log('SUBMIT PESQUISA FIX');
+      const q = document.getElementById('searchInput').value.trim();
+
+      // se pesquisa vazia, esconder resultados e voltar a mostrar populares/top
+      if (!q) {
+        if (searchResultsSection) searchResultsSection.style.display = 'none';
+        if (popularSection) popularSection.style.display = '';
+        if (topSection) topSection.style.display = '';
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/tmdb/search?query=${encodeURIComponent(q)}`);
+        if (!res.ok) {
+          console.error('Erro na pesquisa');
+          return;
+        }
+        const data = await res.json();
+        const movies = data.results || [];
+
+        const row = document.getElementById('search-row');
+        row.innerHTML = '';
+        movies.forEach(m => row.appendChild(createMovieCard(m)));
+        searchResultsSection.style.display = 'block';
+
+        // esconder populares e melhor avaliados
+        if (popularSection) popularSection.style.display = 'none';
+        if (topSection) topSection.style.display = 'none';
+      } catch (err) {
+        console.error('Erro ao pesquisar', err);
+      }
+    });
+  }
+
+  // carregar secções iniciais
+  loadSection('/tmdb/popular', 'popular-row');
+  loadSection('/tmdb/top-rated', 'top-rated-row');
+  // se mais tarde quiseres preencher a watchlist:
+  // loadSection('/watchlist', 'watchlist-row');
 });
+
 
 
   </script>
