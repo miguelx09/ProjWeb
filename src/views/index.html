@@ -266,12 +266,14 @@ async function openDetails(id) {
 
   const actionButtons = isAuth
     ? `
-        <button class="btn btn-sm btn-outline-warning" onclick="addToFavorites(${movie.id})">
+        <div class="d-flex gap-1 flex-fill">
+        <button class="btn btn-sm btn-outline-warning w-50" onclick="addToFavorites(${movie.id})">
           Favoritos
         </button>
-        <button class="btn btn-sm btn-outline-danger" onclick="addToWatchlist(${movie.id})">
+        <button class="btn btn-sm btn-outline-danger w-50" onclick="addToWatchlist(${movie.id})">
           + Lista
         </button>
+      </div>
       `
     : '';
 
@@ -284,12 +286,12 @@ async function openDetails(id) {
           movie.vote_average?.toFixed ? movie.vote_average.toFixed(1) : movie.vote_average || 'N/A'
         }</small>
       </div>
-      <div class="card-footer border-0 d-flex justify-content-between gap-1 p-2">
-        <button class="btn btn-sm btn-outline-light flex-fill" onclick="openDetails(${movie.id})">
-          Detalhes
-        </button>
-        ${actionButtons}
-      </div>
+      <div class="card-footer border-0 d-flex gap-1 p-2">
+      <button class="btn btn-sm btn-outline-light flex-fill" onclick="openDetails(${movie.id})">
+        Detalhes
+      </button>
+      ${actionButtons}
+    </div>
     </div>
   `;
   return col;
