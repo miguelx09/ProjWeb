@@ -66,7 +66,7 @@ router.get('/movies/:id_movie/reviews', async (req, res) => {
  * (Opcional) POST /api/reviews/:id_review/useful
  * Incrementa contador de "útil" numa review
  */
-router.post('/reviews/:id_review/useful', authMiddleware, async (req, res) => {
+router.post('/reviews/:id_review/useful', requireAuth, async (req, res) => {
   const { id_review } = req.params;
 
   try {
