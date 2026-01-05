@@ -11,9 +11,16 @@ router.post('/', requireAuth, async (req, res) => {
 
   try {
     await db.query(
-      'INSERT IGNORE INTO watchlist (id_user, tmdb_id) VALUES (?, ?)',
+      'INSERT IGNORE INTO movies (tmdb_id, title) VALUES (?, ?)',
+      [movieId, '']
+    );
+
+    await db.query(
+      `INSERT IGNORE INTO watchlist (user_id, movie_id)
+       SELECT ?, id_movie FROM movies WHERE tmdb_id = ?`,
       [userId, movieId]
     );
+
     res.status(201).json({ message: 'Adicionado à watchlist' });
   } catch (err) {
     console.error(err);
@@ -27,7 +34,10 @@ router.get('/', requireAuth, async (req, res) => {
 
   try {
     const [rows] = await db.query(
-      'SELECT tmdb_id FROM watchlist WHERE id_user = ?',
+      `SELECT m.tmdb_id
+       FROM watchlist w
+       JOIN movies m ON w.movie_id = m.id_movie
+       WHERE w.user_id = ?`,
       [userId]
     );
     res.json(rows);
