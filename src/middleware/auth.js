@@ -1,21 +1,21 @@
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = 'segredo_super_simples';
+const JWT_SECRET = 'segredo_super_simples'; // ou process.env.JWT_SECRET
 
-export function authMiddleware(req, res, next) {
-  const authHeader = req.headers.authorization;
+export function requireAuth(req, res, next) {
+  const authHeader = req.headers.authorization || '';
+  const [type, token] = authHeader.split(' ');
 
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  if (type !== 'Bearer' || !token) {
     return res.status(401).json({ message: 'Token em falta' });
   }
 
-  const token = authHeader.split(' ')[1];
-
   try {
     const payload = jwt.verify(token, JWT_SECRET);
-    req.user = { id_user: payload.id_user, username: payload.username };
+    req.user = payload; // { id_user, username }
     next();
   } catch (err) {
+    console.error(err);
     return res.status(401).json({ message: 'Token inválido ou expirado' });
   }
 }
