@@ -74,8 +74,8 @@ CREATE TABLE reviews (
   FOREIGN KEY (movie_id) REFERENCES movies(id_movie) ON DELETE CASCADE
 );
 
-ALTER TABLE movies
-ADD COLUMN poster_path VARCHAR(255) NULL;
+alter table movies
+add column poster_path varchar(255) null;
 
 
-SELECT id_movie, title, synopsis, release_year, tmdb_id, poster_path FROM movies WHERE id_movie = ?
+
