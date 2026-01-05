@@ -82,6 +82,9 @@
     const API_BASE = '/api';
     const IMG_BASE = 'https://image.tmdb.org/t/p/w500';
 
+
+
+
     function updateNavbarAuthState() {
       const token = localStorage.getItem('token');
       const username = localStorage.getItem('username');
@@ -113,6 +116,16 @@
         logoutItem.classList.toggle('d-none', !isLoggedIn);
       }
     }
+
+    const row = document.getElementById('favorites-row');
+        row.innerHTML = '';
+        movies.forEach(m => {
+        const div = document.createElement('div');
+        div.className = 'col-12 text-muted';
+        div.textContent = 'tmdb_id: ' + m.tmdb_id;
+        row.appendChild(div);
+        });
+
 
     function setupLogout() {
       const btn = document.getElementById('logoutBtn');
@@ -190,6 +203,8 @@
       setupLogout();
       loadFavorites();
     });
+
+
   </script>
 </body>
 </html>

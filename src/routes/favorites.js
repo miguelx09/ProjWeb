@@ -52,6 +52,7 @@ router.get('/', requireAuth, async (req, res) => {
 });
 
 // GET /api/favorites/full  -> filmes com detalhes TMDB
+// GET /api/favorites/full  -> por agora só devolve ids TMDB
 router.get('/full', requireAuth, async (req, res) => {
   const userId = req.user.id_user;
 
@@ -64,25 +65,12 @@ router.get('/full', requireAuth, async (req, res) => {
       [userId]
     );
 
-    const ids = rows.map(r => r.tmdb_id);
-    const movies = [];
-
-    // exemplo com serviço TMDB em estilo callback:
-    for (const id of ids) {
-      const movie = await new Promise((resolve, reject) => {
-        tmdb.movie.info(id, (err, data) => {
-          if (err) return reject(err);
-          resolve(data);
-        });
-      });
-      movies.push(movie);
-    }
-
-    res.json(movies);
+    res.json(rows); // ex: [ { tmdb_id: 123 }, { tmdb_id: 456 } ]
   } catch (err) {
-    console.error(err);
+    console.error('ERRO /api/favorites/full:', err);
     res.status(500).json({ message: 'Erro ao obter favoritos detalhados' });
   }
 });
+
 
 export default router;
