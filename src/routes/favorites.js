@@ -2,7 +2,7 @@
 import express from 'express';
 import db from '../db.js';
 import { requireAuth } from '../middleware/auth.js';
-import tmdb from '../services/tmdb.js'; // adapta ao que tens
+
 
 const router = express.Router();
 
