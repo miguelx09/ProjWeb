@@ -1,3 +1,6 @@
 
 
  ao fazer registro o utilizador ja fica logado nao sendo preciso fazer login 
+
+
+ barra de pesquisa desapareceu
