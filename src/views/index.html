@@ -437,28 +437,28 @@ async function openDetails(id) {
     </div>
   `;
   return col;
+  }  
+
+     async function loadSection(endpoint, containerId) {
+  try {
+    const res = await fetch(API_BASE + endpoint);
+    if (!res.ok) return;
+    const data = await res.json();
+    let movies = Array.isArray(data) ? data : data.results || [];
+    
+    // Filtrar filmes sem poster
+    movies = movies.filter(movie => movie.poster_path);
+    
+    // Limitar a 15 filmes
+    movies = movies.slice(0, 15);
+    
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    movies.forEach(movie => container.appendChild(createMovieCard(movie)));
+  } catch (err) {
+    console.error('Erro ao carregar', endpoint, err);
   }
-
-
-
-  
-
-      async function loadSection(endpoint, containerId) {
-      try {
-        const res = await fetch(API_BASE + endpoint);
-        if (!res.ok) return;
-        const data = await res.json();
-        const movies = Array.isArray(data) ? data : data.results || [];
-        const container = document.getElementById(containerId);
-        container.innerHTML = '';
-        movies.forEach(movie => container.appendChild(createMovieCard(movie)));
-      } catch (err) {
-        console.error('Erro ao carregar', endpoint, err);
-      }
-    }
-
-
-
+}
 
     async function loadHero() {
       try {

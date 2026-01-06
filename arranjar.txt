@@ -1,14 +1,4 @@
-
-
- ao fazer registro o utilizador ja fica logado nao sendo preciso fazer login 
-
-
-
 aparecer 10 filmes nos melhores avaliadoshaver
-
-
-
 ao pesquisar filmes nao permitir filmes sem imagens
 
 
-barra de pesquisa no facvoritos e watchlist
