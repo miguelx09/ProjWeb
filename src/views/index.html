@@ -254,7 +254,7 @@ async function openDetails(id) {
 
     const IMG_BASE = 'https://image.tmdb.org/t/p/w500';
 
-    function createMovieCard(movie) {
+  function createMovieCard(movie) {
   const col = document.createElement('div');
   col.className = 'col-6 col-sm-4 col-md-3 col-lg-2';
 
@@ -266,14 +266,12 @@ async function openDetails(id) {
 
   const actionButtons = isAuth
     ? `
-        <div class="d-flex gap-1 flex-fill">
-        <button class="btn btn-sm btn-outline-warning w-50" onclick="addToFavorites(${movie.id})">
+        <button class="btn btn-sm btn-warning w-100 mb-1" onclick="addToFavorites(${movie.id})">
           Favoritos
         </button>
-        <button class="btn btn-sm btn-outline-danger w-50" onclick="addToWatchlist(${movie.id})">
+        <button class="btn btn-sm btn-danger w-100" onclick="addToWatchlist(${movie.id})">
           + Lista
         </button>
-      </div>
       `
     : '';
 
@@ -286,16 +284,17 @@ async function openDetails(id) {
           movie.vote_average?.toFixed ? movie.vote_average.toFixed(1) : movie.vote_average || 'N/A'
         }</small>
       </div>
-      <div class="card-footer border-0 d-flex gap-1 p-2">
-      <button class="btn btn-sm btn-outline-light flex-fill" onclick="openDetails(${movie.id})">
-        Detalhes
-      </button>
-      ${actionButtons}
-    </div>
+      <div class="card-footer border-0 p-2">
+        <button class="btn btn-sm btn-outline-light w-100 mb-1" onclick="openDetails(${movie.id})">
+          Detalhes
+        </button>
+        ${actionButtons}
+      </div>
     </div>
   `;
   return col;
-}
+  }
+
 
 
   
