@@ -4,27 +4,41 @@ import db from '../db.js';
 import { requireAuth } from '../middleware/auth.js';
 import { getMovieDetails } from '../services/tmdb.js';
 
-
 const router = express.Router();
 
 // POST /api/favorites
 router.post('/', requireAuth, async (req, res) => {
-  const { movieId } = req.body; // ID TMDB vindo do front
+  const { movieId } = req.body; // tmdb_id
   const userId = req.user.id_user;
 
   try {
-    // garantir que o filme existe na tabela movies
-    await db.query(
-      'INSERT IGNORE INTO movies (tmdb_id, title) VALUES (?, ?)',
-      [movieId, '']
+    // 1. verificar se o filme já existe na tabela movies
+    const [existing] = await db.query(
+      'SELECT id_movie FROM movies WHERE tmdb_id = ? LIMIT 1',
+      [movieId]
     );
 
-    // ligar user -> movie (via movie_id)
-    await db.query(
-      `INSERT IGNORE INTO favorites (user_id, movie_id)
-       SELECT ?, id_movie FROM movies WHERE tmdb_id = ?`,
-      [userId, movieId]
+    let internalMovieId;
+    if (existing.length > 0) {
+      internalMovieId = existing[0].id_movie;
+    } else {
+      // inserir novo filme
+      const [insertResult] = await db.query(
+        'INSERT INTO movies (tmdb_id, title) VALUES (?, ?)',
+        [movieId, '']
+      );
+      internalMovieId = insertResult.insertId;
+    }
+
+    // 2. tentar adicionar aos favoritos
+    const [insertFav] = await db.query(
+      'INSERT IGNORE INTO favorites (user_id, movie_id) VALUES (?, ?)',
+      [userId, internalMovieId]
     );
+
+    if (insertFav.affectedRows === 0) {
+      return res.status(200).json({ message: 'Este filme já está nos teus favoritos.' });
+    }
 
     res.status(201).json({ message: 'Adicionado aos favoritos' });
   } catch (err) {
@@ -33,7 +47,7 @@ router.post('/', requireAuth, async (req, res) => {
   }
 });
 
-// GET /api/favorites  (só ids TMDB)
+// GET /api/favorites  (mantém como está)
 router.get('/', requireAuth, async (req, res) => {
   const userId = req.user.id_user;
 
@@ -52,7 +66,7 @@ router.get('/', requireAuth, async (req, res) => {
   }
 });
 
-// GET /api/favorites/full  -> filmes com detalhes TMDB
+// GET /api/favorites/full
 router.get('/full', requireAuth, async (req, res) => {
   const userId = req.user.id_user;
 
@@ -84,6 +98,5 @@ router.get('/full', requireAuth, async (req, res) => {
     res.status(500).json({ message: 'Erro ao obter favoritos detalhados' });
   }
 });
-
 
 export default router;

@@ -1,26 +1,43 @@
+// src/routes/watchlist.js
 import express from 'express';
 import db from '../db.js';
 import { requireAuth } from '../middleware/auth.js';
-import { getMovieDetails } from '../services/tmdb.js'; // importa esta função
+import { getMovieDetails } from '../services/tmdb.js';
 
 const router = express.Router();
 
-// POST /api/watchlist  (mantém como está)
+// POST /api/watchlist
 router.post('/', requireAuth, async (req, res) => {
   const { movieId } = req.body;
   const userId = req.user.id_user;
 
   try {
-    await db.query(
-      'INSERT IGNORE INTO movies (tmdb_id, title) VALUES (?, ?)',
-      [movieId, '']
+    // 1. verificar se o filme já existe
+    const [existing] = await db.query(
+      'SELECT id_movie FROM movies WHERE tmdb_id = ? LIMIT 1',
+      [movieId]
     );
 
-    await db.query(
-      `INSERT IGNORE INTO watchlist (user_id, movie_id)
-       SELECT ?, id_movie FROM movies WHERE tmdb_id = ?`,
-      [userId, movieId]
+    let internalMovieId;
+    if (existing.length > 0) {
+      internalMovieId = existing[0].id_movie;
+    } else {
+      const [insertResult] = await db.query(
+        'INSERT INTO movies (tmdb_id, title) VALUES (?, ?)',
+        [movieId, '']
+      );
+      internalMovieId = insertResult.insertId;
+    }
+
+    // 2. tentar adicionar à watchlist
+    const [insertWatch] = await db.query(
+      'INSERT IGNORE INTO watchlist (user_id, movie_id) VALUES (?, ?)',
+      [userId, internalMovieId]
     );
+
+    if (insertWatch.affectedRows === 0) {
+      return res.status(200).json({ message: 'Este filme já está na tua watchlist.' });
+    }
 
     res.status(201).json({ message: 'Adicionado à watchlist' });
   } catch (err) {
@@ -29,7 +46,7 @@ router.post('/', requireAuth, async (req, res) => {
   }
 });
 
-// GET /api/watchlist  (só ids, mantém como está)
+// GET /api/watchlist
 router.get('/', requireAuth, async (req, res) => {
   const userId = req.user.id_user;
 
@@ -48,7 +65,7 @@ router.get('/', requireAuth, async (req, res) => {
   }
 });
 
-// GET /api/watchlist/full  -> filmes com detalhes TMDB
+// GET /api/watchlist/full
 router.get('/full', requireAuth, async (req, res) => {
   const userId = req.user.id_user;
 

@@ -8,4 +8,4 @@
 
 aparecer 10 filmes nos melhores avaliadoshaver
 
-
+devera existir um botao nos favoritos e na watchlist para serem removidos da db
