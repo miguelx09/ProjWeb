@@ -5,21 +5,168 @@
   <title>Favoritos - ProjWeb Movies</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!-- Bootstrap CSS -->
   <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
     rel="stylesheet"
   >
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
   <style>
     body {
       background-color: #050814;
       color: #fff;
-      padding-top: 70px;
+      padding-top: 80px;
     }
-    .navbar-brand span {
-      color: #e50914;
+
+    /* Navbar melhorada */
+    .navbar {
+      background: linear-gradient(135deg, #1a1f35 0%, #0d1117 100%) !important;
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid rgba(229, 9, 20, 0.3);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    .brand-text {
+      font-size: 1.6rem;
       font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #fff;
     }
+
+    .brand-highlight {
+      color: #e50914;
+    }
+
+    /* Barra de pesquisa */
+    .search-wrapper {
+      max-width: 450px;
+      width: 100%;
+    }
+
+    .search-wrapper .form-control {
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 20px 0 0 20px;
+    }
+
+    .search-wrapper .form-control:focus {
+      background-color: rgba(255, 255, 255, 0.15);
+      border-color: #e50914;
+      color: #fff;
+      box-shadow: 0 0 0 0.2rem rgba(229, 9, 20, 0.25);
+    }
+
+    .search-wrapper .form-control::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .search-wrapper .btn {
+      border-radius: 0 20px 20px 0;
+      border-left: none;
+      padding: 0.5rem 1.2rem;
+    }
+
+    .search-wrapper .btn:hover {
+      background-color: #e50914;
+      border-color: #e50914;
+    }
+
+    /* Menu items */
+    .navbar-nav .nav-link {
+      font-weight: 500;
+      transition: all 0.3s ease;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .navbar-nav .nav-link:hover {
+      background-color: rgba(229, 9, 20, 0.15);
+      color: #e50914;
+    }
+
+    .navbar-nav .nav-link.active {
+      color: #e50914;
+    }
+
+    .navbar-nav .nav-link i {
+      margin-right: 5px;
+    }
+
+    /* Bem-vindo section */
+    .user-welcome {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.4rem 0;
+    }
+
+    .user-welcome .username {
+      color: #fff;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    /* Botão sair */
+    .btn-logout {
+      background-color: #e50914;
+      border: none;
+      color: #fff;
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .btn-logout:hover {
+      background-color: #b8070f;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(229, 9, 20, 0.4);
+      color: #fff;
+    }
+
+    /* Botão entrar */
+    .btn-login {
+      background-color: transparent;
+      border: 2px solid #e50914;
+      color: #e50914;
+      padding: 0.4rem 1.5rem;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-login:hover {
+      background-color: #e50914;
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    /* Responsividade */
+    @media (max-width: 991px) {
+      .search-wrapper {
+        max-width: 100%;
+        margin: 1rem 0;
+      }
+      
+      .user-welcome {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 0.5rem;
+      }
+
+      .navbar-nav {
+        margin-top: 1rem;
+      }
+    }
+
+    /* Movie cards */
     .movie-card img {
       height: 260px;
       object-fit: cover;
@@ -28,46 +175,78 @@
 </head>
 <body>
 
-  <!-- Navbar igual à do index -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-opacity-75 fixed-top">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
     <div class="container-fluid px-4">
+      <!-- Logo/Brand -->
       <a class="navbar-brand" href="/">
-        ProjWeb<span>Movies</span>
+        <span class="brand-text">ProjWeb<span class="brand-highlight">Movies</span></span>
       </a>
 
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <!-- Toggle button para mobile -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <!-- Barra de pesquisa -->
+        <form class="d-flex mx-auto my-2 my-lg-0 search-wrapper" id="searchForm">
+          <input 
+            class="form-control" 
+            type="search" 
+            placeholder="Pesquisar filmes..." 
+            aria-label="Pesquisar"
+            id="searchInput"
+          >
+          <button class="btn btn-outline-light" type="submit">
+            <i class="bi bi-search"></i>
+          </button>
+        </form>
+
+        <!-- Menu items -->
+        <ul class="navbar-nav ms-auto align-items-lg-center">
           <li class="nav-item">
-            <a class="nav-link" href="/">Início</a>
-          </li>
-          <li class="nav-item" id="nav-watchlist">
-            <a class="nav-link" href="/watchlist.html">Watchlist</a>
-          </li>
-          <li class="nav-item" id="nav-favorites">
-            <a class="nav-link active" href="/favorites.html">Favoritos</a>
-          </li>
-          <li class="nav-item" id="nav-login">
-            <a class="nav-link" href="/login.html">Entrar</a>
-          </li>
-          <li class="nav-item d-none" id="nav-user">
-            <span class="nav-link">
-              Bem‑vindo, <span id="nav-username"></span>
-            </span>
-          </li>
-          <li class="nav-item d-none" id="nav-logout">
-            <a href="#" class="nav-link logout-icon" id="logoutBtn" title="Sair">
-              🚪
+            <a class="nav-link" href="/">
+              <i class="bi bi-house-door"></i> Início
             </a>
+          </li>
+
+          <!-- Links só para utilizadores autenticados -->
+          <li class="nav-item d-none" id="nav-watchlist">
+            <a class="nav-link" href="/watchlist.html">
+              <i class="bi bi-clock-history"></i> Watchlist
+            </a>
+          </li>
+          <li class="nav-item d-none" id="nav-favorites">
+            <a class="nav-link active" href="/favorites.html">
+              <i class="bi bi-heart-fill"></i> Favoritos
+            </a>
+          </li>
+
+          <!-- Link Entrar (quando não está logado) -->
+          <li class="nav-item" id="nav-login">
+            <a class="btn-login" href="/login.html">
+              <i class="bi bi-person-circle"></i> Entrar
+            </a>
+          </li>
+
+          <!-- Bem-vindo + Botão Sair (quando está logado) -->
+          <li class="nav-item d-none" id="nav-user-section">
+            <div class="user-welcome">
+              <span class="username">
+                Olá, <strong id="nav-username">Utilizador</strong>
+              </span>
+              <button class="btn btn-logout" id="logoutBtn">
+                <i class="bi bi-box-arrow-right"></i> Sair
+              </button>
+            </div>
           </li>
         </ul>
       </div>
     </div>
   </nav>
 
+  <!-- Main Content -->
   <main class="container py-4">
     <h2 class="mb-3">Os teus favoritos</h2>
     <p id="emptyMsg" class="text-muted" style="display:none;">
@@ -76,14 +255,13 @@
     <div class="row gy-3" id="favorites-row"></div>
   </main>
 
+  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+  <!-- Scripts -->
   <script>
     const API_BASE = '/api';
     const IMG_BASE = 'https://image.tmdb.org/t/p/w500';
-
-
-
 
     function updateNavbarAuthState() {
       const token = localStorage.getItem('token');
@@ -92,32 +270,23 @@
       const watchlistItem = document.getElementById('nav-watchlist');
       const favoritesItem = document.getElementById('nav-favorites');
       const loginItem = document.getElementById('nav-login');
-      const userItem = document.getElementById('nav-user');
+      const userSection = document.getElementById('nav-user-section');
       const userNameSpan = document.getElementById('nav-username');
-      const logoutItem = document.getElementById('nav-logout');
 
       const isLoggedIn = !!token;
 
-      if (watchlistItem) watchlistItem.style.display = isLoggedIn ? 'block' : 'none';
-      if (favoritesItem) favoritesItem.style.display = isLoggedIn ? 'block' : 'none';
-      if (loginItem) loginItem.style.display = isLoggedIn ? 'none' : 'block';
+      // Mostrar/esconder elementos baseado no login
+      if (watchlistItem) watchlistItem.classList.toggle('d-none', !isLoggedIn);
+      if (favoritesItem) favoritesItem.classList.toggle('d-none', !isLoggedIn);
+      if (loginItem) loginItem.classList.toggle('d-none', isLoggedIn);
+      if (userSection) userSection.classList.toggle('d-none', !isLoggedIn);
 
-      if (userItem) {
-        userItem.classList.toggle('d-none', !isLoggedIn);
-        if (isLoggedIn && userNameSpan) {
-          const rawName = username || 'utilizador';
-          const formattedName =
-            rawName.charAt(0).toUpperCase() + rawName.slice(1).toLowerCase();
-          userNameSpan.textContent = formattedName;
-        }
-      }
-
-      if (logoutItem) {
-        logoutItem.classList.toggle('d-none', !isLoggedIn);
+      // Atualizar nome do utilizador
+      if (isLoggedIn && userNameSpan && username) {
+        const formattedName = username.charAt(0).toUpperCase() + username.slice(1).toLowerCase();
+        userNameSpan.textContent = formattedName;
       }
     }
-
- 
 
     function setupLogout() {
       const btn = document.getElementById('logoutBtn');
@@ -130,61 +299,71 @@
       });
     }
 
-    function createMovieCard(movie) {
-  const col = document.createElement('div');
-  col.className = 'col-6 col-sm-4 col-md-3 col-lg-2';
+    function setupSearch() {
+      const searchForm = document.getElementById('searchForm');
+      if (!searchForm) return;
 
-  const poster = movie.poster_path
-    ? IMG_BASE + movie.poster_path
-    : '/public/img/placeholder.jpg';
-
-  col.innerHTML = `
-    <div class="card bg-dark text-white movie-card h-100">
-      <img src="${poster}" class="card-img-top" alt="${movie.title}">
-      <div class="card-body p-2">
-        <h6 class="card-title mb-1 text-truncate" title="${movie.title}">${movie.title}</h6>
-        <small class="text-warning">★ ${
-          movie.vote_average?.toFixed ? movie.vote_average.toFixed(1) : movie.vote_average || 'N/A'
-        }</small>
-      </div>
-      <div class="card-footer border-0 p-2">
-        <div class="d-grid gap-1">
-          <button class="btn btn-sm btn-outline-light" onclick="openDetails(${movie.id})">
-            Detalhes
-          </button>
-          <button class="btn btn-sm btn-danger" onclick="removeFromFavorites(${movie.id})">
-            Remover
-          </button>
-        </div>
-      </div>
-    </div>
-  `;
-  return col;
-}
-
-async function removeFromFavorites(id) {
-  const token = localStorage.getItem('token');
-  if (!token) return;
-
-  try {
-    const res = await fetch(`${API_BASE}/favorites/${id}`, {
-      method: 'DELETE',
-      headers: { 'Authorization': 'Bearer ' + token }
-    });
-    if (!res.ok) {
-      console.error('Erro ao remover dos favoritos');
-      return;
+      searchForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const query = document.getElementById('searchInput').value.trim();
+        if (query) {
+          window.location.href = `/?search=${encodeURIComponent(query)}`;
+        }
+      });
     }
-    alert('Filme removido dos favoritos.');
-    loadFavorites(); // recarrega a lista
-  } catch (err) {
-    console.error('Erro ao remover dos favoritos', err);
-  }
-}
 
+    function createMovieCard(movie) {
+      const col = document.createElement('div');
+      col.className = 'col-6 col-sm-4 col-md-3 col-lg-2';
 
+      const poster = movie.poster_path
+        ? IMG_BASE + movie.poster_path
+        : '/public/img/placeholder.jpg';
 
-    
+      col.innerHTML = `
+        <div class="card bg-dark text-white movie-card h-100">
+          <img src="${poster}" class="card-img-top" alt="${movie.title}">
+          <div class="card-body p-2">
+            <h6 class="card-title mb-1 text-truncate" title="${movie.title}">${movie.title}</h6>
+            <small class="text-warning">★ ${
+              movie.vote_average?.toFixed ? movie.vote_average.toFixed(1) : movie.vote_average || 'N/A'
+            }</small>
+          </div>
+          <div class="card-footer border-0 p-2">
+            <div class="d-grid gap-1">
+              <button class="btn btn-sm btn-outline-light" onclick="openDetails(${movie.id})">
+                Detalhes
+              </button>
+              <button class="btn btn-sm btn-danger" onclick="removeFromFavorites(${movie.id})">
+                Remover
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      return col;
+    }
+
+    async function removeFromFavorites(id) {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      try {
+        const res = await fetch(`${API_BASE}/favorites/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (!res.ok) {
+          console.error('Erro ao remover dos favoritos');
+          return;
+        }
+        alert('Filme removido dos favoritos.');
+        loadFavorites(); // recarrega a lista
+      } catch (err) {
+        console.error('Erro ao remover dos favoritos', err);
+      }
+    }
+
     async function loadFavorites() {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -221,10 +400,9 @@ async function removeFromFavorites(id) {
     document.addEventListener('DOMContentLoaded', () => {
       updateNavbarAuthState();
       setupLogout();
+      setupSearch();
       loadFavorites();
     });
-
-
   </script>
 </body>
 </html>
