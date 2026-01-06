@@ -11,150 +11,167 @@
     rel="stylesheet"
   >
 
-    <style>
-      
-     /* Navbar melhorada */
-  .navbar {
-    background: linear-gradient(135deg, #1a1f35 0%, #0d1117 100%) !important;
-    backdrop-filter: blur(10px);
-    border-bottom: 2px solid rgba(229, 9, 20, 0.3);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  }
+     <style>
+    body {
+      background-color: #050814;
+      color: #fff;
+      padding-top: 80px;
+    }
 
-  .brand-text {
-    font-size: 1.6rem;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    color: #fff;
-  }
+    /* Navbar melhorada */
+    .navbar {
+      background: linear-gradient(135deg, #1a1f35 0%, #0d1117 100%) !important;
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid rgba(229, 9, 20, 0.3);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
 
-  .brand-highlight {
-    color: #e50914;
-  }
+    .brand-text {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #fff;
+    }
 
-  /* Barra de pesquisa */
-  .search-wrapper {
-    max-width: 450px;
-    width: 100%;
-  }
+    .brand-highlight {
+      color: #e50914;
+    }
 
-  .search-wrapper .form-control {
-    background-color: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #fff;
-    padding: 0.5rem 1rem;
-    border-radius: 20px 0 0 20px;
-  }
-
-  .search-wrapper .form-control:focus {
-    background-color: rgba(255, 255, 255, 0.15);
-    border-color: #e50914;
-    color: #fff;
-    box-shadow: 0 0 0 0.2rem rgba(229, 9, 20, 0.25);
-  }
-
-  .search-wrapper .form-control::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-  }
-
-  .search-wrapper .btn {
-    border-radius: 0 20px 20px 0;
-    border-left: none;
-    padding: 0.5rem 1.2rem;
-  }
-
-  .search-wrapper .btn:hover {
-    background-color: #e50914;
-    border-color: #e50914;
-  }
-
-  /* Menu items */
-  .navbar-nav .nav-link {
-    font-weight: 500;
-    transition: all 0.3s ease;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    color: rgba(255, 255, 255, 0.85);
-  }
-
-  .navbar-nav .nav-link:hover {
-    background-color: rgba(229, 9, 20, 0.15);
-    color: #e50914;
-  }
-
-  .navbar-nav .nav-link i {
-    margin-right: 5px;
-  }
-
-  /* Bem-vindo section */
-  .user-welcome {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.4rem 0;
-  }
-
-  .user-welcome .username {
-    color: #fff;
-    font-weight: 600;
-    margin: 0;
-  }
-
-  /* Botão sair */
-  .btn-logout {
-    background-color: #e50914;
-    border: none;
-    color: #fff;
-    padding: 0.4rem 1rem;
-    border-radius: 6px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-  }
-
-  .btn-logout:hover {
-    background-color: #b8070f;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(229, 9, 20, 0.4);
-    color: #fff;
-  }
-
-  /* Botão entrar */
-  .btn-login {
-    background-color: transparent;
-    border: 2px solid #e50914;
-    color: #e50914;
-    padding: 0.4rem 1.5rem;
-    border-radius: 6px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    display: inline-block;
-  }
-
-  .btn-login:hover {
-    background-color: #e50914;
-    color: #fff;
-    transform: translateY(-2px);
-  }
-
-  /* Responsividade */
-  @media (max-width: 991px) {
+    /* Barra de pesquisa */
     .search-wrapper {
-      max-width: 100%;
-      margin: 1rem 0;
+      max-width: 450px;
+      width: 100%;
+    }
+
+    .search-wrapper .form-control {
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 20px 0 0 20px;
+    }
+
+    .search-wrapper .form-control:focus {
+      background-color: rgba(255, 255, 255, 0.15);
+      border-color: #e50914;
+      color: #fff;
+      box-shadow: 0 0 0 0.2rem rgba(229, 9, 20, 0.25);
+    }
+
+    .search-wrapper .form-control::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .search-wrapper .btn {
+      border-radius: 0 20px 20px 0;
+      border-left: none;
+      padding: 0.5rem 1.2rem;
+    }
+
+    .search-wrapper .btn:hover {
+      background-color: #e50914;
+      border-color: #e50914;
+    }
+
+    /* Menu items */
+    .navbar-nav .nav-link {
+      font-weight: 500;
+      transition: all 0.3s ease;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .navbar-nav .nav-link:hover {
+      background-color: rgba(229, 9, 20, 0.15);
+      color: #e50914;
+    }
+
+    .navbar-nav .nav-link i {
+      margin-right: 5px;
+    }
+
+    /* Bem-vindo section */
+    .user-welcome {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.4rem 0;
+    }
+
+    .user-welcome .username {
+      color: #fff;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    /* Botão sair */
+    .btn-logout {
+      background-color: #e50914;
+      border: none;
+      color: #fff;
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .btn-logout:hover {
+      background-color: #b8070f;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(229, 9, 20, 0.4);
+      color: #fff;
+    }
+
+    /* Botão entrar */
+    .btn-login {
+      background-color: transparent;
+      border: 2px solid #e50914;
+      color: #e50914;
+      padding: 0.4rem 1.5rem;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-login:hover {
+      background-color: #e50914;
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    /* Responsividade */
+    @media (max-width: 991px) {
+      .search-wrapper {
+        max-width: 100%;
+        margin: 1rem 0;
+      }
+      
+      .user-welcome {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 0.5rem;
+      }
+
+      .navbar-nav {
+        margin-top: 1rem;
+      }
+    }
+
+    /* Cards e outros estilos originais */
+    .movie-card img {
+      height: 260px;
+      object-fit: cover;
     }
     
-    .user-welcome {
-      flex-direction: column;
-      align-items: flex-start !important;
-      gap: 0.5rem;
+    .section-title {
+      font-size: 1.4rem;
+      font-weight: 600;
     }
-
-    .navbar-nav {
-      margin-top: 1rem;
-    }
-  }
   </style>
+    
 </head>
 <body>
 
