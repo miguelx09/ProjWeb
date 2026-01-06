@@ -1,10 +1,11 @@
 import express from 'express';
 import db from '../db.js';
 import { requireAuth } from '../middleware/auth.js';
+import { getMovieDetails } from '../services/tmdb.js'; // importa esta função
 
 const router = express.Router();
 
-// POST /api/watchlist
+// POST /api/watchlist  (mantém como está)
 router.post('/', requireAuth, async (req, res) => {
   const { movieId } = req.body;
   const userId = req.user.id_user;
@@ -28,7 +29,7 @@ router.post('/', requireAuth, async (req, res) => {
   }
 });
 
-// GET /api/watchlist  -> só ids TMDB
+// GET /api/watchlist  (só ids, mantém como está)
 router.get('/', requireAuth, async (req, res) => {
   const userId = req.user.id_user;
 
@@ -47,7 +48,7 @@ router.get('/', requireAuth, async (req, res) => {
   }
 });
 
-// GET /api/watchlist/full  -> por agora também só ids TMDB
+// GET /api/watchlist/full  -> filmes com detalhes TMDB
 router.get('/full', requireAuth, async (req, res) => {
   const userId = req.user.id_user;
 
@@ -60,7 +61,20 @@ router.get('/full', requireAuth, async (req, res) => {
       [userId]
     );
 
-    res.json(rows); // [{ tmdb_id: ... }, ...]
+    const ids = rows.map(r => r.tmdb_id);
+    const movies = [];
+
+    for (const id of ids) {
+      const movie = await new Promise((resolve, reject) => {
+        getMovieDetails(id, (err, data) => {
+          if (err) return reject(err);
+          resolve(data);
+        });
+      });
+      movies.push(movie);
+    }
+
+    res.json(movies);
   } catch (err) {
     console.error('ERRO /api/watchlist/full:', err);
     res.status(500).json({ message: 'Erro ao obter watchlist completa' });
