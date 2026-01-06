@@ -10,17 +10,159 @@
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
     rel="stylesheet"
   >
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
   <style>
     body {
       background-color: #050814;
       color: #fff;
-      padding-top: 70px; /* igual ao index/login */
+      padding-top: 80px;
     }
-    .navbar-brand span {
-      color: #e50914;
+
+    /* Navbar melhorada */
+    .navbar {
+      background: linear-gradient(135deg, #1a1f35 0%, #0d1117 100%) !important;
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid rgba(229, 9, 20, 0.3);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    .brand-text {
+      font-size: 1.6rem;
       font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #fff;
     }
+
+    .brand-highlight {
+      color: #e50914;
+    }
+
+    /* Barra de pesquisa */
+    .search-wrapper {
+      max-width: 450px;
+      width: 100%;
+    }
+
+    .search-wrapper .form-control {
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 20px 0 0 20px;
+    }
+
+    .search-wrapper .form-control:focus {
+      background-color: rgba(255, 255, 255, 0.15);
+      border-color: #e50914;
+      color: #fff;
+      box-shadow: 0 0 0 0.2rem rgba(229, 9, 20, 0.25);
+    }
+
+    .search-wrapper .form-control::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .search-wrapper .btn {
+      border-radius: 0 20px 20px 0;
+      border-left: none;
+      padding: 0.5rem 1.2rem;
+    }
+
+    .search-wrapper .btn:hover {
+      background-color: #e50914;
+      border-color: #e50914;
+    }
+
+    /* Menu items */
+    .navbar-nav .nav-link {
+      font-weight: 500;
+      transition: all 0.3s ease;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .navbar-nav .nav-link:hover {
+      background-color: rgba(229, 9, 20, 0.15);
+      color: #e50914;
+    }
+
+    .navbar-nav .nav-link i {
+      margin-right: 5px;
+    }
+
+    /* Bem-vindo section */
+    .user-welcome {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.4rem 0;
+    }
+
+    .user-welcome .username {
+      color: #fff;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    /* Botão sair */
+    .btn-logout {
+      background-color: #e50914;
+      border: none;
+      color: #fff;
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .btn-logout:hover {
+      background-color: #b8070f;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(229, 9, 20, 0.4);
+      color: #fff;
+    }
+
+    /* Botão entrar */
+    .btn-login {
+      background-color: transparent;
+      border: 2px solid #e50914;
+      color: #e50914;
+      padding: 0.4rem 1.5rem;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-login:hover {
+      background-color: #e50914;
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    /* Responsividade */
+    @media (max-width: 991px) {
+      .search-wrapper {
+        max-width: 100%;
+        margin: 1rem 0;
+      }
+      
+      .user-welcome {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 0.5rem;
+      }
+
+      .navbar-nav {
+        margin-top: 1rem;
+      }
+    }
+
+    /* Form box */
     .form-box {
       background-color: #111827;
       border-radius: 8px;
@@ -29,102 +171,112 @@
       margin: 0 auto;
       box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
+
     .form-control {
       background-color: #020617;
       border-color: #374151;
       color: #fff;
     }
+
     .form-control:focus {
       background-color: #020617;
       color: #fff;
       border-color: #e50914;
       box-shadow: 0 0 0 0.2rem rgba(229,9,20,0.3);
     }
+
     .btn-primary {
       background-color: #e50914;
       border-color: #e50914;
     }
+
     .btn-primary:hover {
       background-color: #b00710;
       border-color: #b00710;
     }
+
     a.link-light {
       color: #93c5fd;
       text-decoration: none;
     }
+
     a.link-light:hover {
       text-decoration: underline;
     }
-    .logout-icon {
-        color: #e50914;
-        font-size: 1.2rem;
-        line-height: 1;                 /* ajuda a centrar verticalmente */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding-top: 0;
-        padding-bottom: 0;
-        transition: transform 0.2s ease, color 0.2s ease;
-      }
-
-      .logout-icon:hover {
-        color: #ff4b5c;
-        transform: scale(1.2) rotate(-5deg);
-      }
-
-
   </style>
 </head>
 <body>
 
-  <!-- Navbar igual à do index/login -->
- <nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-opacity-75 fixed-top">
-  <div class="container-fluid px-4">
-    <a class="navbar-brand" href="/">
-      ProjWeb<span>Movies</span>
-    </a>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container-fluid px-4">
+      <!-- Logo/Brand -->
+      <a class="navbar-brand" href="/">
+        <span class="brand-text">ProjWeb<span class="brand-highlight">Movies</span></span>
+      </a>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+      <!-- Toggle button para mobile -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="/">Início</a>
-        </li>
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <!-- Barra de pesquisa -->
+        <form class="d-flex mx-auto my-2 my-lg-0 search-wrapper" id="searchForm">
+          <input 
+            class="form-control" 
+            type="search" 
+            placeholder="Pesquisar filmes..." 
+            aria-label="Pesquisar"
+            id="searchInput"
+          >
+          <button class="btn btn-outline-light" type="submit">
+            <i class="bi bi-search"></i>
+          </button>
+        </form>
 
-        <!-- Só visíveis quando estiver logado (via JS) -->
-        <li class="nav-item" id="nav-watchlist">
-          <a class="nav-link" href="/watchlist.html">Watchlist</a>
-        </li>
-        <li class="nav-item" id="nav-favorites">
-          <a class="nav-link" href="/favorites.html">Favoritos</a>
-        </li>
-
-        <!-- Link Entrar (esconde quando estiver logado) -->
-        <li class="nav-item" id="nav-login">
-          <a class="nav-link" href="/login.html">Entrar</a>
-        </li>
-
-        <!-- Texto Bem-vindo, nome (só aparece logado) -->
-        <li class="nav-item d-none" id="nav-user">
-          <span class="nav-link">
-            Bem‑vindo, <span id="nav-username"></span>
-          </span>
-        </li>
-
-        <!-- Botão sair (ícone porta vermelha, só aparece logado) -->
-        <li class="nav-item d-none" id="nav-logout">
-           <a href="#" class="nav-link logout-icon" id="logoutBtn" title="Sair">
-              🚪
+        <!-- Menu items -->
+        <ul class="navbar-nav ms-auto align-items-lg-center">
+          <li class="nav-item">
+            <a class="nav-link" href="/">
+              <i class="bi bi-house-door"></i> Início
             </a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
+          </li>
 
+          <!-- Links só para utilizadores autenticados -->
+          <li class="nav-item d-none" id="nav-watchlist">
+            <a class="nav-link" href="/watchlist.html">
+              <i class="bi bi-clock-history"></i> Watchlist
+            </a>
+          </li>
+          <li class="nav-item d-none" id="nav-favorites">
+            <a class="nav-link" href="/favorites.html">
+              <i class="bi bi-heart-fill"></i> Favoritos
+            </a>
+          </li>
+
+          <!-- Link Entrar (quando não está logado) -->
+          <li class="nav-item" id="nav-login">
+            <a class="btn-login" href="/login.html">
+              <i class="bi bi-person-circle"></i> Entrar
+            </a>
+          </li>
+
+          <!-- Bem-vindo + Botão Sair (quando está logado) -->
+          <li class="nav-item d-none" id="nav-user-section">
+            <div class="user-welcome">
+              <span class="username">
+                Olá, <strong id="nav-username">Utilizador</strong>
+              </span>
+              <button class="btn btn-logout" id="logoutBtn">
+                <i class="bi bi-box-arrow-right"></i> Sair
+              </button>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
   <!-- Conteúdo -->
   <main class="container">
@@ -135,7 +287,7 @@
           <p class="text-muted text-center mb-4">
             Cria a tua conta para guardares favoritos, watchlist e deixar reviews.
           </p>
-           <div id="registerAlert" class="alert d-none" role="alert"></div>          
+          <div id="registerAlert" class="alert d-none" role="alert"></div>          
 
           <form id="registerForm">
             <div class="mb-3">
@@ -169,14 +321,16 @@
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Script de registo (liga depois à tua API /auth/register) -->
+  <!-- Script de registo -->
   <script>
     const API_BASE = '/api';
 
     function showAlert(message, type = 'success') {
-    alertBox.textContent = message;
-    alertBox.className = 'alert alert-' + type; // ex: alert-success, alert-danger
-  }
+      const alertBox = document.getElementById('registerAlert');
+      alertBox.textContent = message;
+      alertBox.className = 'alert alert-' + type;
+      alertBox.classList.remove('d-none');
+    }
 
     document.getElementById('registerForm').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -186,7 +340,7 @@
       const password2 = document.getElementById('regPassword2').value.trim();
 
       if (password !== password2) {
-        alert('As passwords não coincidem.');
+        showAlert('As passwords não coincidem.', 'danger');
         return;
       }
 
@@ -198,73 +352,80 @@
         });
 
         if (!res.ok) {
-          alert('Erro ao criar conta (email já existe ou dados inválidos).');
+          showAlert('Erro ao criar conta (email já existe ou dados inválidos).', 'danger');
           return;
         }
 
-        // se quiseres, redireciona logo para login
-        window.location.href = '/login.html';
+        showAlert('Conta criada com sucesso! A redirecionar...', 'success');
+        setTimeout(() => {
+          window.location.href = '/login.html';
+        }, 1500);
       } catch (err) {
         console.error('Erro no registo', err);
-        alert('Erro ao registar. Tenta novamente.');
+        showAlert('Erro ao registar. Tenta novamente.', 'danger');
       }
     });
   </script>
 
-<script>
-  function updateNavbarAuthState() {
-    const token = localStorage.getItem('token');
-    const username = localStorage.getItem('username');
+  <!-- Script da navbar -->
+  <script>
+    function updateNavbarAuthState() {
+      const token = localStorage.getItem('token');
+      const username = localStorage.getItem('username');
 
-    const watchlistItem = document.getElementById('nav-watchlist');
-    const favoritesItem = document.getElementById('nav-favorites');
-    const loginItem = document.getElementById('nav-login');
-    const userItem = document.getElementById('nav-user');
-    const userNameSpan = document.getElementById('nav-username');
-    const logoutItem = document.getElementById('nav-logout');
+      const watchlistItem = document.getElementById('nav-watchlist');
+      const favoritesItem = document.getElementById('nav-favorites');
+      const loginItem = document.getElementById('nav-login');
+      const userSection = document.getElementById('nav-user-section');
+      const userNameSpan = document.getElementById('nav-username');
 
-    const isLoggedIn = !!token;
+      const isLoggedIn = !!token;
 
-    if (watchlistItem) watchlistItem.style.display = isLoggedIn ? 'block' : 'none';
-    if (favoritesItem) favoritesItem.style.display = isLoggedIn ? 'block' : 'none';
-    if (loginItem) loginItem.style.display = isLoggedIn ? 'none' : 'block';
+      // Mostrar/esconder elementos baseado no login
+      if (watchlistItem) watchlistItem.classList.toggle('d-none', !isLoggedIn);
+      if (favoritesItem) favoritesItem.classList.toggle('d-none', !isLoggedIn);
+      if (loginItem) loginItem.classList.toggle('d-none', isLoggedIn);
+      if (userSection) userSection.classList.toggle('d-none', !isLoggedIn);
 
-    if (userItem) {
-  userItem.classList.toggle('d-none', !isLoggedIn);
-  if (isLoggedIn && userNameSpan) {
-    const rawName = username || 'utilizador';
-
-    const formattedName =
-      rawName.charAt(0).toUpperCase() + rawName.slice(1).toLowerCase();
-
-    userNameSpan.textContent = formattedName;
-  }
-}
-
-
-    if (logoutItem) {
-      logoutItem.classList.toggle('d-none', !isLoggedIn);
+      // Atualizar nome do utilizador
+      if (isLoggedIn && userNameSpan && username) {
+        const formattedName = username.charAt(0).toUpperCase() + username.slice(1).toLowerCase();
+        userNameSpan.textContent = formattedName;
+      }
     }
-  }
 
-  function setupLogout() {
-    const btn = document.getElementById('logoutBtn');
-    if (!btn) return;
+    function setupLogout() {
+      const btn = document.getElementById('logoutBtn');
+      if (!btn) return;
 
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      localStorage.removeItem('token');
-      localStorage.removeItem('username');
-      window.location.href = '/';
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        window.location.href = '/';
+      });
+    }
+
+    function setupSearch() {
+      const searchForm = document.getElementById('searchForm');
+      if (!searchForm) return;
+
+      searchForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const query = document.getElementById('searchInput').value.trim();
+        if (query) {
+          window.location.href = `/?search=${encodeURIComponent(query)}`;
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateNavbarAuthState();
+      setupLogout();
+      setupSearch();
     });
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    updateNavbarAuthState();
-    setupLogout();
-  });
-</script>
-
+  
+  </script>
 
 
 
