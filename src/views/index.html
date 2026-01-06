@@ -11,128 +11,242 @@
     rel="stylesheet"
   >
 
-  <style>
+    <style>
     body {
       background-color: #050814;
       color: #fff;
-      padding-top: 70px
+      padding-top: 80px;
     }
-    .navbar-brand span {
-      color: #e50914;
+
+    /* Navbar melhorada */
+    .navbar {
+      background: linear-gradient(135deg, #1a1f35 0%, #0d1117 100%) !important;
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid rgba(229, 9, 20, 0.3);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    .brand-text {
+      font-size: 1.6rem;
       font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #fff;
     }
-    .hero-section {
-      position: relative;
-      min-height: 60vh;
-      background-size: cover;
-      background-position: center;
-      background-image: url("https://images.pexels.com/photos/799157/pexels-photo-799157.jpeg");
+
+    .brand-highlight {
+      color: #e50914;
     }
-    .hero-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.3));
+
+    /* Barra de pesquisa */
+    .search-wrapper {
+      max-width: 450px;
+      width: 100%;
     }
-    .hero-content {
-      position: relative;
-      z-index: 1;
-      padding-top: 8rem;
-      padding-bottom: 6rem;
+
+    .search-wrapper .form-control {
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 20px 0 0 20px;
     }
+
+    .search-wrapper .form-control:focus {
+      background-color: rgba(255, 255, 255, 0.15);
+      border-color: #e50914;
+      color: #fff;
+      box-shadow: 0 0 0 0.2rem rgba(229, 9, 20, 0.25);
+    }
+
+    .search-wrapper .form-control::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .search-wrapper .btn {
+      border-radius: 0 20px 20px 0;
+      border-left: none;
+      padding: 0.5rem 1.2rem;
+    }
+
+    .search-wrapper .btn:hover {
+      background-color: #e50914;
+      border-color: #e50914;
+    }
+
+    /* Menu items */
+    .navbar-nav .nav-link {
+      font-weight: 500;
+      transition: all 0.3s ease;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .navbar-nav .nav-link:hover {
+      background-color: rgba(229, 9, 20, 0.15);
+      color: #e50914;
+    }
+
+    .navbar-nav .nav-link i {
+      margin-right: 5px;
+    }
+
+    /* Bem-vindo section */
+    .user-welcome {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.4rem 0;
+    }
+
+    .user-welcome .username {
+      color: #fff;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    /* Botão sair */
+    .btn-logout {
+      background-color: #e50914;
+      border: none;
+      color: #fff;
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .btn-logout:hover {
+      background-color: #b8070f;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(229, 9, 20, 0.4);
+      color: #fff;
+    }
+
+    /* Botão entrar */
+    .btn-login {
+      background-color: transparent;
+      border: 2px solid #e50914;
+      color: #e50914;
+      padding: 0.4rem 1.5rem;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .btn-login:hover {
+      background-color: #e50914;
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    /* Responsividade */
+    @media (max-width: 991px) {
+      .search-wrapper {
+        max-width: 100%;
+        margin: 1rem 0;
+      }
+      
+      .user-welcome {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 0.5rem;
+      }
+
+      .navbar-nav {
+        margin-top: 1rem;
+      }
+    }
+
+    /* Cards e outros estilos originais */
     .movie-card img {
       height: 260px;
       object-fit: cover;
     }
+    
     .section-title {
       font-size: 1.4rem;
       font-weight: 600;
     }
-   .logout-icon {
-    color: #e50914;
-    font-size: 1.2rem;
-    line-height: 1;                 /* ajuda a centrar verticalmente */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-top: 0;
-    padding-bottom: 0;
-    transition: transform 0.2s ease, color 0.2s ease;
-  }
-
-  .logout-icon:hover {
-    color: #ff4b5c;
-    transform: scale(1.2) rotate(-5deg);
-  }
-
-
   </style>
 </head>
 <body>
 
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-opacity-75 fixed-top">
-  <div class="container-fluid px-4">
-    <a class="navbar-brand" href="/">
-      ProjWeb<span>Movies</span>
-    </a>
+  <!-- Navbar Melhorada -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container-fluid px-4">
+      <!-- Logo/Brand -->
+      <a class="navbar-brand" href="/">
+        <span class="brand-text">ProjWeb<span class="brand-highlight">Movies</span></span>
+      </a>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+      <!-- Toggle button para mobile -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-     <form class="d-flex ms-3" id="searchForm" role="search">
-    <input class="form-control form-control-sm me-2"
-           type="search"
-           placeholder="Pesquisar filmes..."
-           aria-label="Pesquisar"
-           id="searchInput">
-    <button class="btn btn-sm btn-outline-light" type="submit">Pesquisar</button>
-  </form>
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <!-- Barra de pesquisa -->
+        <form class="d-flex mx-auto my-2 my-lg-0 search-wrapper" id="searchForm">
+          <input 
+            class="form-control" 
+            type="search" 
+            placeholder="Pesquisar filmes..." 
+            aria-label="Pesquisar"
+            id="searchInput"
+          >
+          <button class="btn btn-outline-light" type="submit">
+            <i class="bi bi-search"></i>
+          </button>
+        </form>
 
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="/">Início</a>
-        </li>
+        <!-- Menu items -->
+        <ul class="navbar-nav ms-auto align-items-lg-center">
+          <li class="nav-item">
+            <a class="nav-link" href="/">
+              <i class="bi bi-house-door"></i> Início
+            </a>
+          </li>
 
-        <!-- Só visíveis quando estiver logado (via JS) -->
-        <li class="nav-item" id="nav-watchlist">
-          <a class="nav-link" href="/watchlist.html">Watchlist</a>
-        </li>
-        <li class="nav-item" id="nav-favorites">
-          <a class="nav-link" href="/favorites.html">Favoritos</a>
-        </li>
+          <!-- Links só para utilizadores autenticados -->
+          <li class="nav-item d-none" id="nav-watchlist">
+            <a class="nav-link" href="/watchlist.html">
+              <i class="bi bi-clock-history"></i> Watchlist
+            </a>
+          </li>
+          <li class="nav-item d-none" id="nav-favorites">
+            <a class="nav-link" href="/favorites.html">
+              <i class="bi bi-heart-fill"></i> Favoritos
+            </a>
+          </li>
 
-        <!-- Link Entrar (esconde quando estiver logado) -->
-        <li class="nav-item" id="nav-login">
-          <a class="nav-link" href="/login.html">Entrar</a>
-        </li>
+          <!-- Link Entrar (quando não está logado) -->
+          <li class="nav-item" id="nav-login">
+            <a class="btn-login" href="/login.html">
+              <i class="bi bi-person-circle"></i> Entrar
+            </a>
+          </li>
 
-        <!-- Texto Bem-vindo, nome (só aparece logado) -->
-        <li class="nav-item d-none" id="nav-user">
-          <span class="nav-link">
-            Bem‑vindo, <span id="nav-username"></span>
-          </span>
-        </li>
-
-        <!-- Botão sair (ícone porta vermelha, só aparece logado) -->
-        <li class="nav-item d-none" id="nav-logout">
-           <a href="#" class="nav-link logout-icon" id="logoutBtn" title="Sair">
-            🚪
-          </a>
-        </li>
-      </ul>
+          <!-- Bem-vindo + Botão Sair (quando está logado) -->
+          <li class="nav-item d-none" id="nav-user-section">
+            <div class="user-welcome">
+              <span class="username">
+                Olá, <strong id="nav-username">Utilizador</strong>
+              </span>
+              <button class="btn btn-logout" id="logoutBtn">
+                <i class="bi bi-box-arrow-right"></i> Sair
+              </button>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
 
-
-
-
-
+  <!-- Main Content -->
   <main class="container-fluid px-4 py-4">
     
-
     <!-- Populares -->
     <section class="mb-4">
       <div class="d-flex justify-content-between align-items-center mb-2">
@@ -153,13 +267,12 @@
       </div>
     </section>
 
-      <section class="mb-4" id="search-section" style="display:none;">
-    <div class="d-flex justify-content-between align-items-center mb-2">
-      <h2 class="section-title">Resultados da pesquisa</h2>
-    </div>
-    <div class="row gy-3" id="search-row"></div>
-  </section>
-
+    <section class="mb-4" id="search-section" style="display:none;">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h2 class="section-title">Resultados da pesquisa</h2>
+      </div>
+      <div class="row gy-3" id="search-row"></div>
+    </section>
 
     <!-- Watchlist (se utilizador autenticado) -->
     <section class="mb-4">
@@ -172,30 +285,32 @@
     </section>
 
   </main>
+
+  <!-- Modal -->
   <div class="modal fade" id="movieModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content bg-dark text-white">
-      <div class="modal-header border-0">
-        <h5 class="modal-title" id="movieModalTitle"></h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <div class="row gy-3">
-          <div class="col-md-4">
-            <img id="movieModalPoster" class="img-fluid rounded" alt="">
-          </div>
-          <div class="col-md-8">
-            <p id="movieModalOverview"></p>
-            <p><strong>Rating:</strong> <span id="movieModalRating"></span></p>
-            <p><strong>Data lançamento:</strong> <span id="movieModalDate"></span></p>
-            <button class="btn btn-danger me-2" id="modalFavBtn">Adicionar aos favoritos</button>
-            <button class="btn btn-outline-light" id="modalWatchBtn">Adicionar à watchlist</button>
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content bg-dark text-white">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="movieModalTitle"></h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row gy-3">
+            <div class="col-md-4">
+              <img id="movieModalPoster" class="img-fluid rounded" alt="">
+            </div>
+            <div class="col-md-8">
+              <p id="movieModalOverview"></p>
+              <p><strong>Rating:</strong> <span id="movieModalRating"></span></p>
+              <p><strong>Data lançamento:</strong> <span id="movieModalDate"></span></p>
+              <button class="btn btn-danger me-2" id="modalFavBtn">Adicionar aos favoritos</button>
+              <button class="btn btn-outline-light" id="modalWatchBtn">Adicionar à watchlist</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
