@@ -9,3 +9,8 @@
 aparecer 10 filmes nos melhores avaliadoshaver
 
 devera existir um botao nos favoritos e na watchlist para serem removidos da db
+
+ao pesquisar filmes nao permitir filmes sem imagens
+
+
+barra de pesquisa no facvoritos e watchlist

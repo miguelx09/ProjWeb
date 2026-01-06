@@ -98,4 +98,24 @@ router.get('/full', requireAuth, async (req, res) => {
   }
 });
 
+// DELETE /api/watchlist/:movieId
+router.delete('/:movieId', requireAuth, async (req, res) => {
+  const { movieId } = req.params; // tmdb_id
+  const userId = req.user.id_user;
+
+  try {
+    await db.query(
+      `DELETE FROM watchlist 
+       WHERE user_id = ? 
+       AND movie_id = (SELECT id_movie FROM movies WHERE tmdb_id = ? LIMIT 1)`,
+      [userId, movieId]
+    );
+    res.json({ message: 'Removido da watchlist' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Erro ao remover da watchlist' });
+  }
+});
+
+
 export default router;
