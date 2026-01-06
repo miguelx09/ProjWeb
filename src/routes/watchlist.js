@@ -28,7 +28,7 @@ router.post('/', requireAuth, async (req, res) => {
   }
 });
 
-// GET /api/watchlist
+// GET /api/watchlist  -> só ids TMDB
 router.get('/', requireAuth, async (req, res) => {
   const userId = req.user.id_user;
 
@@ -47,6 +47,7 @@ router.get('/', requireAuth, async (req, res) => {
   }
 });
 
+// GET /api/watchlist/full  -> por agora também só ids TMDB
 router.get('/full', requireAuth, async (req, res) => {
   const userId = req.user.id_user;
 
@@ -59,21 +60,11 @@ router.get('/full', requireAuth, async (req, res) => {
       [userId]
     );
 
-    const ids = rows.map(r => r.tmdb_id);
-
-    // buscar detalhes a partir do teu serviço TMDB
-    const movies = [];
-    for (const id of ids) {
-      const movie = await tmdb.getMovieDetails(id); // adapta ao teu serviço
-      movies.push(movie);
-    }
-
-    res.json(movies);
+    res.json(rows); // [{ tmdb_id: ... }, ...]
   } catch (err) {
-    console.error(err);
+    console.error('ERRO /api/watchlist/full:', err);
     res.status(500).json({ message: 'Erro ao obter watchlist completa' });
   }
 });
-
 
 export default router;

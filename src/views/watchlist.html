@@ -15,8 +15,43 @@
 </head>
 <body>
 
-  <!-- mesma navbar do index -->
-  <!-- ... cola aqui a navbar que já tens com Bem-vindo / porta ... -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-opacity-75 fixed-top">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand" href="/">
+      ProjWeb<span>Movies</span>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Início</a>
+        </li>
+        <li class="nav-item" id="nav-watchlist">
+          <a class="nav-link active" href="/watchlist.html">Watchlist</a>
+        </li>
+        <li class="nav-item" id="nav-favorites">
+          <a class="nav-link" href="/favorites.html">Favoritos</a>
+        </li>
+        <li class="nav-item" id="nav-login">
+          <a class="nav-link" href="/login.html">Entrar</a>
+        </li>
+        <li class="nav-item d-none" id="nav-user">
+          <span class="nav-link">
+            Bem‑vindo, <span id="nav-username"></span>
+          </span>
+        </li>
+        <li class="nav-item d-none" id="nav-logout">
+          <a href="#" class="nav-link logout-icon" id="logoutBtn" title="Sair">🚪</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
 
   <main class="container py-4">
     <h2 class="mb-3">A tua watchlist</h2>
@@ -109,6 +144,57 @@
     document.addEventListener('DOMContentLoaded', () => {
       loadWatchlist();
     });
+
+    async function loadWatchlist() {
+  const token = localStorage.getItem('token');
+  const emptyMsg = document.getElementById('emptyMsg');
+
+  if (!token) {
+    emptyMsg.textContent = 'Precisas de iniciar sessão para ver a tua watchlist.';
+    emptyMsg.style.display = 'block';
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/watchlist/full', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    if (!res.ok) {
+      console.error('Erro ao carregar watchlist');
+      return;
+    }
+
+    const rows = await res.json();      // [{ tmdb_id: ... }, ...]
+    const row = document.getElementById('watchlist-row');
+    row.innerHTML = '';
+
+    if (!rows.length) {
+      emptyMsg.textContent = 'Ainda não tens filmes na watchlist.';
+      emptyMsg.style.display = 'block';
+      return;
+    }
+
+    emptyMsg.style.display = 'none';
+
+    // por enquanto mostra só o tmdb_id (depois podemos puxar detalhes do TMDB)
+    rows.forEach(r => {
+      const div = document.createElement('div');
+      div.className = 'col-12 text-muted';
+      div.textContent = 'tmdb_id: ' + r.tmdb_id;
+      row.appendChild(div);
+    });
+  } catch (err) {
+    console.error('Erro ao carregar watchlist', err);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  updateNavbarAuthState();
+  setupLogout();
+  loadWatchlist();
+});
+
+
   </script>
 </body>
 </html>
