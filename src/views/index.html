@@ -290,30 +290,56 @@
   </main>
 
   <!-- Modal -->
-  <div class="modal fade" id="movieModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-      <div class="modal-content bg-dark text-white">
-        <div class="modal-header border-0">
-          <h5 class="modal-title" id="movieModalTitle"></h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <div class="row gy-3">
-            <div class="col-md-4">
-              <img id="movieModalPoster" class="img-fluid rounded" alt="">
-            </div>
-            <div class="col-md-8">
-              <p id="movieModalOverview"></p>
-              <p><strong>Rating:</strong> <span id="movieModalRating"></span></p>
-              <p><strong>Data lançamento:</strong> <span id="movieModalDate"></span></p>
-              <button class="btn btn-danger me-2" id="modalFavBtn">Adicionar aos favoritos</button>
-              <button class="btn btn-outline-light" id="modalWatchBtn">Adicionar à watchlist</button>
-            </div>
+ <div class="modal fade" id="movieModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header border-0">
+        <h5 class="modal-title" id="movieModalTitle"></h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row gy-3">
+          <div class="col-md-4">
+            <img id="movieModalPoster" class="img-fluid rounded" alt="">
           </div>
+          <div class="col-md-8">
+            <p id="movieModalOverview"></p>
+            <p><strong>Rating:</strong> <span id="movieModalRating"></span></p>
+            <p><strong>Data lançamento:</strong> <span id="movieModalDate"></span></p>
+            <button class="btn btn-danger me-2" id="modalFavBtn">Adicionar aos favoritos</button>
+            <button class="btn btn-outline-light" id="modalWatchBtn">Adicionar à watchlist</button>
+          </div>
+        </div>
+
+        <hr class="my-4">
+
+        <!-- Secção de Reviews -->
+        <div class="reviews-section">
+          <h5 class="mb-3">Reviews</h5>
+          
+          <!-- Formulário para adicionar review (só aparece se logado) -->
+          <div id="addReviewForm" class="mb-4 d-none">
+            <h6>Deixa a tua review</h6>
+            <form id="reviewForm">
+              <div class="mb-3">
+                <label for="reviewRating" class="form-label">Rating (1-10)</label>
+                <input type="number" class="form-control" id="reviewRating" min="1" max="10" required>
+              </div>
+              <div class="mb-3">
+                <label for="reviewComment" class="form-label">Comentário (opcional)</label>
+                <textarea class="form-control" id="reviewComment" rows="3"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Enviar Review</button>
+            </form>
+          </div>
+
+          <!-- Lista de reviews -->
+          <div id="reviewsList"></div>
         </div>
       </div>
     </div>
   </div>
+</div>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -620,6 +646,145 @@ async function addToWatchlist(id) {
     updateNavbarAuthState();
     setupLogout();
   });
+
+let currentMovieId = null;
+
+async function openDetails(id) {
+  currentMovieId = id;
+  
+  try {
+    const res = await fetch(`/api/tmdb/movie/${id}`);
+    if (!res.ok) return;
+    const m = await res.json();
+
+    document.getElementById('movieModalTitle').textContent = m.title;
+    document.getElementById('movieModalPoster').src =
+      m.poster_path ? IMG_BASE + m.poster_path : '/public/img/placeholder.jpg';
+    document.getElementById('movieModalOverview').textContent = m.overview || '';
+    document.getElementById('movieModalRating').textContent = m.vote_average ?? 'N/A';
+    document.getElementById('movieModalDate').textContent = m.release_date || '-';
+
+    document.getElementById('modalFavBtn').onclick = () => addToFavorites(m.id);
+    document.getElementById('modalWatchBtn').onclick = () => addToWatchlist(m.id);
+
+    // Mostrar formulário de review se estiver logado
+    const token = localStorage.getItem('token');
+    const reviewFormDiv = document.getElementById('addReviewForm');
+    if (token) {
+      reviewFormDiv.classList.remove('d-none');
+    } else {
+      reviewFormDiv.classList.add('d-none');
+    }
+
+    // Carregar reviews
+    loadReviews(id);
+
+    movieModal.show();
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+async function loadReviews(movieId) {
+  try {
+    const res = await fetch(`/api/reviews/movie/${movieId}`);
+    if (!res.ok) return;
+    
+    const reviews = await res.json();
+    const reviewsList = document.getElementById('reviewsList');
+    reviewsList.innerHTML = '';
+
+    if (reviews.length === 0) {
+      reviewsList.innerHTML = '<p class="text-muted">Ainda não há reviews para este filme.</p>';
+      return;
+    }
+
+    reviews.forEach(review => {
+      const reviewCard = document.createElement('div');
+      reviewCard.className = 'card bg-secondary mb-3';
+      reviewCard.innerHTML = `
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <h6 class="card-title">${review.username}</h6>
+              <p class="text-warning mb-2">★ ${review.rating}/10</p>
+            </div>
+            <small class="text-muted">${new Date(review.review_date).toLocaleDateString('pt-PT')}</small>
+          </div>
+          <p class="card-text">${review.comment || '<em>Sem comentário</em>'}</p>
+          <div class="d-flex gap-2">
+            <button class="btn btn-sm btn-outline-light" onclick="voteReview(${review.id_review}, true)">
+              👍 Útil (${review.useful_votes || 0})
+            </button>
+          </div>
+        </div>
+      `;
+      reviewsList.appendChild(reviewCard);
+    });
+  } catch (err) {
+    console.error('Erro ao carregar reviews', err);
+  }
+}
+
+// Enviar review
+document.getElementById('reviewForm')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const token = localStorage.getItem('token');
+  if (!token) return;
+
+  const rating = document.getElementById('reviewRating').value;
+  const comment = document.getElementById('reviewComment').value;
+
+  try {
+    const res = await fetch('/api/reviews', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify({ 
+        movieId: currentMovieId, 
+        rating: parseInt(rating), 
+        comment 
+      })
+    });
+
+    if (!res.ok) {
+      alert('Erro ao enviar review');
+      return;
+    }
+
+    alert('Review enviado com sucesso!');
+    document.getElementById('reviewForm').reset();
+    loadReviews(currentMovieId);
+  } catch (err) {
+    console.error('Erro ao enviar review', err);
+  }
+});
+
+// Votar em review
+async function voteReview(reviewId, helpful) {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert('Precisas de estar logado para votar');
+    return;
+  }
+
+  try {
+    await fetch(`/api/reviews/${reviewId}/vote`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify({ helpful })
+    });
+
+    loadReviews(currentMovieId);
+  } catch (err) {
+    console.error('Erro ao votar', err);
+  }
+}
 
 </script>
 
