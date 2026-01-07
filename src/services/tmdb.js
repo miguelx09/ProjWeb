@@ -69,4 +69,18 @@ export async function getMoviesByGenre(genreId, callback) {
   }
 }
 
+// Créditos (elenco e equipa)
+export async function getMovieCredits(tmdbId, callback) {
+  try {
+    const res = await fetch(
+      `${BASE_URL}/movie/${tmdbId}/credits?api_key=${API_KEY}&language=pt-PT`
+    );
+    const data = await res.json();
+    callback(null, data);
+  } catch (err) {
+    callback(err);
+  }
+}
+
+
 

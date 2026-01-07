@@ -5,7 +5,8 @@ import {
   getPopularMovies,
   getTopRatedMovies,
   getUpcomingMovies,
-  getMoviesByGenre
+  getMoviesByGenre,
+  getMovieCredits
 } from '../services/tmdb.js';
 
 import dotenv from 'dotenv';
@@ -133,6 +134,18 @@ router.get('/tmdb/genre/:genreId', (req, res) => {
   });
 });
 
+// GET /api/tmdb/movie/:id/credits
+router.get('/tmdb/movie/:id/credits', (req, res) => {
+  const { id } = req.params;
+
+  getMovieCredits(id, (err, result) => {
+    if (err) {
+      console.error('TMDB credits error:', err);
+      return res.status(500).json({ message: 'Erro ao obter créditos' });
+    }
+    res.json(result);
+  });
+});
 
 
 
