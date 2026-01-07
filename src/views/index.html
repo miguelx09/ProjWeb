@@ -216,6 +216,16 @@
     font-size: 2rem;
   }
 }
+  .cta-banner {
+    background: linear-gradient(135deg, #1a1f35 0%, #2a1f35 100%);
+    border: 2px solid rgba(229, 9, 20, 0.3);
+    box-shadow: 0 8px 24px rgba(229, 9, 20, 0.2);
+  }
+
+  .cta-banner h3 {
+    font-size: 2rem;
+  }
+
 
   </style>
     
@@ -319,6 +329,28 @@
   </div>
 </section>
 
+<!-- CTA Banner (só aparece para não logados) -->
+  <section class="cta-banner p-5 rounded text-center mb-4 d-none" id="cta-section">
+    <div class="container">
+      <h3 class="fw-bold mb-3">
+        <i class="bi bi-star-fill text-warning"></i> 
+        Cria a tua conta grátis!
+      </h3>
+      <p class="mb-4 lead">
+        Guarda os teus filmes favoritos, cria listas personalizadas e partilha reviews com a comunidade.
+      </p>
+      <div class="d-flex gap-3 justify-content-center">
+        <a href="/register.html" class="btn btn-danger btn-lg px-5">
+          <i class="bi bi-person-plus"></i> Registar Agora
+        </a>
+        <a href="/login.html" class="btn btn-outline-light btn-lg px-5">
+          Já tenho conta
+        </a>
+      </div>
+    </div>
+  </section>
+
+
 <!-- Main Content -->
 <main class="container-fluid px-4 py-4">
 
@@ -354,14 +386,18 @@
     </section>
 
     <!-- Watchlist (se utilizador autenticado) -->
+    <!-- Em Breve nos Cinemas -->
     <section class="mb-4">
       <div class="d-flex justify-content-between align-items-center mb-2">
-        <h2 class="section-title">A ver mais tarde</h2>
+        <h2 class="section-title">
+          <i class="bi bi-calendar-event text-danger"></i> Em Breve nos Cinemas
+        </h2>
       </div>
-      <div class="row flex-nowrap overflow-auto gy-3" id="watchlist-row">
+      <div class="row flex-nowrap overflow-auto gy-3" id="upcoming-row">
         <!-- Cards preenchidos por JS -->
       </div>
     </section>
+
 
   </main>
 
@@ -620,6 +656,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // carregar secções iniciais
   loadSection('/tmdb/popular', 'popular-row');
   loadSection('/tmdb/top-rated', 'top-rated-row');
+  loadSection('/tmdb/upcoming', 'upcoming-row');
   // se mais tarde quiseres preencher a watchlist:
   // loadSection('/watchlist', 'watchlist-row');
 });
@@ -747,6 +784,13 @@ async function loadHeroMovie() {
     updateNavbarAuthState();
     setupLogout();
     loadHeroMovie();
+
+     const token = localStorage.getItem('token');
+  const ctaSection = document.getElementById('cta-section');
+  if (!token && ctaSection) {
+    ctaSection.classList.remove('d-none');
+  }
+  
   });
 
 let currentMovieId = null;

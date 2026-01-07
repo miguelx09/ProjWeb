@@ -104,4 +104,19 @@ router.post('/tmdb/import/:id', (req, res) => {
   });
 });
 
+// GET /tmdb/upcoming
+router.get('/tmdb/upcoming', async (req, res) => {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/movie/upcoming?api_key=${API_KEY}&language=pt-PT&page=1`
+    );
+    const data = await response.json();
+    res.json(data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Erro ao obter filmes em breve' });
+  }
+});
+
+
 export default router;
