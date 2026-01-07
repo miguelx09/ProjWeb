@@ -4,11 +4,9 @@ import { getMovieDetails } from '../services/tmdb.js';
 
 const router = express.Router();
 
-// Nota: authenticateToken já é aplicado no app.js, então não precisa do requireAuth aqui
-
 // POST /api/favorites - Adicionar aos favoritos
 router.post('/', async (req, res) => {
-  const { movieId } = req.body; // tmdb_id
+  const { movieId } = req.body;
   const userId = req.user.id_user;
 
   try {
@@ -22,7 +20,7 @@ router.post('/', async (req, res) => {
     if (existing.length > 0) {
       internalMovieId = existing[0].id_movie;
     } else {
-      // Buscar detalhes do filme no TMDB para inserir completo
+      // Buscar detalhes do filme no TMDB
       const movieDetails = await new Promise((resolve, reject) => {
         getMovieDetails(movieId, (err, data) => {
           if (err) return reject(err);
@@ -47,9 +45,9 @@ router.post('/', async (req, res) => {
       internalMovieId = insertResult.insertId;
     }
 
-    // 2. Verificar se já existe nos favoritos
+    // 2. Verificar se já existe nos favoritos (USAR user_id e movie_id)
     const [existingFav] = await db.query(
-      'SELECT * FROM favorites WHERE id_user = ? AND id_movie = ?',
+      'SELECT * FROM favorites WHERE user_id = ? AND movie_id = ?',
       [userId, internalMovieId]
     );
 
@@ -57,9 +55,9 @@ router.post('/', async (req, res) => {
       return res.status(200).json({ message: 'Este filme já está nos teus favoritos.' });
     }
 
-    // 3. Adicionar aos favoritos
+    // 3. Adicionar aos favoritos (USAR user_id e movie_id)
     await db.query(
-      'INSERT INTO favorites (id_user, id_movie) VALUES (?, ?)',
+      'INSERT INTO favorites (user_id, movie_id) VALUES (?, ?)',
       [userId, internalMovieId]
     );
 
@@ -70,7 +68,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// GET /api/favorites - Listar IDs dos favoritos (para verificar se está favoritado)
+// GET /api/favorites - Listar IDs dos favoritos
 router.get('/', async (req, res) => {
   const userId = req.user.id_user;
 
@@ -78,8 +76,8 @@ router.get('/', async (req, res) => {
     const [rows] = await db.query(
       `SELECT m.tmdb_id
        FROM favorites f
-       INNER JOIN movies m ON f.id_movie = m.id_movie
-       WHERE f.id_user = ?`,
+       INNER JOIN movies m ON f.movie_id = m.id_movie
+       WHERE f.user_id = ?`,
       [userId]
     );
     res.json(rows);
@@ -89,7 +87,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /api/favorites/full - Listar favoritos COM TODOS OS DETALHES
+// GET /api/favorites/full - Listar favoritos COM DETALHES
 router.get('/full', async (req, res) => {
   const userId = req.user.id_user;
 
@@ -97,8 +95,8 @@ router.get('/full', async (req, res) => {
     const [favorites] = await db.query(
       `SELECT 
         f.id_favorite,
-        f.id_user,
-        f.id_movie,
+        f.user_id,
+        f.movie_id,
         f.added_at,
         m.title,
         m.synopsis,
@@ -108,13 +106,12 @@ router.get('/full', async (req, res) => {
         m.tmdb_id,
         m.duration_minutes
       FROM favorites f
-      INNER JOIN movies m ON f.id_movie = m.id_movie
-      WHERE f.id_user = ?
+      INNER JOIN movies m ON f.movie_id = m.id_movie
+      WHERE f.user_id = ?
       ORDER BY f.added_at DESC`,
       [userId]
     );
 
-    // Formatar para compatibilidade com frontend
     const formattedFavorites = favorites.map(fav => ({
       id: fav.tmdb_id,
       title: fav.title,
@@ -134,11 +131,10 @@ router.get('/full', async (req, res) => {
 
 // DELETE /api/favorites/:movieId - Remover dos favoritos
 router.delete('/:movieId', async (req, res) => {
-  const { movieId } = req.params; // tmdb_id
+  const { movieId } = req.params;
   const userId = req.user.id_user;
 
   try {
-    // Buscar id_movie baseado no tmdb_id
     const [movie] = await db.query(
       'SELECT id_movie FROM movies WHERE tmdb_id = ? LIMIT 1',
       [movieId]
@@ -148,9 +144,8 @@ router.delete('/:movieId', async (req, res) => {
       return res.status(404).json({ message: 'Filme não encontrado' });
     }
 
-    // Remover dos favoritos
     const [result] = await db.query(
-      'DELETE FROM favorites WHERE id_user = ? AND id_movie = ?',
+      'DELETE FROM favorites WHERE user_id = ? AND movie_id = ?',
       [userId, movie[0].id_movie]
     );
 
