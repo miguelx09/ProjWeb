@@ -1,1 +1,3 @@
-nao consigo obter diretor e o elenco
+erro no registro
+
+admin pages para apagar contas
