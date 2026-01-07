@@ -172,6 +172,50 @@
       height: 260px;
       object-fit: cover;
     }
+
+    /* Footer */
+.footer {
+  background: linear-gradient(180deg, #050814 0%, #0d1117 100%);
+  border-top: 2px solid rgba(229, 9, 20, 0.3);
+  margin-top: 5rem;
+  color: #fff !important;
+}
+
+.footer * {
+  color: #fff !important;
+}
+
+.footer .brand-text {
+  font-size: 1.4rem;
+  color: #fff !important;
+}
+
+.footer h5, .footer h6 {
+  font-weight: 600;
+  color: #fff !important;
+}
+
+.footer-text {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.footer-link {
+  color: rgba(255, 255, 255, 0.8) !important;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.footer-link:hover {
+  color: #e50914 !important;
+  transform: translateX(3px);
+}
+
+.footer ul li i {
+  margin-right: 5px;
+  color: #e50914 !important;
+}
+
   </style>
 </head>
 <body>
@@ -315,7 +359,92 @@
     </div>
   </div>
 </div>
+<footer class="footer mt-5 py-4">
+  <div class="container">
+    <div class="row g-4">
+      <!-- Sobre -->
+      <div class="col-md-4">
+        <h5 class="brand-text mb-3">
+          Film<span class="brand-highlight">Keepr</span>
+        </h5>
+        <p class="footer-text small">
+          A tua plataforma para descobrir, organizar e partilhar a tua paixão pelo cinema. 
+          Milhares de filmes, reviews da comunidade e listas personalizadas.
+        </p>
+      </div>
 
+      <!-- Links Rápidos -->
+      <div class="col-md-3">
+        <h6 class="text-danger mb-3">Navegação</h6>
+        <ul class="list-unstyled">
+          <li class="mb-2">
+            <a href="/" class="footer-link">
+              <i class="bi bi-house-door"></i> Início
+            </a>
+          </li>
+          <li class="mb-2">
+            <a href="/favorites.html" class="footer-link">
+              <i class="bi bi-heart"></i> Favoritos
+            </a>
+          </li>
+          <li class="mb-2">
+            <a href="/watchlist.html" class="footer-link">
+              <i class="bi bi-clock-history"></i> Watchlist
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Conta -->
+      <div class="col-md-2">
+        <h6 class="text-danger mb-3">Conta</h6>
+        <ul class="list-unstyled">
+          <li class="mb-2">
+            <a href="/login.html" class="footer-link">
+              <i class="bi bi-person-circle"></i> Entrar
+            </a>
+          </li>
+          <li class="mb-2">
+            <a href="/register.html" class="footer-link">
+              <i class="bi bi-person-plus"></i> Registar
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Informações -->
+      <div class="col-md-3">
+        <h6 class="text-danger mb-3">Informações</h6>
+        <p class="footer-text small mb-2">
+          <i class="bi bi-info-circle"></i> 
+          Dados fornecidos por 
+          <a href="https://www.themoviedb.org/" target="_blank" class="footer-link">TMDB</a>
+        </p>
+        <p class="footer-text small mb-2">
+          <i class="bi bi-code-slash"></i> 
+          Projeto académico
+        </p>
+        <p class="footer-text small mb-0">
+          <i class="bi bi-calendar-check"></i> 
+          © 2026 FilmKeepr
+        </p>
+      </div>
+    </div>
+
+    <!-- Linha separadora -->
+    <hr class="my-4 border-secondary opacity-25">
+
+    <!-- Copyright -->
+    <div class="row">
+      <div class="col-12 text-center">
+        <p class="footer-text small mb-0">
+          Feito por <strong>Miguel Cortes | Norberto Conde</strong> | 
+          Powered by <a href="https://www.themoviedb.org/" target="_blank" class="footer-link">TMDB</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
 
   </main>
 
