@@ -10,11 +10,11 @@ import watchlistRouter from './routes/watchlist.js';
 import reviewsRouter from './routes/reviews.js';
 import tmdbRouter from './routes/tmdb.js';
 import adminRouter from './routes/admin.js';
-import adminUsersRouter from './routes/admin.js'; // ← CORRIGIDO: ficheiro diferente
+import adminUsersRouter from './routes/adminUsers.js'; // ← CORRIGIDO: adminUsers.js (não admin.js)
 import dotenv from 'dotenv';
 
 // Importar middleware de autenticação
-import { authenticateToken, requireAdmin } from './middleware/authMiddleware.js'; // ← ADICIONAR
+import { authenticateToken, requireAdmin } from './middleware/authMiddleware.js';
 
 dotenv.config();
 
@@ -33,11 +33,11 @@ app.use('/api', reviewsRouter);             // Reviews
 app.use('/api', tmdbRouter);                // TMDB
 
 // ---------- API PROTEGIDAS (requer autenticação) ----------
-app.use('/api/favorites', authenticateToken, favoritesRouter);    // ← ADICIONAR authenticateToken
-app.use('/api/watchlist', authenticateToken, watchlistRouter);    // ← ADICIONAR authenticateToken
+app.use('/api/favorites', authenticateToken, favoritesRouter);
+app.use('/api/watchlist', authenticateToken, watchlistRouter);
 
 // ---------- API ADMIN (requer autenticação + admin) ----------
-app.use('/api/admin', authenticateToken, requireAdmin, adminUsersRouter); // ← ADICIONAR middleware
+app.use('/api/admin', authenticateToken, requireAdmin, adminUsersRouter);
 
 // ---------- Backoffice admin (Mustache) ----------
 app.engine('mustache', mustacheExpress());
