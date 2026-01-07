@@ -216,6 +216,21 @@
     font-size: 2rem;
   }
 }
+.btn-genre {
+  transition: all 0.3s ease;
+}
+
+.btn-genre:hover {
+  background-color: #e50914;
+  border-color: #e50914;
+  transform: translateY(-2px);
+}
+
+.btn-genre.active {
+  background-color: #e50914;
+  border-color: #e50914;
+}
+
   
 
 
@@ -358,7 +373,50 @@
       <div class="row gy-3" id="search-row"></div>
     </section>
 
-    <!-- Watchlist (se utilizador autenticado) -->
+    <!-- Géneros -->
+<section class="mb-4">
+  <h2 class="section-title mb-3">
+    <i class="bi bi-film text-danger"></i> Explorar por Género
+  </h2>
+  <div class="d-flex gap-2 flex-wrap" id="genres-container">
+    <button class="btn btn-outline-light btn-sm btn-genre" data-genre="28">
+      <i class="bi bi-lightning"></i> Ação
+    </button>
+    <button class="btn btn-outline-light btn-sm btn-genre" data-genre="35">
+      <i class="bi bi-emoji-laughing"></i> Comédia
+    </button>
+    <button class="btn btn-outline-light btn-sm btn-genre" data-genre="18">
+      <i class="bi bi-heart"></i> Drama
+    </button>
+    <button class="btn btn-outline-light btn-sm btn-genre" data-genre="878">
+      <i class="bi bi-rocket"></i> Ficção Científica
+    </button>
+    <button class="btn btn-outline-light btn-sm btn-genre" data-genre="27">
+      <i class="bi bi-eye"></i> Terror
+    </button>
+    <button class="btn btn-outline-light btn-sm btn-genre" data-genre="10749">
+      <i class="bi bi-heart-fill"></i> Romance
+    </button>
+    <button class="btn btn-outline-light btn-sm btn-genre" data-genre="16">
+      <i class="bi bi-palette"></i> Animação
+    </button>
+    <button class="btn btn-outline-light btn-sm btn-genre" data-genre="12">
+      <i class="bi bi-compass"></i> Aventura
+    </button>
+  </div>
+</section>
+
+<!-- Secção de resultados por género (escondida por padrão) -->
+<section class="mb-4 d-none" id="genre-section">
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <h2 class="section-title" id="genre-title">Filmes de Ação</h2>
+    <button class="btn btn-sm btn-outline-light" onclick="clearGenreFilter()">
+      <i class="bi bi-x-lg"></i> Limpar Filtro
+    </button>
+  </div>
+  <div class="row gy-3" id="genre-row"></div>
+</section>
+
     <!-- Em Breve nos Cinemas -->
     <section class="mb-4">
       <div class="d-flex justify-content-between align-items-center mb-2">
@@ -901,6 +959,67 @@ async function voteReview(reviewId, helpful) {
   } catch (err) {
     console.error('Erro ao votar', err);
   }
+}
+
+document.querySelectorAll('.btn-genre').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const genreId = btn.dataset.genre;
+    const genreName = btn.textContent.trim();
+    
+ 
+    document.querySelectorAll('.btn-genre').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    const heroSection = document.querySelector('.hero-section');
+    const popularSection = document.getElementById('popular-row')?.closest('section');
+    const topSection = document.getElementById('top-rated-row')?.closest('section');
+    const upcomingSection = document.getElementById('upcoming-row')?.closest('section');
+    const searchSection = document.getElementById('search-section');
+    
+    if (heroSection) heroSection.style.display = 'none';
+    if (popularSection) popularSection.style.display = 'none';
+    if (topSection) topSection.style.display = 'none';
+    if (upcomingSection) upcomingSection.style.display = 'none';
+    if (searchSection) searchSection.style.display = 'none';
+    
+    // Mostrar secção de género
+    const genreSection = document.getElementById('genre-section');
+    genreSection.classList.remove('d-none');
+    document.getElementById('genre-title').textContent = `Filmes de ${genreName}`;
+    
+    // Carregar filmes do género
+    try {
+      const res = await fetch(`${API_BASE}/tmdb/genre/${genreId}`);
+      if (!res.ok) return;
+      const data = await res.json();
+      let movies = data.results || [];
+      movies = movies.filter(m => m.poster_path).slice(0, 20);
+      
+      const row = document.getElementById('genre-row');
+      row.innerHTML = '';
+      movies.forEach(m => row.appendChild(createMovieCard(m)));
+    } catch (err) {
+      console.error('Erro ao carregar género', err);
+    }
+  });
+});
+
+
+function clearGenreFilter() {
+  const genreSection = document.getElementById('genre-section');
+  const heroSection = document.querySelector('.hero-section');
+  const popularSection = document.getElementById('popular-row')?.closest('section');
+  const topSection = document.getElementById('top-rated-row')?.closest('section');
+  const upcomingSection = document.getElementById('upcoming-row')?.closest('section');
+  
+  genreSection.classList.add('d-none');
+  if (heroSection) heroSection.style.display = '';
+  if (popularSection) popularSection.style.display = '';
+  if (topSection) topSection.style.display = '';
+  if (upcomingSection) upcomingSection.style.display = '';
+  
+  // Desmarcar botões
+  document.querySelectorAll('.btn-genre').forEach(b => b.classList.remove('active'));
 }
 
 </script>

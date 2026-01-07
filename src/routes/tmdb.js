@@ -4,7 +4,8 @@ import {
   getMovieDetails,
   getPopularMovies,
   getTopRatedMovies,
-  getUpcomingMovies
+  getUpcomingMovies,
+  getMoviesByGenre
 } from '../services/tmdb.js';
 
 import dotenv from 'dotenv';
@@ -118,5 +119,21 @@ router.post('/tmdb/import/:id', (req, res) => {
     }
   });
 });
+
+// GET /api/tmdb/genre/:genreId
+router.get('/tmdb/genre/:genreId', (req, res) => {
+  const { genreId } = req.params;
+  
+  getMoviesByGenre(genreId, (err, result) => {
+    if (err) {
+      console.error('TMDB genre error:', err);
+      return res.status(500).json({ message: 'Erro ao obter filmes por género' });
+    }
+    res.json(result);
+  });
+});
+
+
+
 
 export default router;

@@ -56,3 +56,17 @@ export async function getUpcomingMovies(callback) {
   }
 }
 
+// Filmes por género
+export async function getMoviesByGenre(genreId, callback) {
+  try {
+    const res = await fetch(
+      `${BASE_URL}/discover/movie?api_key=${API_KEY}&language=pt-PT&with_genres=${genreId}&sort_by=popularity.desc&page=1`
+    );
+    const data = await res.json();
+    callback(null, data);
+  } catch (err) {
+    callback(err);
+  }
+}
+
+
