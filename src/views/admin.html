@@ -303,7 +303,13 @@
     const API_BASE = '/api';
     let editUserModal, deleteUserModal;
 
-    // Verificar autenticação e permissões
+      function getAuthHeaders() {
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
+    };
+  }
+    
     function checkAuth() {
     const token = localStorage.getItem('token');
     const isAdminValue = localStorage.getItem('is_admin');
