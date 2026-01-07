@@ -522,10 +522,7 @@
       <img src="${poster}" class="card-img-top" alt="${movie.title}">
       <div class="card-body p-2">
         <h6 class="card-title mb-1 text-truncate" title="${movie.title}">${movie.title}</h6>
-        <small class="text-warning">★ ${
-          movie.vote_average?.toFixed ? movie.vote_average.toFixed(1) : movie.vote_average || 'N/A'
-        }</small>
-      </div>
+            </div>
       <div class="card-footer border-0 p-2">
         <div class="d-grid gap-1">
           <button class="btn btn-sm btn-outline-light" onclick="openDetails(${movie.id})">
