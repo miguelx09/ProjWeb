@@ -173,6 +173,50 @@
       font-size: 1.4rem;
       font-weight: 600;
     }
+    /* Hero Section */
+.hero-section {
+  position: relative;
+  min-height: 500px;
+  background-size: cover;
+  background-position: center;
+  background-image: linear-gradient(to right, rgba(5, 8, 20, 0.95) 40%, transparent),
+                    url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1600');
+  border-radius: 12px;
+  margin: 1rem 1rem 2rem 1rem;
+  overflow: hidden;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(5, 8, 20, 0.95) 40%, rgba(5, 8, 20, 0.3));
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  padding: 3rem 0;
+}
+
+.hero-section h1 {
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+.hero-section .lead {
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    min-height: 350px;
+  }
+  
+  .hero-section h1 {
+    font-size: 2rem;
+  }
+}
+
   </style>
     
 </head>
@@ -248,6 +292,36 @@
     </div>
   </div>
 </nav>
+
+
+</nav>
+
+<!-- Hero Section -->
+<section class="hero-section position-relative overflow-hidden mb-5">
+  <div class="hero-overlay"></div>
+  <div class="hero-content container">
+    <div class="row align-items-center" style="min-height: 450px;">
+      <div class="col-lg-6">
+        <h1 class="display-3 fw-bold mb-3" id="hero-title">Descobre Milhares de Filmes</h1>
+        <p class="lead mb-4" id="hero-overview">
+          Explora os filmes mais populares, cria listas personalizadas e partilha a tua opinião com a comunidade.
+        </p>
+        <div class="d-flex gap-3">
+          <button class="btn btn-danger btn-lg" id="hero-play">
+            <i class="bi bi-play-fill"></i> Ver Detalhes
+          </button>
+          <button class="btn btn-outline-light btn-lg" id="hero-watchlist">
+            <i class="bi bi-plus-lg"></i> Adicionar à Lista
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Main Content -->
+<main class="container-fluid px-4 py-4">
+
 
   <!-- Main Content -->
   <main class="container-fluid px-4 py-4">
@@ -602,6 +676,30 @@ async function addToWatchlist(id) {
   }
 }
 
+  // Carregar filme em destaque no Hero
+async function loadHeroMovie() {
+  try {
+    const res = await fetch(API_BASE + '/tmdb/popular');
+    if (!res.ok) return;
+    const data = await res.json();
+    const movie = data.results[0]; // Primeiro filme popular
+
+    const heroSection = document.querySelector('.hero-section');
+    if (movie.backdrop_path) {
+      heroSection.style.backgroundImage = `
+        linear-gradient(to right, rgba(5, 8, 20, 0.95) 40%, rgba(5, 8, 20, 0.3)),
+        url(${IMG_BASE}${movie.backdrop_path})
+      `;
+    }
+    
+    document.getElementById('hero-title').textContent = movie.title;
+    document.getElementById('hero-overview').textContent = movie.overview || 'Explora os melhores filmes e cria as tuas listas.';
+    document.getElementById('hero-play').onclick = () => openDetails(movie.id);
+    document.getElementById('hero-watchlist').onclick = () => addToWatchlist(movie.id);
+  } catch (err) {
+    console.error('Erro ao carregar hero', err);
+  }
+}
 
 
 
@@ -631,6 +729,7 @@ async function addToWatchlist(id) {
       userNameSpan.textContent = formattedName;
     }
   }
+  
 
   function setupLogout() {
     const btn = document.getElementById('logoutBtn');
@@ -647,6 +746,7 @@ async function addToWatchlist(id) {
   document.addEventListener('DOMContentLoaded', () => {
     updateNavbarAuthState();
     setupLogout();
+    loadHeroMovie();
   });
 
 let currentMovieId = null;

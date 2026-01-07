@@ -1,4 +1,1 @@
-aparecer 10 filmes nos melhores avaliadoshaver
-ao pesquisar filmes nao permitir filmes sem imagens
-
-
+MELHORAR O INDEX ADICONAR algo PAARA MOSTAR filmes
