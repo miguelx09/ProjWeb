@@ -565,7 +565,14 @@
     }
 
     async function loadWatchlist() {
+
+      
       const token = localStorage.getItem('token');
+       if (!token) {
+      // REDIRECIONAR em vez de mostrar mensagem
+      window.location.href = '/login.html?redirect=/favorites.html';
+      return;
+  }
       const emptyMsg = document.getElementById('emptyMsg');
 
       if (!token) {

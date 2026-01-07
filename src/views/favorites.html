@@ -563,6 +563,7 @@
         document.getElementById('emptyMsg').textContent =
           'Precisas de iniciar sessão para ver os teus favoritos.';
         document.getElementById('emptyMsg').style.display = 'block';
+         window.location.href = '/login.html?redirect=/favorites.html';
         return;
       }
 
