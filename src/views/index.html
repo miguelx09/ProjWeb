@@ -216,15 +216,7 @@
     font-size: 2rem;
   }
 }
-  .cta-banner {
-    background: linear-gradient(135deg, #1a1f35 0%, #2a1f35 100%);
-    border: 2px solid rgba(229, 9, 20, 0.3);
-    box-shadow: 0 8px 24px rgba(229, 9, 20, 0.2);
-  }
-
-  .cta-banner h3 {
-    font-size: 2rem;
-  }
+  
 
 
   </style>
@@ -329,26 +321,7 @@
   </div>
 </section>
 
-<!-- CTA Banner (só aparece para não logados) -->
-  <section class="cta-banner p-5 rounded text-center mb-4 d-none" id="cta-section">
-    <div class="container">
-      <h3 class="fw-bold mb-3">
-        <i class="bi bi-star-fill text-warning"></i> 
-        Cria a tua conta grátis!
-      </h3>
-      <p class="mb-4 lead">
-        Guarda os teus filmes favoritos, cria listas personalizadas e partilha reviews com a comunidade.
-      </p>
-      <div class="d-flex gap-3 justify-content-center">
-        <a href="/register.html" class="btn btn-danger btn-lg px-5">
-          <i class="bi bi-person-plus"></i> Registar Agora
-        </a>
-        <a href="/login.html" class="btn btn-outline-light btn-lg px-5">
-          Já tenho conta
-        </a>
-      </div>
-    </div>
-  </section>
+
 
 
 <!-- Main Content -->
@@ -785,12 +758,6 @@ async function loadHeroMovie() {
     setupLogout();
     loadHeroMovie();
 
-     const token = localStorage.getItem('token');
-  const ctaSection = document.getElementById('cta-section');
-  if (!token && ctaSection) {
-    ctaSection.classList.remove('d-none');
-  }
-  
   });
 
 let currentMovieId = null;
