@@ -327,6 +327,9 @@
           <button class="btn btn-danger btn-lg" id="hero-play">
             <i class="bi bi-play-fill"></i> Ver Detalhes
           </button>
+          <button class="btn btn-warning btn-lg" id="hero-favorites">
+            <i class="bi bi-heart-fill"></i> Favoritos
+          </button>
           <button class="btn btn-outline-light btn-lg" id="hero-watchlist">
             <i class="bi bi-plus-lg"></i> Adicionar à Lista
           </button>
@@ -335,6 +338,7 @@
     </div>
   </div>
 </section>
+
 
 
 
@@ -749,12 +753,14 @@ async function addToWatchlist(id) {
 }
 
   // Carregar filme em destaque no Hero
+// Carregar filme em destaque no Hero
+// Carregar filme em destaque no Hero
 async function loadHeroMovie() {
   try {
     const res = await fetch(API_BASE + '/tmdb/popular');
     if (!res.ok) return;
     const data = await res.json();
-    const movie = data.results[0]; // Primeiro filme popular
+    const movie = data.results[0];
 
     const heroSection = document.querySelector('.hero-section');
     if (movie.backdrop_path) {
@@ -766,12 +772,35 @@ async function loadHeroMovie() {
     
     document.getElementById('hero-title').textContent = movie.title;
     document.getElementById('hero-overview').textContent = movie.overview || 'Explora os melhores filmes e cria as tuas listas.';
+    
+    // Botão "Ver Detalhes"
     document.getElementById('hero-play').onclick = () => openDetails(movie.id);
-    document.getElementById('hero-watchlist').onclick = () => addToWatchlist(movie.id);
+    
+    // Botão "Favoritos"
+    document.getElementById('hero-favorites').onclick = () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Precisas de iniciar sessão para adicionar favoritos.');
+        return;
+      }
+      addToFavorites(movie.id);
+    };
+    
+    // Botão "Adicionar à Lista"
+    document.getElementById('hero-watchlist').onclick = () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Precisas de iniciar sessão para adicionar à watchlist.');
+        return;
+      }
+      addToWatchlist(movie.id);
+    };
   } catch (err) {
     console.error('Erro ao carregar hero', err);
   }
 }
+
+
 
 
 
