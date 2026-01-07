@@ -436,13 +436,86 @@
 
 
     // Modal de detalhes
-    const movieModal = new bootstrap.Modal(document.createElement('div')); // temporário
+    const movieModal = new bootstrap.Modal(document.getElementById('movieModal'));
 
-    async function openDetails(id) {
-      // Redirecionar para a página inicial com o modal aberto
-      // Ou implementar modal aqui também
-      window.location.href = `/?movie=${id}`;
+
+    // Abrir modal com detalhes
+async function openDetails(id) {
+  try {
+    const res = await fetch(`/api/tmdb/movie/${id}`);
+    if (!res.ok) return;
+    const m = await res.json();
+
+    document.getElementById('movieModalTitle').textContent = m.title;
+    document.getElementById('movieModalPoster').src =
+      m.poster_path ? IMG_BASE + m.poster_path : '/public/img/placeholder.jpg';
+    document.getElementById('movieModalOverview').textContent = m.overview || '';
+    document.getElementById('movieModalRating').textContent = m.vote_average ?? 'N/A';
+    document.getElementById('movieModalDate').textContent = m.release_date || '-';
+
+    document.getElementById('modalFavBtn').onclick = () => addToFavorites(m.id);
+    document.getElementById('modalWatchBtn').onclick = () => addToWatchlist(m.id);
+
+    movieModal.show();
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+// Adicionar aos favoritos
+async function addToFavorites(id) {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert('Precisas de iniciar sessão.');
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/favorites', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify({ movieId: id })
+    });
+    if (!res.ok) {
+      console.error('Erro ao adicionar aos favoritos');
+      return;
     }
+    alert('Filme adicionado aos favoritos.');
+  } catch (err) {
+    console.error('Erro ao adicionar aos favoritos', err);
+  }
+}
+
+// Adicionar à watchlist
+async function addToWatchlist(id) {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert('Precisas de iniciar sessão.');
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/watchlist', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify({ movieId: id })
+    });
+    if (!res.ok) {
+      console.error('Erro ao adicionar à watchlist');
+      return;
+    }
+    alert('Filme adicionado à watchlist.');
+  } catch (err) {
+    console.error('Erro ao adicionar à watchlist', err);
+  }
+}
+
 
   </script>
 </body>
