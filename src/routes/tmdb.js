@@ -3,8 +3,12 @@ import {
   searchMovies,
   getMovieDetails,
   getPopularMovies,
-  getTopRatedMovies
+  getTopRatedMovies,
+  getUpcomingMovies
 } from '../services/tmdb.js';
+
+import dotenv from 'dotenv';
+dotenv.config();
 
 const router = express.Router();
 
@@ -20,7 +24,7 @@ router.get('/tmdb/search', (req, res) => {
       console.error('TMDB search error:', err);
       return res.status(500).json({ message: 'Erro ao pesquisar na TMDB', error: err });
     }
-    res.json(result); // { page, results, ... }
+    res.json(result);
   });
 });
 
@@ -44,7 +48,7 @@ router.get('/tmdb/popular', (req, res) => {
       console.error('TMDB popular error:', err);
       return res.status(500).json({ message: 'Erro ao obter populares' });
     }
-    res.json(result); // também vem como { page, results, ... }
+    res.json(result);
   });
 });
 
@@ -59,7 +63,18 @@ router.get('/tmdb/top-rated', (req, res) => {
   });
 });
 
-// POST /api/tmdb/import/:id  -> fica igual ao teu código atual
+// GET /api/tmdb/upcoming
+router.get('/tmdb/upcoming', (req, res) => {
+  getUpcomingMovies((err, result) => {
+    if (err) {
+      console.error('TMDB upcoming error:', err);
+      return res.status(500).json({ message: 'Erro ao obter filmes em breve' });
+    }
+    res.json(result);
+  });
+});
+
+// POST /api/tmdb/import/:id
 router.post('/tmdb/import/:id', (req, res) => {
   const { id } = req.params;
 
@@ -103,20 +118,5 @@ router.post('/tmdb/import/:id', (req, res) => {
     }
   });
 });
-
-// GET /tmdb/upcoming
-router.get('/tmdb/upcoming', async (req, res) => {
-  try {
-    const response = await fetch(
-      `${BASE_URL}/movie/upcoming?api_key=${API_KEY}&language=pt-PT&page=1`
-    );
-    const data = await response.json();
-    res.json(data);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Erro ao obter filmes em breve' });
-  }
-});
-
 
 export default router;

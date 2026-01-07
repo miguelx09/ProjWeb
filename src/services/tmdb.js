@@ -42,3 +42,17 @@ export async function getTopRatedMovies(callback) {
     callback(err);
   }
 }
+
+// Filmes em breve (usa fetch direto à API TMDB)
+export async function getUpcomingMovies(callback) {
+  try {
+    const res = await fetch(
+      `${BASE_URL}/movie/upcoming?api_key=${API_KEY}&language=pt-PT&page=1`
+    );
+    const data = await res.json();
+    callback(null, data);
+  } catch (err) {
+    callback(err);
+  }
+}
+
