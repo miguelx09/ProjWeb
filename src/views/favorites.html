@@ -254,6 +254,69 @@
       Ainda não tens filmes favoritos.
     </p>
     <div class="row gy-3" id="favorites-row"></div>
+
+    <!-- Modal de Detalhes -->
+<div class="modal fade" id="movieModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header border-0">
+        <h5 class="modal-title" id="movieModalTitle"></h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row gy-3">
+          <div class="col-md-4">
+            <img id="movieModalPoster" class="img-fluid rounded" alt="">
+            <div class="mt-3">
+              <button class="btn btn-danger w-100 mb-2" id="modalFavBtn">
+                <i class="bi bi-heart-fill"></i> Favoritos
+              </button>
+              <button class="btn btn-outline-light w-100" id="modalWatchBtn">
+                <i class="bi bi-clock"></i> Watchlist
+              </button>
+            </div>
+          </div>
+
+          <div class="col-md-8">
+            <h6 class="text-danger mb-2"><i class="bi bi-card-text"></i> Sinopse</h6>
+            <p id="movieModalOverview" class="mb-3"></p>
+
+            <div class="row g-3 mb-3">
+              <div class="col-6">
+                <strong><i class="bi bi-star-fill text-warning"></i> Avaliação:</strong>
+                <p class="mb-0" id="movieModalRating">-</p>
+              </div>
+              <div class="col-6">
+                <strong><i class="bi bi-calendar"></i> Ano:</strong>
+                <p class="mb-0" id="movieModalYear">-</p>
+              </div>
+              <div class="col-6">
+                <strong><i class="bi bi-clock"></i> Duração:</strong>
+                <p class="mb-0" id="movieModalDuration">-</p>
+              </div>
+              <div class="col-6">
+                <strong><i class="bi bi-tag"></i> Géneros:</strong>
+                <p class="mb-0" id="movieModalGenres">-</p>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <strong><i class="bi bi-camera-reels"></i> Diretor:</strong>
+              <p class="mb-0" id="movieModalDirector">Carregando...</p>
+            </div>
+
+            <div class="mb-3">
+              <strong><i class="bi bi-people-fill"></i> Elenco Principal:</strong>
+              <p class="mb-0" id="movieModalCast">Carregando...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
   </main>
 
   <!-- Bootstrap JS -->
@@ -404,6 +467,129 @@
       setupSearch();
       loadFavorites();
     });
+
+    const movieModal = new bootstrap.Modal(document.getElementById('movieModal'));
+
+// Abrir detalhes
+async function openDetails(id) {
+  try {
+    const res = await fetch(`/api/tmdb/movie/${id}`);
+    if (!res.ok) return;
+    const m = await res.json();
+
+    document.getElementById('movieModalTitle').textContent = m.title;
+    document.getElementById('movieModalPoster').src =
+      m.poster_path ? IMG_BASE + m.poster_path : '/public/img/placeholder.jpg';
+    document.getElementById('movieModalOverview').textContent = m.overview || 'Sem sinopse disponível.';
+    document.getElementById('movieModalRating').textContent = 
+      m.vote_average ? `${m.vote_average.toFixed(1)}/10` : 'N/A';
+    document.getElementById('movieModalYear').textContent = 
+      m.release_date ? m.release_date.split('-')[0] : '-';
+    document.getElementById('movieModalDuration').textContent = 
+      m.runtime ? `${m.runtime} min` : '-';
+
+    if (m.genres && m.genres.length > 0) {
+      document.getElementById('movieModalGenres').textContent = 
+        m.genres.map(g => g.name).join(', ');
+    } else {
+      document.getElementById('movieModalGenres').textContent = '-';
+    }
+
+    loadMovieCredits(id);
+
+    document.getElementById('modalFavBtn').onclick = () => addToFavorites(m.id);
+    document.getElementById('modalWatchBtn').onclick = () => addToWatchlist(m.id);
+
+    movieModal.show();
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+// Carregar créditos
+async function loadMovieCredits(movieId) {
+  try {
+    const res = await fetch(`/api/tmdb/movie/${movieId}/credits`);
+    if (!res.ok) {
+      document.getElementById('movieModalDirector').textContent = '-';
+      document.getElementById('movieModalCast').textContent = '-';
+      return;
+    }
+    
+    const credits = await res.json();
+
+    const director = credits.crew?.find(person => person.job === 'Director');
+    document.getElementById('movieModalDirector').textContent = 
+      director ? director.name : '-';
+
+    if (credits.cast && credits.cast.length > 0) {
+      const topCast = credits.cast.slice(0, 5).map(actor => actor.name).join(', ');
+      document.getElementById('movieModalCast').textContent = topCast;
+    } else {
+      document.getElementById('movieModalCast').textContent = '-';
+    }
+  } catch (err) {
+    console.error('Erro ao carregar créditos', err);
+    document.getElementById('movieModalDirector').textContent = '-';
+    document.getElementById('movieModalCast').textContent = '-';
+  }
+}
+
+// Adicionar aos favoritos
+async function addToFavorites(id) {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert('Precisas de iniciar sessão.');
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/favorites', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify({ movieId: id })
+    });
+    if (!res.ok) {
+      console.error('Erro ao adicionar aos favoritos');
+      return;
+    }
+    alert('Filme adicionado aos favoritos.');
+  } catch (err) {
+    console.error('Erro ao adicionar aos favoritos', err);
+  }
+}
+
+// Adicionar à watchlist
+async function addToWatchlist(id) {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert('Precisas de iniciar sessão.');
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/watchlist', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify({ movieId: id })
+    });
+    if (!res.ok) {
+      console.error('Erro ao adicionar à watchlist');
+      return;
+    }
+    alert('Filme adicionado à watchlist.');
+  } catch (err) {
+    console.error('Erro ao adicionar à watchlist', err);
+  }
+}
+
+
   </script>
 </body>
 </html>
