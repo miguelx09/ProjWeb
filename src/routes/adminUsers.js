@@ -117,26 +117,30 @@ router.delete('/users/:id', async (req, res) => {
 // ==================== GESTÃO DE FILMES ====================
 
 // GET /api/admin/movies - Listar todos os filmes importados
+// GET /api/admin/movies - Listar filmes importados
 router.get('/movies', async (req, res) => {
   try {
     const [movies] = await db.query(`
       SELECT 
         id_movie,
         title,
-        release_date,
-        overview,
-        poster_path,
+        synopsis,
+        duration_minutes,
+        release_year,
+        poster_url,
         tmdb_id,
-        created_at
+        created_at,
+        poster_path
       FROM movies 
       ORDER BY created_at DESC
     `);
     res.json(movies);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Erro ao listar filmes' });
+    console.error('Erro ao listar filmes:', err); // ← Ver erro no terminal
+    res.status(500).json({ message: 'Erro ao listar filmes', error: err.message });
   }
 });
+
 
 // ==================== ESTATÍSTICAS ====================
 
