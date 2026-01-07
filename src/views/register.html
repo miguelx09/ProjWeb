@@ -484,37 +484,45 @@
     }
 
     document.getElementById('registerForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const name = document.getElementById('regName').value.trim();
-      const email = document.getElementById('regEmail').value.trim();
-      const password = document.getElementById('regPassword').value.trim();
-      const password2 = document.getElementById('regPassword2').value.trim();
+  e.preventDefault();
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const password = document.getElementById('regPassword').value.trim();
+  const password2 = document.getElementById('regPassword2').value.trim();
 
-      if (password !== password2) {
-        showAlert('As passwords não coincidem.', 'danger');
-        return;
-      }
+  if (password !== password2) {
+    showAlert('As passwords não coincidem.', 'danger');
+    return;
+  }
 
-      try {
-        const res = await fetch(API_BASE + '/auth/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' }      
-        });
-
-        if (!res.ok) {
-          showAlert('Erro ao criar conta (email já existe ou dados inválidos).', 'danger');
-          return;
-        }
-
-        showAlert('Conta criada com sucesso! A redirecionar...', 'success');
-        setTimeout(() => {
-          window.location.href = '/index.html';
-        }, 1500);
-      } catch (err) {
-        console.error('Erro no registo', err);
-        showAlert('Erro ao registar. Tenta novamente.', 'danger');
-      }
+  try {
+    const res = await fetch(API_BASE + '/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({    // ← ADICIONE ESTAS LINHAS!
+        name: name,
+        email: email,
+        password: password
+      })
     });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      showAlert(errorData.message || 'Erro ao criar conta (email já existe ou dados inválidos).', 'danger');
+      return;
+    }
+
+    const data = await res.json();
+    showAlert('Conta criada com sucesso! A redirecionar...', 'success');
+    setTimeout(() => {
+      window.location.href = '/login.html';  // ← Mudei para /login.html
+    }, 1500);
+  } catch (err) {
+    console.error('Erro no registo', err);
+    showAlert('Erro ao registar. Tenta novamente.', 'danger');
+  }
+});
+
   </script>
 
   <!-- Script da navbar -->

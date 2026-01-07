@@ -6,9 +6,6 @@ import db from '../db.js';
 const router = express.Router();
 const JWT_SECRET = 'segredo_super_simples'; // depois podes meter no .env
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
 
 router.post('/register', async (req, res) => {
   console.log('BODY RECEBIDO:', req.body);
