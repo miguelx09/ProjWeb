@@ -468,28 +468,22 @@
 
     // Verificar autenticação e permissões
     function checkAuth() {
-      const token = localStorage.getItem('token');
-      const isAdmin = localStorage.getItem('is_admin') === 'true';
-      const username = localStorage.getItem('username');
+    const token = localStorage.getItem('token');
+    const isAdminValue = localStorage.getItem('is_admin');
+    // Aceitar 'true', '1', 1, ou true
+    const isAdmin = isAdminValue === 'true' || isAdminValue === '1' || isAdminValue === 1 || isAdminValue === true;
+    const username = localStorage.getItem('username');
 
-      if (!token || !isAdmin) {
-        alert('Acesso negado. Apenas administradores podem aceder a esta página.');
-        window.location.href = '/';
-        return false;
-      }
-
-      // Atualizar nome do admin
-      document.getElementById('adminUsername').textContent = username;
-      return true;
+    if (!token || !isAdmin) {
+      alert('Acesso negado. Apenas administradores podem aceder a esta página.');
+      window.location.href = '/';
+      return false;
     }
 
-    // Headers com token
-    function getAuthHeaders() {
-      return {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + localStorage.getItem('token')
-      };
-    }
+    document.getElementById('adminUsername').textContent = username;
+    return true;
+  }
+
 
     // Carregar estatísticas
     async function loadStats() {
