@@ -305,7 +305,7 @@
 
     // Verificar autenticação e permissões
     function checkAuth() {
-    const token = localStoragegesta('token');
+    const token = localStorage.getItem('token');
     const isAdminValue = localStorage.getItem('is_admin');
     // Aceitar 'true', '1', 1, ou true
     const isAdmin = isAdminValue === 'true' || isAdminValue === '1' || isAdminValue === 1 || isAdminValue === true;
