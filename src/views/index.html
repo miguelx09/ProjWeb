@@ -694,6 +694,14 @@
   <script>
     const API_BASE = '/api';
 
+      function getAuthHeaders() {
+    const token = localStorage.getItem('token');
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': token ? `Bearer ${token}` : ''
+    };
+}
+
     const movieModal = new bootstrap.Modal(document.getElementById('movieModal'));
 
 async function openDetails(id) {
@@ -721,20 +729,32 @@ async function openDetails(id) {
 
 
     async function addToFavorites(id) {
-    const token = localStorage.getItem('token');
-    try {
-        await fetch('/api/favorites', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': token ? 'Bearer ' + token : ''
-        },
-        body: JSON.stringify({ movieId: id })
-        });
-    } catch (e) {
-        console.error(e);
+  const token = localStorage.getItem('token');
+  
+  if (!token) {
+    alert('Precisas de iniciar sessão para adicionar favoritos.');
+    window.location.href = '/login.html';
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/favorites`, {
+      method: 'POST',
+      headers: getAuthHeaders(),  // ← USAR A FUNÇÃO
+      body: JSON.stringify({ movieId: id })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert('Filme adicionado aos favoritos!');
+    } else {
+      alert(data.message || 'Erro ao adicionar aos favoritos');
     }
-    }
+  } catch (err) {
+    console.error('Erro ao adicionar aos favoritos:', err);
+  }
+}
 
     function isLoggedIn() {
       return !!localStorage.getItem('token');
@@ -822,20 +842,34 @@ async function openDetails(id) {
       }
     }  
 
-    async function addToWatchlist(id) {
-      try {
-        const res = await fetch(API_BASE + '/watchlist', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ movieId: id })
-        });
-        if (!res.ok) {
-          console.error('Erro ao adicionar à watchlist');
-        }
-      } catch (err) {
-        console.error('Erro ao adicionar à watchlist', err);
-      }
-    }   
+   async function addToWatchlist(id) {
+  const token = localStorage.getItem('token');
+  
+  if (!token) {
+    alert('Precisas de iniciar sessão para adicionar à watchlist.');
+    window.location.href = '/login.html';
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/watchlist`, {
+      method: 'POST',
+      headers: getAuthHeaders(),  // ← USAR A FUNÇÃO
+      body: JSON.stringify({ movieId: id })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert('Filme adicionado à watchlist!');
+    } else {
+      alert(data.message || 'Erro ao adicionar à watchlist');
+    }
+  } catch (err) {
+    console.error('Erro ao adicionar à watchlist:', err);
+  }
+}
+ 
 
 
 document.addEventListener('DOMContentLoaded', () => {
