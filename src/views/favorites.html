@@ -506,36 +506,34 @@
     }
 
     function createMovieCard(movie) {
-      const col = document.createElement('div');
-      col.className = 'col-6 col-sm-4 col-md-3 col-lg-2';
+  const col = document.createElement('div');
+  col.className = 'col-6 col-sm-4 col-md-3 col-lg-2';
 
-      const poster = movie.poster_path
-        ? IMG_BASE + movie.poster_path
-        : '/public/img/placeholder.jpg';
+  const poster = movie.poster_path
+    ? IMG_BASE + movie.poster_path
+    : '/public/img/placeholder.jpg';
 
-      col.innerHTML = `
-        <div class="card bg-dark text-white movie-card h-100">
-          <img src="${poster}" class="card-img-top" alt="${movie.title}">
-          <div class="card-body p-2">
-            <h6 class="card-title mb-1 text-truncate" title="${movie.title}">${movie.title}</h6>
-            <small class="text-warning">★ ${
-              movie.vote_average?.toFixed ? movie.vote_average.toFixed(1) : movie.vote_average || 'N/A'
-            }</small>
-          </div>
-          <div class="card-footer border-0 p-2">
-            <div class="d-grid gap-1">
-              <button class="btn btn-sm btn-outline-light" onclick="openDetails(${movie.id})">
-                Detalhes
-              </button>
-              <button class="btn btn-sm btn-danger" onclick="removeFromFavorites(${movie.id})">
-                Remover
-              </button>
-            </div>
-          </div>
+  col.innerHTML = `
+    <div class="card bg-dark text-white movie-card h-100">
+      <img src="${poster}" class="card-img-top" alt="${movie.title}">
+      <div class="card-body p-2">
+        <h6 class="card-title mb-1 text-truncate" title="${movie.title}">${movie.title}</h6>
+      </div>
+      <div class="card-footer border-0 p-2">
+        <div class="d-grid gap-1">
+          <button class="btn btn-sm btn-outline-light" onclick="openDetails(${movie.id})">
+            Detalhes
+          </button>
+          <button class="btn btn-sm btn-danger" onclick="removeFromFavorites(${movie.id})">
+            Remover
+          </button>
         </div>
-      `;
-      return col;
-    }
+      </div>
+    </div>
+  `;
+  return col;
+}
+
 
     async function removeFromFavorites(id) {
       const token = localStorage.getItem('token');
