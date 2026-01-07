@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Painel Admin - FilmKeepr</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <link rel="icon" href="/FilmKeeperIcone.png" type="image/png">
+
+  <style>
+    body {
+      background-color: #050814;
+      color: #fff;
+      padding-top: 80px;
+    }
+
+    .admin-header {
+      background: linear-gradient(135deg, #1a1f35 0%, #0d1117 100%);
+      padding: 2rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      border: 2px solid rgba(229, 9, 20, 0.3);
+    }
+
+    .card {
+      background-color: #111827;
+      border: 1px solid #374151;
+      color: #fff;
+    }
+
+    .card-header {
+      background-color: #1f2937;
+      border-bottom: 1px solid #374151;
+    }
+
+    .table {
+      color: #fff;
+    }
+
+    .table-dark {
+      background-color: #111827;
+    }
+
+    .btn-danger {
+      background-color: #e50914;
+      border-color: #e50914;
+    }
+
+    .btn-danger:hover {
+      background-color: #b00710;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #1a1f35 0%, #111827 100%);
+      border: 2px solid rgba(229, 9, 20, 0.3);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #e50914;
+    }
+
+    .stat-label {
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .badge {
+      padding: 0.5rem 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="admin-header">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h1 class="mb-0">
+            <i class="bi bi-shield-lock"></i> Painel de Administração
+          </h1>
+          <p class="mb-0 mt-2 text-muted">Bem-vindo, <span id="adminUsername">Admin</span></p>
+        </div>
+        <div>
+          <a href="/" class="btn btn-outline-light me-2">
+            <i class="bi bi-house"></i> Voltar ao Site
+          </a>
+          <button class="btn btn-danger" id="logoutBtn">
+            <i class="bi bi-box-arrow-right"></i> Sair
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estatísticas -->
+    <div class="row mb-4" id="statsSection">
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="stat-number" id="statUsers">0</div>
+          <div class="stat-label">Utilizadores</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="stat-number" id="statMovies">0</div>
+          <div class="stat-label">Filmes</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="stat-number" id="statReviews">0</div>
+          <div class="stat-label">Reviews</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="stat-number" id="statFavorites">0</div>
+          <div class="stat-label">Favoritos</div>
+        </div>
+              </div>
+    </div>
+
+    <!-- Tabs de Navegação -->
+    <ul class="nav nav-tabs mb-4" id="adminTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button">
+          <i class="bi bi-people"></i> Utilizadores
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="movies-tab" data-bs-toggle="tab" data-bs-target="#movies" type="button">
+          <i class="bi bi-film"></i> Filmes
+        </button>
+      </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content" id="adminTabsContent">
+      
+      <!-- Tab Utilizadores -->
+      <div class="tab-pane fade show active" id="users" role="tabpanel">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-people-fill"></i> Gestão de Utilizadores</h5>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-dark table-hover">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Admin</th>
+                    <th>Data de Registo</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                  <tr>
+                    <td colspan="6" class="text-center">
+                      <div class="spinner-border text-danger" role="status">
+                        <span class="visually-hidden">A carregar...</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Filmes -->
+      <div class="tab-pane fade" id="movies" role="tabpanel">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-film"></i> Filmes Importados</h5>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-dark table-hover">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Poster</th>
+                    <th>Título</th>
+                    <th>Data de Lançamento</th>
+                    <th>TMDB ID</th>
+                    <th>Importado em</th>
+                  </tr>
+                </thead>
+                <tbody id="moviesTableBody">
+                  <tr>
+                    <td colspan="6" class="text-center">
+                      <div class="spinner-border text-danger" role="status">
+                        <span class="visually-hidden">A carregar...</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal Editar Utilizador -->
+  <div class="modal fade" id="editUserModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content bg-dark text-white">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="bi bi-pencil-square"></i> Editar Utilizador</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="editUserForm">
+            <input type="hidden" id="editUserId">
+            
+            <div class="mb-3">
+              <label for="editUsername" class="form-label">Username</label>
+              <input type="text" class="form-control" id="editUsername" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="editEmail" class="form-label">Email</label>
+              <input type="email" class="form-control" id="editEmail" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="editPassword" class="form-label">Nova Password (deixar vazio para não alterar)</label>
+              <input type="password" class="form-control" id="editPassword" placeholder="Deixar vazio para manter">
+            </div>
+
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="editIsAdmin">
+              <label class="form-check-label" for="editIsAdmin">
+                É Administrador
+              </label>
+            </div>
+
+            <div class="alert alert-warning d-none" id="editUserAlert"></div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary" id="saveUserBtn">
+            <i class="bi bi-save"></i> Guardar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Confirmar Delete -->
+  <div class="modal fade" id="deleteUserModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content bg-dark text-white">
+        <div class="modal-header">
+          <h5 class="modal-title text-danger">
+            <i class="bi bi-exclamation-triangle"></i> Confirmar Eliminação
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p>Tem a certeza que deseja eliminar o utilizador <strong id="deleteUsername"></strong>?</p>
+          <p class="text-warning">
+            <i class="bi bi-info-circle"></i> Esta ação é irreversível e irá apagar:
+          </p>
+          <ul>
+            <li>Todas as reviews do utilizador</li>
+            <li>Todos os favoritos</li>
+            <li>Toda a watchlist</li>
+          </ul>
+          <input type="hidden" id="deleteUserId">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+            <i class="bi bi-trash"></i> Eliminar
+          </button>
+        </div>
+      </div>
+         </div>
+    </div>
+
+    <!-- Tabs de Navegação -->
+    <ul class="nav nav-tabs mb-4" id="adminTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button">
+          <i class="bi bi-people"></i> Utilizadores
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="movies-tab" data-bs-toggle="tab" data-bs-target="#movies" type="button">
+          <i class="bi bi-film"></i> Filmes
+        </button>
+      </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content" id="adminTabsContent">
+      
+      <!-- Tab Utilizadores -->
+      <div class="tab-pane fade show active" id="users" role="tabpanel">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-people-fill"></i> Gestão de Utilizadores</h5>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-dark table-hover">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Admin</th>
+                    <th>Data de Registo</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                  <tr>
+                    <td colspan="6" class="text-center">
+                      <div class="spinner-border text-danger" role="status">
+                        <span class="visually-hidden">A carregar...</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Filmes -->
+      <div class="tab-pane fade" id="movies" role="tabpanel">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-film"></i> Filmes Importados</h5>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-dark table-hover">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Poster</th>
+                    <th>Título</th>
+                    <th>Data de Lançamento</th>
+                    <th>TMDB ID</th>
+                    <th>Importado em</th>
+                  </tr>
+                </thead>
+                <tbody id="moviesTableBody">
+                  <tr>
+                    <td colspan="6" class="text-center">
+                      <div class="spinner-border text-danger" role="status">
+                        <span class="visually-hidden">A carregar...</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal Editar Utilizador -->
+  <div class="modal fade" id="editUserModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content bg-dark text-white">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="bi bi-pencil-square"></i> Editar Utilizador</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="editUserForm">
+            <input type="hidden" id="editUserId">
+            
+            <div class="mb-3">
+              <label for="editUsername" class="form-label">Username</label>
+              <input type="text" class="form-control" id="editUsername" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="editEmail" class="form-label">Email</label>
+              <input type="email" class="form-control" id="editEmail" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="editPassword" class="form-label">Nova Password (deixar vazio para não alterar)</label>
+              <input type="password" class="form-control" id="editPassword" placeholder="Deixar vazio para manter">
+            </div>
+
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="editIsAdmin">
+              <label class="form-check-label" for="editIsAdmin">
+                É Administrador
+              </label>
+            </div>
+
+            <div class="alert alert-warning d-none" id="editUserAlert"></div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary" id="saveUserBtn">
+            <i class="bi bi-save"></i> Guardar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Confirmar Delete -->
+  <div class="modal fade" id="deleteUserModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content bg-dark text-white">
+        <div class="modal-header">
+          <h5 class="modal-title text-danger">
+            <i class="bi bi-exclamation-triangle"></i> Confirmar Eliminação
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p>Tem a certeza que deseja eliminar o utilizador <strong id="deleteUsername"></strong>?</p>
+          <p class="text-warning">
+            <i class="bi bi-info-circle"></i> Esta ação é irreversível e irá apagar:
+          </p>
+          <ul>
+            <li>Todas as reviews do utilizador</li>
+            <li>Todos os favoritos</li>
+            <li>Toda a watchlist</li>
+          </ul>
+          <input type="hidden" id="deleteUserId">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+            <i class="bi bi-trash"></i> Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    const API_BASE = '/api';
+    let editUserModal, deleteUserModal;
+
+    // Verificar autenticação e permissões
+    function checkAuth() {
+      const token = localStorage.getItem('token');
+      const isAdmin = localStorage.getItem('is_admin') === 'true';
+      const username = localStorage.getItem('username');
+
+      if (!token || !isAdmin) {
+        alert('Acesso negado. Apenas administradores podem aceder a esta página.');
+        window.location.href = '/';
+        return false;
+      }
+
+      // Atualizar nome do admin
+      document.getElementById('adminUsername').textContent = username;
+      return true;
+    }
+
+    // Headers com token
+    function getAuthHeaders() {
+      return {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      };
+    }
+
+    // Carregar estatísticas
+    async function loadStats() {
+      try {
+        const res = await fetch(API_BASE + '/admin/stats', {
+          headers: getAuthHeaders()
+        });
+
+        if (!res.ok) throw new Error('Erro ao carregar estatísticas');
+
+        const stats = await res.json();
+        document.getElementById('statUsers').textContent = stats.users;
+        document.getElementById('statMovies').textContent = stats.movies;
+        document.getElementById('statReviews').textContent = stats.reviews;
+        document.getElementById('statFavorites').textContent = stats.favorites;
+      } catch (err) {
+        console.error('Erro ao carregar estatísticas:', err);
+      }
+    }
+
+    // Carregar utilizadores
+    async function loadUsers() {
+      try {
+        const res = await fetch(API_BASE + '/admin/users', {
+          headers: getAuthHeaders()
+        });
+
+        if (res.status === 403) {
+          alert('Acesso negado. Apenas administradores.');
+          window.location.href = '/';
+          return;
+        }
+
+        if (!res.ok) throw new Error('Erro ao carregar utilizadores');
+
+        const users = await res.json();
+        renderUsers(users);
+      } catch (err) {
+        console.error('Erro ao carregar utilizadores:', err);
+        document.getElementById('usersTableBody').innerHTML = `
+          <tr>
+            <td colspan="6" class="text-center text-danger">
+              <i class="bi bi-exclamation-circle"></i> Erro ao carregar utilizadores
+            </td>
+          </tr>
+        `;
+      }
+    }
+
+    // Renderizar utilizadores na tabela
+    function renderUsers(users) {
+      const tbody = document.getElementById('usersTableBody');
+      
+      if (users.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="text-center text-muted">Nenhum utilizador encontrado</td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = users.map(user => {
+        const date = new Date(user.created_at).toLocaleDateString('pt-PT');
+        const adminBadge = user.is_admin 
+          ? '<span class="badge bg-danger">Admin</span>' 
+          : '<span class="badge bg-secondary">User</span>';
+        
+        return `
+          <tr>
+            <td>${user.id_user}</td>
+            <td>${user.username}</td>
+            <td>${user.email}</td>
+            <td>${adminBadge}</td>
+            <td>${date}</td>
+            <td>
+              <button class="btn btn-sm btn-primary" onclick="openEditModal(${user.id_user})">
+                <i class="bi bi-pencil"></i> Editar
+              </button>
+              <button class="btn btn-sm btn-danger" onclick="openDeleteModal(${user.id_user}, '${user.username}')">
+                <i class="bi bi-trash"></i> Apagar
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Carregar filmes
+    async function loadMovies() {
+      try {
+        const res = await fetch(API_BASE + '/admin/movies', {
+          headers: getAuthHeaders()
+        });
+
+        if (!res.ok) throw new Error('Erro ao carregar filmes');
+
+        const movies = await res.json();
+        renderMovies(movies);
+      } catch (err) {
+        console.error('Erro ao carregar filmes:', err);
+        document.getElementById('moviesTableBody').innerHTML = `
+          <tr>
+            <td colspan="6" class="text-center text-danger">
+              <i class="bi bi-exclamation-circle"></i> Erro ao carregar filmes
+            </td>
+          </tr>
+        `;
+      }
+    }
+
+    // Renderizar filmes na tabela
+    function renderMovies(movies) {
+      const tbody = document.getElementById('moviesTableBody');
+      
+      if (movies.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="text-center text-muted">Nenhum filme importado</td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = movies.map(movie => {
+        const posterUrl = movie.poster_path 
+          ? `https://image.tmdb.org/t/p/w92${movie.poster_path}` 
+          : '/placeholder.png';
+        const date = new Date(movie.created_at).toLocaleDateString('pt-PT');
+        const releaseDate = movie.release_date ? new Date(movie.release_date).toLocaleDateString('pt-PT') : 'N/A';
+        
+        return `
+          <tr>
+            <td>${movie.id_movie}</td>
+            <td><img src="${posterUrl}" alt="${movie.title}" style="width: 50px; border-radius: 4px;"></td>
+            <td>${movie.title}</td>
+            <td>${releaseDate}</td>
+            <td>${movie.tmdb_id}</td>
+            <td>${date}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Abrir modal de edição
+    async function openEditModal(userId) {
+      try {
+        const res = await fetch(`${API_BASE}/admin/users/${userId}`, {
+          headers: getAuthHeaders()
+        });
+
+        if (!res.ok) throw new Error('Erro ao carregar utilizador');
+
+        const user = await res.json();
+        
+        document.getElementById('editUserId').value = user.id_user;
+        document.getElementById('editUsername').value = user.username;
+        document.getElementById('editEmail').value = user.email;
+        document.getElementById('editPassword').value = '';
+        document.getElementById('editIsAdmin').checked = user.is_admin;
+        
+        editUserModal.show();
+      } catch (err) {
+        console.error('Erro ao carregar utilizador:', err);
+        alert('Erro ao carregar dados do utilizador');
+      }
+    }
+
+    // Guardar edição de utilizador
+    async function saveUser() {
+      const userId = document.getElementById('editUserId').value;
+      const username = document.getElementById('editUsername').value.trim();
+      const email = document.getElementById('editEmail').value.trim();
+      const password = document.getElementById('editPassword').value.trim();
+      const isAdmin = document.getElementById('editIsAdmin').checked;
+
+      if (!username || !email) {
+        showAlert('editUserAlert', 'Preencha todos os campos obrigatórios', 'warning');
+        return;
+      }
+
+      try {
+        const body = {
+          username,
+          email,
+          is_admin: isAdmin
+        };
+
+        if (password) {
+          body.new_password = password;
+        }
+
+        const res = await fetch(`${API_BASE}/admin/users/${userId}`, {
+          method: 'PUT',
+          headers: getAuthHeaders(),
+          body: JSON.stringify(body)
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          showAlert('editUserAlert', data.message || 'Erro ao atualizar utilizador', 'danger');
+          return;
+        }
+                editUserModal.hide();
+        loadUsers();
+        loadStats();
+        alert('Utilizador atualizado com sucesso!');
+      } catch (err) {
+        console.error('Erro ao atualizar utilizador:', err);
+        showAlert('editUserAlert', 'Erro ao atualizar utilizador', 'danger');
+      }
+    }
+
+    // Abrir modal de confirmação de delete
+    function openDeleteModal(userId, username) {
+      document.getElementById('deleteUserId').value = userId;
+      document.getElementById('deleteUsername').textContent = username;
+      deleteUserModal.show();
+    }
+
+    // Confirmar delete de utilizador
+    async function deleteUser() {
+      const userId = document.getElementById('deleteUserId').value;
+
+      try {
+        const res = await fetch(`${API_BASE}/admin/users/${userId}`, {
+          method: 'DELETE',
+          headers: getAuthHeaders()
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          alert(data.message || 'Erro ao eliminar utilizador');
+          return;
+        }
+
+        deleteUserModal.hide();
+        loadUsers();
+        loadStats();
+        alert('Utilizador eliminado com sucesso!');
+      } catch (err) {
+        console.error('Erro ao eliminar utilizador:', err);
+        alert('Erro ao eliminar utilizador');
+      }
+    }
+
+    // Mostrar alerta em modal
+    function showAlert(elementId, message, type) {
+      const alert = document.getElementById(elementId);
+      alert.className = `alert alert-${type}`;
+      alert.textContent = message;
+      alert.classList.remove('d-none');
+      
+      setTimeout(() => {
+        alert.classList.add('d-none');
+      }, 5000);
+    }
+
+    // Logout
+    function logout() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('username');
+      localStorage.removeItem('is_admin');
+      window.location.href = '/';
+    }
+
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', () => {
+      // Verificar autenticação
+      if (!checkAuth()) return;
+
+      // Inicializar modals
+      editUserModal = new bootstrap.Modal(document.getElementById('editUserModal'));
+      deleteUserModal = new bootstrap.Modal(document.getElementById('deleteUserModal'));
+
+      // Carregar dados iniciais
+      loadStats();
+      loadUsers();
+
+      // Event listeners
+      document.getElementById('saveUserBtn').addEventListener('click', saveUser);
+      document.getElementById('confirmDeleteBtn').addEventListener('click', deleteUser);
+      document.getElementById('logoutBtn').addEventListener('click', logout);
+
+      // Carregar filmes quando o tab é ativado
+      document.getElementById('movies-tab').addEventListener('shown.bs.tab', () => {
+        loadMovies();
+      });
+
+      // Limpar alertas ao fechar modais
+      document.getElementById('editUserModal').addEventListener('hidden.bs.modal', () => {
+        document.getElementById('editUserAlert').classList.add('d-none');
+      });
+    });
+
+    // Tornar funções globais para onclick
+    window.openEditModal = openEditModal;
+    window.openDeleteModal = openDeleteModal;
+  </script>
+
+  <style>
+    /* Estilos adicionais para inputs nos modals */
+    .modal-content .form-control {
+      background-color: #1f2937;
+      border-color: #374151;
+      color: #fff;
+    }
+
+    .modal-content .form-control:focus {
+      background-color: #1f2937;
+      color: #fff;
+      border-color: #e50914;
+      box-shadow: 0 0 0 0.2rem rgba(229, 9, 20, 0.25);
+    }
+
+    .modal-content .form-check-input {
+      background-color: #1f2937;
+      border-color: #374151;
+    }
+
+    .modal-content .form-check-input:checked {
+      background-color: #e50914;
+      border-color: #e50914;
+    }
+
+    .nav-tabs {
+      border-bottom: 2px solid #374151;
+    }
+
+    .nav-tabs .nav-link {
+      color: rgba(255, 255, 255, 0.7);
+      border: none;
+      padding: 1rem 1.5rem;
+    }
+
+    .nav-tabs .nav-link:hover {
+      color: #e50914;
+      border: none;
+    }
+
+    .nav-tabs .nav-link.active {
+      background-color: transparent;
+      color: #e50914;
+      border: none;
+      border-bottom: 3px solid #e50914;
+    }
+  </style>
+</body>
+</html>
+

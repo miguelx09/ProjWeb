@@ -515,7 +515,7 @@
     const data = await res.json();
     showAlert('Conta criada com sucesso! A redirecionar...', 'success');
     setTimeout(() => {
-      window.location.href = '/login.html';  // ← Mudei para /login.html
+      window.location.href = '/index.html';  // ← Mudei para /login.html
     }, 1500);
   } catch (err) {
     console.error('Erro no registo', err);

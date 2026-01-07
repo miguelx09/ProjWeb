@@ -55,15 +55,19 @@ router.post('/login', async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id_user: user.id_user, username: user.username },
+      { 
+        id_user: user.id_user, 
+        username: user.username,
+        is_admin: user.is_admin || false  // ← ADICIONE ISTO
+      },
       JWT_SECRET,
       { expiresIn: '1h' }
     );
 
-    // AQUI: devolve também o username
     res.json({
       token,
-      username: user.username
+      username: user.username,
+      is_admin: user.is_admin || false  // ← ADICIONE ISTO
     });
   } catch (err) {
     console.error(err);

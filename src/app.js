@@ -11,6 +11,7 @@ import reviewsRouter from './routes/reviews.js';
 import tmdbRouter from './routes/tmdb.js';
 import adminRouter from './routes/admin.js';
 import dotenv from 'dotenv';
+import adminUsersRouter from './routes/admin.js';
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/favorites', favoritesRouter);
 app.use('/api', reviewsRouter);
 app.use('/api', tmdbRouter);
+app.use('/api/admin', adminUsersRouter);
 
 // ---------- Backoffice admin (Mustache) ----------
 app.engine('mustache', mustacheExpress());
@@ -61,6 +63,10 @@ app.get('/watchlist.html', (req, res) => {
 // NOVO: página dos favoritos
 app.get('/favorites.html', (req, res) => {
   res.sendFile('favorites.html', { root: path.join(__dirname, 'views') });
+});
+
+app.get('/admin.html', (req, res) => {
+  res.sendFile('admin.html', { root: path.join(__dirname, 'views') });
 });
 
 // se não estiveres a usar estas rotas Mustache de /login e /register, remove-as:
