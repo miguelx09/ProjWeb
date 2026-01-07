@@ -512,7 +512,7 @@
       });
     }
 
-  function createMovieCard(movie) {
+    function createMovieCard(movie) {
   const col = document.createElement('div');
   col.className = 'col-6 col-sm-4 col-md-3 col-lg-2';
 
@@ -525,6 +525,9 @@
       <img src="${poster}" class="card-img-top" alt="${movie.title}">
       <div class="card-body p-2">
         <h6 class="card-title mb-1 text-truncate" title="${movie.title}">${movie.title}</h6>
+        <small class="text-warning">★ ${
+          movie.vote_average?.toFixed ? movie.vote_average.toFixed(1) : movie.vote_average || 'N/A'
+        }</small>
       </div>
       <div class="card-footer border-0 p-2">
         <div class="d-grid gap-1">
@@ -540,7 +543,6 @@
   `;
   return col;
 }
-
 
 
     async function removeFromWatchlist(id) {
@@ -655,7 +657,6 @@ async function openDetails(id) {
 
     // Botões
     document.getElementById('modalFavBtn').onclick = () => addToFavorites(m.id);
-    document.getElementById('modalWatchBtn').onclick = () => addToWatchlist(m.id);
 
     movieModal.show();
   } catch (e) {
@@ -719,33 +720,6 @@ async function addToFavorites(id) {
     alert('Filme adicionado aos favoritos.');
   } catch (err) {
     console.error('Erro ao adicionar aos favoritos', err);
-  }
-}
-
-// Adicionar à watchlist
-async function addToWatchlist(id) {
-  const token = localStorage.getItem('token');
-  if (!token) {
-    alert('Precisas de iniciar sessão.');
-    return;
-  }
-
-  try {
-    const res = await fetch('/api/watchlist', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + token
-      },
-      body: JSON.stringify({ movieId: id })
-    });
-    if (!res.ok) {
-      console.error('Erro ao adicionar à watchlist');
-      return;
-    }
-    alert('Filme adicionado à watchlist.');
-  } catch (err) {
-    console.error('Erro ao adicionar à watchlist', err);
   }
 }
 

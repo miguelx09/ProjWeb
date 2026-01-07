@@ -625,7 +625,6 @@ async function openDetails(id) {
 
     loadMovieCredits(id);
 
-    document.getElementById('modalFavBtn').onclick = () => addToFavorites(m.id);
     document.getElementById('modalWatchBtn').onclick = () => addToWatchlist(m.id);
 
     movieModal.show();
@@ -663,32 +662,7 @@ async function loadMovieCredits(movieId) {
   }
 }
 
-// Adicionar aos favoritos
-async function addToFavorites(id) {
-  const token = localStorage.getItem('token');
-  if (!token) {
-    alert('Precisas de iniciar sessão.');
-    return;
-  }
 
-  try {
-    const res = await fetch('/api/favorites', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + token
-      },
-      body: JSON.stringify({ movieId: id })
-    });
-    if (!res.ok) {
-      console.error('Erro ao adicionar aos favoritos');
-      return;
-    }
-    alert('Filme adicionado aos favoritos.');
-  } catch (err) {
-    console.error('Erro ao adicionar aos favoritos', err);
-  }
-}
 
 // Adicionar à watchlist
 async function addToWatchlist(id) {
