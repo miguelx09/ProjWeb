@@ -4,11 +4,9 @@ import { getMovieDetails } from '../services/tmdb.js';
 
 const router = express.Router();
 
-// Nota: authenticateToken já é aplicado no app.js
-
 // POST /api/watchlist - Adicionar à watchlist
 router.post('/', async (req, res) => {
-  const { movieId } = req.body; // tmdb_id
+  const { movieId } = req.body;
   const userId = req.user.id_user;
 
   try {
@@ -22,7 +20,7 @@ router.post('/', async (req, res) => {
     if (existing.length > 0) {
       internalMovieId = existing[0].id_movie;
     } else {
-      // Buscar detalhes do filme no TMDB para inserir completo
+      // Buscar detalhes do filme no TMDB
       const movieDetails = await new Promise((resolve, reject) => {
         getMovieDetails(movieId, (err, data) => {
           if (err) return reject(err);
@@ -47,9 +45,9 @@ router.post('/', async (req, res) => {
       internalMovieId = insertResult.insertId;
     }
 
-    // 2. Verificar se já existe na watchlist
+    // 2. Verificar se já existe na watchlist (USAR user_id e movie_id)
     const [existingWatch] = await db.query(
-      'SELECT * FROM watchlist WHERE id_user = ? AND id_movie = ?',
+      'SELECT * FROM watchlist WHERE user_id = ? AND movie_id = ?',
       [userId, internalMovieId]
     );
 
@@ -57,9 +55,9 @@ router.post('/', async (req, res) => {
       return res.status(200).json({ message: 'Este filme já está na tua watchlist.' });
     }
 
-    // 3. Adicionar à watchlist
+    // 3. Adicionar à watchlist (USAR user_id e movie_id)
     await db.query(
-      'INSERT INTO watchlist (id_user, id_movie) VALUES (?, ?)',
+      'INSERT INTO watchlist (user_id, movie_id) VALUES (?, ?)',
       [userId, internalMovieId]
     );
 
@@ -70,7 +68,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// GET /api/watchlist - Listar IDs da watchlist (para verificar se está na lista)
+// GET /api/watchlist - Listar IDs da watchlist
 router.get('/', async (req, res) => {
   const userId = req.user.id_user;
 
@@ -78,8 +76,8 @@ router.get('/', async (req, res) => {
     const [rows] = await db.query(
       `SELECT m.tmdb_id
        FROM watchlist w
-       INNER JOIN movies m ON w.id_movie = m.id_movie
-       WHERE w.id_user = ?`,
+       INNER JOIN movies m ON w.movie_id = m.id_movie
+       WHERE w.user_id = ?`,
       [userId]
     );
     res.json(rows);
@@ -89,17 +87,16 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /api/watchlist/full - Listar watchlist COM TODOS OS DETALHES
+// GET /api/watchlist/full - Listar watchlist COM DETALHES
 router.get('/full', async (req, res) => {
   const userId = req.user.id_user;
 
   try {
     const [watchlist] = await db.query(
       `SELECT 
-        w.id_watchlist,
-        w.id_user,
-        w.id_movie,
-        w.added_at,
+        w.user_id,
+        w.movie_id,
+        w.created_at as added_at,
         m.title,
         m.synopsis,
         m.release_year,
@@ -108,13 +105,12 @@ router.get('/full', async (req, res) => {
         m.tmdb_id,
         m.duration_minutes
       FROM watchlist w
-      INNER JOIN movies m ON w.id_movie = m.id_movie
-      WHERE w.id_user = ?
-      ORDER BY w.added_at DESC`,
+      INNER JOIN movies m ON w.movie_id = m.id_movie
+      WHERE w.user_id = ?
+      ORDER BY w.created_at DESC`,
       [userId]
     );
 
-    // Formatar para compatibilidade com frontend
     const formattedWatchlist = watchlist.map(item => ({
       id: item.tmdb_id,
       title: item.title,
@@ -134,11 +130,10 @@ router.get('/full', async (req, res) => {
 
 // DELETE /api/watchlist/:movieId - Remover da watchlist
 router.delete('/:movieId', async (req, res) => {
-  const { movieId } = req.params; // tmdb_id
+  const { movieId } = req.params;
   const userId = req.user.id_user;
 
   try {
-    // Buscar id_movie baseado no tmdb_id
     const [movie] = await db.query(
       'SELECT id_movie FROM movies WHERE tmdb_id = ? LIMIT 1',
       [movieId]
@@ -148,9 +143,8 @@ router.delete('/:movieId', async (req, res) => {
       return res.status(404).json({ message: 'Filme não encontrado' });
     }
 
-    // Remover da watchlist
     const [result] = await db.query(
-      'DELETE FROM watchlist WHERE id_user = ? AND id_movie = ?',
+      'DELETE FROM watchlist WHERE user_id = ? AND movie_id = ?',
       [userId, movie[0].id_movie]
     );
 
