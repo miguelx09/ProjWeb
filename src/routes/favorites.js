@@ -87,17 +87,15 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /api/favorites/full - Listar favoritos COM DETALHES
 router.get('/full', async (req, res) => {
   const userId = req.user.id_user;
 
   try {
     const [favorites] = await db.query(
       `SELECT 
-        f.id_favorite,
         f.user_id,
         f.movie_id,
-        f.added_at,
+        f.created_at as added_at,
         m.title,
         m.synopsis,
         m.release_year,
@@ -108,7 +106,7 @@ router.get('/full', async (req, res) => {
       FROM favorites f
       INNER JOIN movies m ON f.movie_id = m.id_movie
       WHERE f.user_id = ?
-      ORDER BY f.added_at DESC`,
+      ORDER BY f.created_at DESC`,
       [userId]
     );
 
@@ -129,35 +127,5 @@ router.get('/full', async (req, res) => {
   }
 });
 
-// DELETE /api/favorites/:movieId - Remover dos favoritos
-router.delete('/:movieId', async (req, res) => {
-  const { movieId } = req.params;
-  const userId = req.user.id_user;
-
-  try {
-    const [movie] = await db.query(
-      'SELECT id_movie FROM movies WHERE tmdb_id = ? LIMIT 1',
-      [movieId]
-    );
-
-    if (movie.length === 0) {
-      return res.status(404).json({ message: 'Filme não encontrado' });
-    }
-
-    const [result] = await db.query(
-      'DELETE FROM favorites WHERE user_id = ? AND movie_id = ?',
-      [userId, movie[0].id_movie]
-    );
-
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ message: 'Favorito não encontrado' });
-    }
-
-    res.json({ message: 'Removido dos favoritos' });
-  } catch (err) {
-    console.error('Erro ao remover dos favoritos:', err);
-    res.status(500).json({ message: 'Erro ao remover dos favoritos' });
-  }
-});
 
 export default router;
