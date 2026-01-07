@@ -463,6 +463,11 @@
 
   <!-- Script login -->
   <script>
+
+     const token = localStorage.getItem('token');
+  if (token) {
+    window.location.href = '/';
+  }
     const API_BASE = '/api';
 
     document.getElementById('loginForm').addEventListener('submit', async (e) => {

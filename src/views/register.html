@@ -468,6 +468,12 @@
 
   <!-- Script de registo -->
   <script>
+
+     const token = localStorage.getItem('token');
+  if (token) {
+    window.location.href = '/';
+  }
+  
     const API_BASE = '/api';
 
     function showAlert(message, type = 'success') {
