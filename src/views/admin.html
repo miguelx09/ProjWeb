@@ -192,14 +192,13 @@
                     <th>ID</th>
                     <th>Poster</th>
                     <th>Título</th>
-                    <th>Data de Lançamento</th>
                     <th>TMDB ID</th>
                     <th>Importado em</th>
                   </tr>
                 </thead>
                 <tbody id="moviesTableBody">
                   <tr>
-                    <td colspan="6" class="text-center">
+                    <td colspan="5" class="text-center">
                       <div class="spinner-border text-danger" role="status">
                         <span class="visually-hidden">A carregar...</span>
                       </div>
@@ -430,7 +429,7 @@
         console.error('Erro ao carregar filmes:', err);
         document.getElementById('moviesTableBody').innerHTML = `
           <tr>
-            <td colspan="6" class="text-center text-danger">
+            <td colspan="5" class="text-center text-danger">
               <i class="bi bi-exclamation-circle"></i> Erro ao carregar filmes
             </td>
           </tr>
@@ -456,14 +455,12 @@
           ? `https://image.tmdb.org/t/p/w92${movie.poster_path}` 
           : '/placeholder.png';
         const date = new Date(movie.created_at).toLocaleDateString('pt-PT');
-        const releaseDate = movie.release_date ? new Date(movie.release_date).toLocaleDateString('pt-PT') : 'N/A';
         
         return `
           <tr>
             <td>${movie.id_movie}</td>
             <td><img src="${posterUrl}" alt="${movie.title}" style="width: 50px; border-radius: 4px;"></td>
             <td>${movie.title}</td>
-            <td>${releaseDate}</td>
             <td>${movie.tmdb_id}</td>
             <td>${date}</td>
           </tr>

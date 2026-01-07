@@ -87,6 +87,7 @@ router.get('/', async (req, res) => {
   }
 });
 
+// GET /api/favorites/full
 router.get('/full', async (req, res) => {
   const userId = req.user.id_user;
 
@@ -102,7 +103,8 @@ router.get('/full', async (req, res) => {
         m.poster_url,
         m.poster_path,
         m.tmdb_id,
-        m.duration_minutes
+        m.duration_minutes,
+        m.vote_average
       FROM favorites f
       INNER JOIN movies m ON f.movie_id = m.id_movie
       WHERE f.user_id = ?
@@ -117,6 +119,7 @@ router.get('/full', async (req, res) => {
       poster_path: fav.poster_path,
       release_date: fav.release_year ? `${fav.release_year}-01-01` : null,
       runtime: fav.duration_minutes,
+      vote_average: fav.vote_average,  // ← ADICIONAR
       added_at: fav.added_at
     }));
 
@@ -126,6 +129,7 @@ router.get('/full', async (req, res) => {
     res.status(500).json({ message: 'Erro ao obter favoritos detalhados' });
   }
 });
+
 
 
 export default router;

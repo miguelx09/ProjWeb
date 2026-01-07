@@ -87,7 +87,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /api/watchlist/full - Listar watchlist COM DETALHES
+
+// GET /api/watchlist/full
 router.get('/full', async (req, res) => {
   const userId = req.user.id_user;
 
@@ -103,7 +104,8 @@ router.get('/full', async (req, res) => {
         m.poster_url,
         m.poster_path,
         m.tmdb_id,
-        m.duration_minutes
+        m.duration_minutes,
+        m.vote_average
       FROM watchlist w
       INNER JOIN movies m ON w.movie_id = m.id_movie
       WHERE w.user_id = ?
@@ -118,6 +120,7 @@ router.get('/full', async (req, res) => {
       poster_path: item.poster_path,
       release_date: item.release_year ? `${item.release_year}-01-01` : null,
       runtime: item.duration_minutes,
+      vote_average: item.vote_average,  // ← ADICIONAR
       added_at: item.added_at
     }));
 
@@ -127,6 +130,7 @@ router.get('/full', async (req, res) => {
     res.status(500).json({ message: 'Erro ao obter watchlist completa' });
   }
 });
+
 
 // DELETE /api/watchlist/:movieId - Remover da watchlist
 router.delete('/:movieId', async (req, res) => {
