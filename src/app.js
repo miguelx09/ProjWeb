@@ -10,7 +10,7 @@ import watchlistRouter from './routes/watchlist.js';
 import reviewsRouter from './routes/reviews.js';
 import tmdbRouter from './routes/tmdb.js';
 import adminRouter from './routes/admin.js';
-import adminUsersRouter from './routes/adminUsers.js'; // ← CORRIGIDO: ficheiro diferente
+import adminUsersRouter from './routes/admin.js'; // ← CORRIGIDO: ficheiro diferente
 import dotenv from 'dotenv';
 
 // Importar middleware de autenticação
