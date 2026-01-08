@@ -98,7 +98,7 @@ router.delete('/users/:id', async (req, res) => {
       return res.status(400).json({ success: false, message: 'Não podes apagar a tua própria conta.' });
     }
 
-    // Apagar dados relacionados primeiro (ignora erros se tabela não existir)
+    // Apagar dados relacionados primeiro
     try {
       await db.query('DELETE FROM favorites WHERE user_id = ?', [userId]);
     } catch (e) {
@@ -130,6 +130,7 @@ router.delete('/users/:id', async (req, res) => {
     res.status(500).json({ success: false, message: 'Erro ao apagar utilizador.' });
   }
 });
+
 
 
 // ==================== GESTÃO DE FILMES ====================
