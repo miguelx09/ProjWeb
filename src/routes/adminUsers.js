@@ -88,8 +88,8 @@ router.put('/users/:id', async (req, res) => {
 });
 
 
-// DELETE /api/admin/users/:id - Apagar utilizador
-router.delete('/users/:id', async (req, res) => {
+// DELETE /api/admin/users/:id - Apagar utilizador a
+router.delete('/users/:id', async (req, res) => { 
   try {
     const userId = req.params.id;
 
