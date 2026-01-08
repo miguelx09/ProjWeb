@@ -100,21 +100,21 @@ router.delete('/users/:id', async (req, res) => {
 
     // Apagar dados relacionados primeiro (ignora erros se tabela não existir)
     try {
-      await db.query('DELETE FROM favorites WHERE id_user = ?', [userId]);
+      await db.query('DELETE FROM favorites WHERE user_id = ?', [userId]);
     } catch (e) {
-      console.log('Tabela favorites não existe ou erro ao apagar:', e.message);
+      console.log('Erro ao apagar favorites:', e.message);
     }
 
     try {
-      await db.query('DELETE FROM watchlist WHERE id_user = ?', [userId]);
+      await db.query('DELETE FROM watchlist WHERE user_id = ?', [userId]);
     } catch (e) {
-      console.log('Tabela watchlist não existe ou erro ao apagar:', e.message);
+      console.log('Erro ao apagar watchlist:', e.message);
     }
 
     try {
-      await db.query('DELETE FROM reviews WHERE id_user = ?', [userId]);
+      await db.query('DELETE FROM reviews WHERE user_id = ?', [userId]);
     } catch (e) {
-      console.log('Tabela reviews não existe ou erro ao apagar:', e.message);
+      console.log('Erro ao apagar reviews:', e.message);
     }
 
     // Apagar o utilizador
