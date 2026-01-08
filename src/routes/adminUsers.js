@@ -87,24 +87,23 @@ router.put('/users/:id', async (req, res) => {
   }
 });
 
-
 // DELETE /api/admin/users/:id - Apagar utilizador
-router.delete('/users/:id', isAdmin, async (req, res) => {
+router.delete('/users/:id', async (req, res) => {
   try {
     const userId = req.params.id;
 
     // Não pode apagar o próprio utilizador
-    if (parseInt(userId) === req.user.id) {
+    if (parseInt(userId) === req.user.id_user) {
       return res.status(400).json({ success: false, message: 'Não podes apagar a tua própria conta.' });
     }
 
     // Apagar dados relacionados primeiro (CASCADE pode não estar configurado)
-    await db.promise().query('DELETE FROM favoritos WHERE user_id = ?', [userId]);
-    await db.promise().query('DELETE FROM watchlist WHERE user_id = ?', [userId]);
-    await db.promise().query('DELETE FROM reviews WHERE user_id = ?', [userId]);
+    await db.query('DELETE FROM favoritos WHERE user_id = ?', [userId]);
+    await db.query('DELETE FROM watchlist WHERE user_id = ?', [userId]);
+    await db.query('DELETE FROM reviews WHERE user_id = ?', [userId]);
 
     // Apagar o utilizador
-    const [result] = await db.promise().query('DELETE FROM users WHERE id = ?', [userId]);
+    const [result] = await db.query('DELETE FROM users WHERE id_user = ?', [userId]);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ success: false, message: 'Utilizador não encontrado.' });
@@ -117,11 +116,9 @@ router.delete('/users/:id', isAdmin, async (req, res) => {
   }
 });
 
-
 // ==================== GESTÃO DE FILMES ====================
 
 // GET /api/admin/movies - Listar todos os filmes importados
-// GET /api/admin/movies - Listar filmes importados
 router.get('/movies', async (req, res) => {
   try {
     const [movies] = await db.query(`
@@ -140,11 +137,10 @@ router.get('/movies', async (req, res) => {
     `);
     res.json(movies);
   } catch (err) {
-    console.error('Erro ao listar filmes:', err); // ← Ver erro no terminal
+    console.error('Erro ao listar filmes:', err);
     res.status(500).json({ message: 'Erro ao listar filmes', error: err.message });
   }
 });
-
 
 // ==================== ESTATÍSTICAS ====================
 
