@@ -87,6 +87,7 @@ router.put('/users/:id', async (req, res) => {
   }
 });
 
+
 // DELETE /api/admin/users/:id - Apagar utilizador
 router.delete('/users/:id', async (req, res) => {
   try {
@@ -97,10 +98,24 @@ router.delete('/users/:id', async (req, res) => {
       return res.status(400).json({ success: false, message: 'Não podes apagar a tua própria conta.' });
     }
 
-    // Apagar dados relacionados primeiro (CASCADE pode não estar configurado)
-    await db.query('DELETE FROM favoritos WHERE user_id = ?', [userId]);
-    await db.query('DELETE FROM watchlist WHERE user_id = ?', [userId]);
-    await db.query('DELETE FROM reviews WHERE user_id = ?', [userId]);
+    // Apagar dados relacionados primeiro (ignora erros se tabela não existir)
+    try {
+      await db.query('DELETE FROM favorites WHERE id_user = ?', [userId]);
+    } catch (e) {
+      console.log('Tabela favorites não existe ou erro ao apagar:', e.message);
+    }
+
+    try {
+      await db.query('DELETE FROM watchlist WHERE id_user = ?', [userId]);
+    } catch (e) {
+      console.log('Tabela watchlist não existe ou erro ao apagar:', e.message);
+    }
+
+    try {
+      await db.query('DELETE FROM reviews WHERE id_user = ?', [userId]);
+    } catch (e) {
+      console.log('Tabela reviews não existe ou erro ao apagar:', e.message);
+    }
 
     // Apagar o utilizador
     const [result] = await db.query('DELETE FROM users WHERE id_user = ?', [userId]);
@@ -115,6 +130,7 @@ router.delete('/users/:id', async (req, res) => {
     res.status(500).json({ success: false, message: 'Erro ao apagar utilizador.' });
   }
 });
+
 
 // ==================== GESTÃO DE FILMES ====================
 
