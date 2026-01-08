@@ -35,7 +35,6 @@ router.post('/reviews', requireAuth, async (req, res) => {
   }
 
   try {
-    // Garantir que o filme existe
     const [existing] = await db.query(
       'SELECT id_movie FROM movies WHERE tmdb_id = ? LIMIT 1',
       [movieId]
@@ -52,14 +51,12 @@ router.post('/reviews', requireAuth, async (req, res) => {
       internalMovieId = insertResult.insertId;
     }
 
-    // Verificar se já existe review deste user para este filme
     const [existingReview] = await db.query(
       'SELECT id_review FROM reviews WHERE user_id = ? AND movie_id = ?',
       [userId, internalMovieId]
     );
 
     if (existingReview.length > 0) {
-      // Atualizar review existente
       await db.query(
         `UPDATE reviews 
          SET rating = ?, comment = ?, review_date = CURDATE()
@@ -68,7 +65,6 @@ router.post('/reviews', requireAuth, async (req, res) => {
       );
       res.json({ message: 'Review atualizado' });
     } else {
-      // Criar novo review
       await db.query(
         `INSERT INTO reviews (user_id, movie_id, rating, comment, review_date)
          VALUES (?, ?, ?, ?, CURDATE())`,

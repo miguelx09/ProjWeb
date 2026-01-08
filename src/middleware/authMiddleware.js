@@ -3,7 +3,6 @@ import db from '../db.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'segredo_super_simples';
 
-// Middleware para verificar se está autenticado
 export const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1]; // "Bearer TOKEN"
@@ -21,7 +20,6 @@ export const authenticateToken = (req, res, next) => {
   });
 };
 
-// Middleware para verificar se é admin
 export const requireAdmin = async (req, res, next) => {
   try {
     const [rows] = await db.query(

@@ -10,7 +10,6 @@ router.post('/', async (req, res) => {
   const userId = req.user.id_user;
 
   try {
-    // 1. Verificar se o filme já existe na tabela movies
     const [existing] = await db.query(
       'SELECT id_movie FROM movies WHERE tmdb_id = ? LIMIT 1',
       [movieId]
@@ -20,7 +19,6 @@ router.post('/', async (req, res) => {
     if (existing.length > 0) {
       internalMovieId = existing[0].id_movie;
     } else {
-      // Buscar detalhes do filme no TMDB
       const movieDetails = await new Promise((resolve, reject) => {
         getMovieDetails(movieId, (err, data) => {
           if (err) return reject(err);
@@ -28,7 +26,6 @@ router.post('/', async (req, res) => {
         });
       });
 
-      // Inserir filme completo na base de dados
       const [insertResult] = await db.query(
         `INSERT INTO movies (tmdb_id, title, synopsis, release_year, poster_url, poster_path, duration_minutes) 
          VALUES (?, ?, ?, ?, ?, ?, ?)`,
@@ -45,7 +42,6 @@ router.post('/', async (req, res) => {
       internalMovieId = insertResult.insertId;
     }
 
-    // 2. Verificar se já existe na watchlist (USAR user_id e movie_id)
     const [existingWatch] = await db.query(
       'SELECT * FROM watchlist WHERE user_id = ? AND movie_id = ?',
       [userId, internalMovieId]
@@ -55,7 +51,6 @@ router.post('/', async (req, res) => {
       return res.status(200).json({ message: 'Este filme já está na tua watchlist.' });
     }
 
-    // 3. Adicionar à watchlist (USAR user_id e movie_id)
     await db.query(
       'INSERT INTO watchlist (user_id, movie_id) VALUES (?, ?)',
       [userId, internalMovieId]

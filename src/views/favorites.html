@@ -5,12 +5,10 @@
   <title>Favoritos - FilmKeepr</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Bootstrap CSS -->
   <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
     rel="stylesheet"
   >
-  <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
   <link rel="icon" href="/FilmKeeperIcone.png" type="image/png">
 
@@ -220,21 +218,17 @@
 </head>
 <body>
 
-  <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
     <div class="container-fluid px-4">
-      <!-- Logo/Brand -->
       <a class="navbar-brand" href="/">
         <span class="brand-text">Film<span class="brand-highlight">Keepr</span></span>
       </a>
 
-      <!-- Toggle button para mobile -->
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
         <span class="navbar-toggler-icon"></span>
       </button>
 
       <div class="collapse navbar-collapse" id="navbarContent">
-        <!-- Barra de pesquisa -->
         <form class="d-flex mx-auto my-2 my-lg-0 search-wrapper" id="searchForm">
           <input 
             class="form-control" 
@@ -248,7 +242,6 @@
           </button>
         </form>
 
-        <!-- Menu items -->
         <ul class="navbar-nav ms-auto align-items-lg-center">
           <li class="nav-item">
             <a class="nav-link" href="/">
@@ -256,7 +249,6 @@
             </a>
           </li>
 
-          <!-- Links só para utilizadores autenticados -->
           <li class="nav-item d-none" id="nav-watchlist">
             <a class="nav-link" href="/watchlist.html">
               <i class="bi bi-clock-history"></i> Watchlist
@@ -268,14 +260,12 @@
             </a>
           </li>
 
-          <!-- Link Entrar (quando não está logado) -->
           <li class="nav-item" id="nav-login">
             <a class="btn-login" href="/login.html">
               <i class="bi bi-person-circle"></i> Entrar
             </a>
           </li>
 
-          <!-- Bem-vindo + Botão Sair (quando está logado) -->
           <li class="nav-item d-none" id="nav-user-section">
             <div class="user-welcome">
               <span class="username">
@@ -291,7 +281,6 @@
     </div>
   </nav>
 
-  <!-- Main Content -->
   <main class="container py-4">
     <h2 class="mb-3">Os teus favoritos</h2>
     <div id="emptyMsg" class="alert alert-secondary text-center" style="display:none;">
@@ -299,7 +288,6 @@
   </div>
     <div class="row gy-3" id="favorites-row"></div>
 
-    <!-- Modal de Detalhes -->
 <div class="modal fade" id="movieModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content bg-dark text-white">
@@ -359,7 +347,6 @@
 <footer class="footer mt-5 py-4">
   <div class="container">
     <div class="row g-4">
-      <!-- Sobre -->
       <div class="col-md-4">
         <h5 class="brand-text mb-3">
           Film<span class="brand-highlight">Keepr</span>
@@ -370,7 +357,6 @@
         </p>
       </div>
 
-      <!-- Links Rápidos -->
       <div class="col-md-3">
         <h6 class="text-danger mb-3">Navegação</h6>
         <ul class="list-unstyled">
@@ -392,7 +378,6 @@
         </ul>
       </div>
 
-      <!-- Conta -->
       <div class="col-md-2">
         <h6 class="text-danger mb-3">Conta</h6>
         <ul class="list-unstyled">
@@ -409,7 +394,6 @@
         </ul>
       </div>
 
-      <!-- Informações -->
       <div class="col-md-3">
         <h6 class="text-danger mb-3">Informações</h6>
         <p class="footer-text small mb-2">
@@ -428,10 +412,8 @@
       </div>
     </div>
 
-    <!-- Linha separadora -->
     <hr class="my-4 border-secondary opacity-25">
 
-    <!-- Copyright -->
     <div class="row">
       <div class="col-12 text-center">
         <p class="footer-text small mb-0">
@@ -445,10 +427,8 @@
 
   </main>
 
-  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Scripts -->
   <script>
     const API_BASE = '/api';
     const IMG_BASE = 'https://image.tmdb.org/t/p/w500';
