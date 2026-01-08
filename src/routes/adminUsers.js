@@ -87,32 +87,36 @@ router.put('/users/:id', async (req, res) => {
   }
 });
 
+
 // DELETE /api/admin/users/:id - Apagar utilizador
-router.delete('/users/:id', async (req, res) => {
+router.delete('/users/:id', isAdmin, async (req, res) => {
   try {
-    // Impedir que o admin apague a própria conta
-    if (req.user.id_user == req.params.id) {
-      return res.status(400).json({ message: 'Não pode apagar a sua própria conta' });
+    const userId = req.params.id;
+
+    // Não pode apagar o próprio utilizador
+    if (parseInt(userId) === req.user.id) {
+      return res.status(400).json({ success: false, message: 'Não podes apagar a tua própria conta.' });
     }
 
-    // Apagar dados relacionados primeiro (integridade referencial)
-    await db.query('DELETE FROM reviews WHERE id_user = ?', [req.params.id]);
-    await db.query('DELETE FROM favorites WHERE id_user = ?', [req.params.id]);
-    await db.query('DELETE FROM watchlist WHERE id_user = ?', [req.params.id]);
+    // Apagar dados relacionados primeiro (CASCADE pode não estar configurado)
+    await db.promise().query('DELETE FROM favoritos WHERE user_id = ?', [userId]);
+    await db.promise().query('DELETE FROM watchlist WHERE user_id = ?', [userId]);
+    await db.promise().query('DELETE FROM reviews WHERE user_id = ?', [userId]);
 
-    // Apagar utilizador
-    const [result] = await db.query('DELETE FROM users WHERE id_user = ?', [req.params.id]);
+    // Apagar o utilizador
+    const [result] = await db.promise().query('DELETE FROM users WHERE id = ?', [userId]);
 
     if (result.affectedRows === 0) {
-      return res.status(404).json({ message: 'Utilizador não encontrado' });
+      return res.status(404).json({ success: false, message: 'Utilizador não encontrado.' });
     }
 
-    res.json({ message: 'Utilizador apagado com sucesso' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Erro ao apagar utilizador' });
+    res.json({ success: true, message: 'Utilizador apagado com sucesso.' });
+  } catch (error) {
+    console.error('Erro ao apagar utilizador:', error);
+    res.status(500).json({ success: false, message: 'Erro ao apagar utilizador.' });
   }
 });
+
 
 // ==================== GESTÃO DE FILMES ====================
 
