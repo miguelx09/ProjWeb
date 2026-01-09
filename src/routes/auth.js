@@ -8,7 +8,6 @@ const JWT_SECRET = 'segredo_super_simples'; // depois podes meter no .env
 
 // POST /api/auth/register
 router.post('/register', async (req, res) => {
-  console.log('BODY RECEBIDO:', req.body);
 
   const { name, email, password } = req.body;
 
