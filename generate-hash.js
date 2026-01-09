@@ -12,3 +12,6 @@ bcrypt.hash(password, 10).then(hash => {
   console.log(`UPDATE users SET password_hash = '${hash}';`);
   console.log('\n');
 });
+
+
+UPDATE users SET password_hash = 'HASH_COPIADO_AQUI';
