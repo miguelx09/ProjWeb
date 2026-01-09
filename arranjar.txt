@@ -25,146 +25,60 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- Hash gerado com bcrypt (10 rounds): $2b$10$YX5V5YfVqJ5V5YfVqJ5V5.N5V5YfVqJ5V5YfVqJ5V5YfVqJ5V5Y
 
 INSERT INTO users (username, email, password_hash, is_admin) VALUES
-('root', 'admin@filmkeepr.com', '$2b$10$rQ3qK3JZ3qK3JZ3qK3JZ3.K3JZ3qK3JZ3qK3JZ3qK3JZ3qK3JZ3q', 1),
-('miguel', 'miguel@gmail.com', '$2b$10$rQ3qK3JZ3qK3JZ3qK3JZ3.K3JZ3qK3JZ3qK3JZ3qK3JZ3qK3JZ3q', 0),
-('norberto', 'norberto@gmail.com', '$2b$10$rQ3qK3JZ3qK3JZ3qK3JZ3.K3JZ3qK3JZ3qK3JZ3qK3JZ3qK3JZ3q', 0),
-('maria', 'maria@gmail.com', '$2b$10$rQ3qK3JZ3qK3JZ3qK3JZ3.K3JZ3qK3JZ3qK3JZ3qK3JZ3qK3JZ3q', 0),
-('joao', 'joao@gmail.com', '$2b$10$rQ3qK3JZ3qK3JZ3qK3JZ3.K3JZ3qK3JZ3qK3JZ3qK3JZ3qK3JZ3q', 0);
+('root', 'admin@filmkeepr.com', '$2b$10$K8qJ5v5YfVqJ5V5YfVqJ5.V5YfVqJ5V5YfVqJ5V5YfVqJ5V5YfVq', 1),
+('miguel', 'miguel@gmail.com', '$2b$10$K8qJ5v5YfVqJ5V5YfVqJ5.V5YfVqJ5V5YfVqJ5V5YfVqJ5V5YfVq', 0),
+('norberto', 'norberto@gmail.com', '$2b$10$K8qJ5v5YfVqJ5V5YfVqJ5.V5YfVqJ5V5YfVqJ5V5YfVqJ5V5YfVq', 0),
+('maria', 'maria@gmail.com', '$2b$10$K8qJ5v5YfVqJ5V5YfVqJ5.V5YfVqJ5V5YfVqJ5V5YfVqJ5V5YfVq', 0),
+('joao', 'joao@gmail.com', '$2b$10$K8qJ5v5YfVqJ5V5YfVqJ5.V5YfVqJ5V5YfVqJ5V5YfVqJ5V5YfVq', 0);
 
--- ==================== 5. INSERIR GÉNEROS ====================
-INSERT INTO genres (name) VALUES
-('Ação'),
-('Aventura'),
-('Animação'),
-('Comédia'),
-('Crime'),
-('Documentário'),
-('Drama'),
-('Fantasia'),
-('Ficção Científica'),
-('Terror'),
-('Thriller'),
-('Romance'),
-('Mistério'),
-('Família'),
-('Guerra'),
-('Música'),
-('História'),
-('Western');
-
--- ==================== 6. INSERIR FILMES DE EXEMPLO ====================
+-- ==================== 5. INSERIR FILMES ====================
 INSERT INTO movies (title, synopsis, duration_minutes, release_year, poster_path, tmdb_id) VALUES
-('The Shawshank Redemption', 'Dois homens presos desenvolvem uma amizade ao longo de vários anos, encontrando consolo e eventual redenção através de atos de decência comum.', 142, 1994, '/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg', 278),
-('The Godfather', 'O patriarca envelhecido de uma dinastia do crime organizado transfere o controle de seu império clandestino para seu filho relutante.', 175, 1972, '/3bhkrj58Vtu7enYsRolD1fZdja1.jpg', 238),
-('The Dark Knight', 'Quando a ameaça conhecida como o Coringa causa estragos e caos nas pessoas de Gotham, Batman deve aceitar um dos maiores testes psicológicos e físicos.', 152, 2008, '/qJ2tW6WMUDux911r6m7haRef0WH.jpg', 155),
-('Pulp Fiction', 'As vidas de dois assassinos da máfia, um boxeador, a esposa de um gangster e um par de bandidos se entrelaçam em quatro histórias de violência e redenção.', 154, 1994, '/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg', 680),
-('Forrest Gump', 'As presidências de Kennedy e Johnson, a Guerra do Vietnã, Watergate e outros eventos históricos se desenrolam através da perspectiva de um homem do Alabama.', 142, 1994, '/arw2vcBveWOVZr6pxd9XTd1TdQa.jpg', 13),
-('Inception', 'Um ladrão que rouba segredos corporativos através da tecnologia de compartilhamento de sonhos recebe a tarefa inversa de plantar uma ideia na mente de um CEO.', 148, 2010, '/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg', 27205),
-('The Matrix', 'Um hacker descobre que a realidade é uma simulação criada por máquinas e se junta a uma rebelião para libertar a humanidade.', 136, 1999, '/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg', 603),
-('Interstellar', 'Uma equipe de exploradores viaja através de um buraco de minhoca no espaço na tentativa de garantir a sobrevivência da humanidade.', 169, 2014, '/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg', 157336),
-('The Lion King', 'Simba, um jovem leão, deve aceitar seu destino como rei após a morte de seu pai.', 88, 1994, '/sKCr78MXSLixwmZ8DyJLrpMsd15.jpg', 8587),
-('Toy Story', 'Brinquedos ganham vida quando humanos não estão por perto, e um novo brinquedo ameaça a posição de líder de Woody.', 81, 1995, '/uXDfjJbdP4ijW5hWSBrPrlKpxab.jpg', 862);
+('The Shawshank Redemption', 'Dois homens presos desenvolvem uma amizade ao longo de vários anos.', 142, 1994, '/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg', 278),
+('The Godfather', 'O patriarca envelhecido de uma dinastia do crime organizado.', 175, 1972, '/3bhkrj58Vtu7enYsRolD1fZdja1.jpg', 238),
+('The Dark Knight', 'Batman enfrenta o Coringa em Gotham.', 152, 2008, '/qJ2tW6WMUDux911r6m7haRef0WH.jpg', 155),
+('Pulp Fiction', 'Histórias entrelaçadas de violência e redenção.', 154, 1994, '/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg', 680),
+('Forrest Gump', 'A vida extraordinária de um homem simples.', 142, 1994, '/arw2vcBveWOVZr6pxd9XTd1TdQa.jpg', 13),
+('Inception', 'Roubo de ideias através dos sonhos.', 148, 2010, '/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg', 27205),
+('The Matrix', 'A realidade é uma simulação controlada por máquinas.', 136, 1999, '/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg', 603),
+('Interstellar', 'Viagem espacial para salvar a humanidade.', 169, 2014, '/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg', 157336),
+('The Lion King', 'Simba deve aceitar seu destino como rei.', 88, 1994, '/sKCr78MXSLixwmZ8DyJLrpMsd15.jpg', 8587),
+('Toy Story', 'Brinquedos ganham vida quando humanos não estão.', 81, 1995, '/uXDfjJbdP4ijW5hWSBrPrlKpxab.jpg', 862);
 
--- ==================== 7. ASSOCIAR FILMES COM GÉNEROS ====================
--- The Shawshank Redemption: Drama, Crime
-INSERT INTO movie_genres (movie_id, genre_id) VALUES
-(1, 7), (1, 5);
+-- ==================== 6. INSERIR FAVORITOS (SEM TITLE/POSTER_PATH) ====================
+INSERT INTO favorites (user_id, movie_id) VALUES
+(2, 1),  -- Miguel: The Shawshank Redemption
+(2, 6),  -- Miguel: Inception
+(2, 7),  -- Miguel: The Matrix
+(3, 3),  -- Norberto: The Dark Knight
+(3, 4),  -- Norberto: Pulp Fiction
+(3, 8),  -- Norberto: Interstellar
+(4, 5),  -- Maria: Forrest Gump
+(4, 9),  -- Maria: The Lion King
+(4, 10); -- Maria: Toy Story
 
--- The Godfather: Drama, Crime
-INSERT INTO movie_genres (movie_id, genre_id) VALUES
-(2, 7), (2, 5);
+-- ==================== 7. INSERIR WATCHLIST (SEM TITLE/POSTER_PATH) ====================
+INSERT INTO watchlist (user_id, movie_id) VALUES
+(2, 2),  -- Miguel: The Godfather
+(2, 4),  -- Miguel: Pulp Fiction
+(3, 1),  -- Norberto: The Shawshank Redemption
+(3, 9),  -- Norberto: The Lion King
+(5, 6),  -- João: Inception
+(5, 8),  -- João: Interstellar
+(5, 7);  -- João: The Matrix
 
--- The Dark Knight: Ação, Crime, Drama
-INSERT INTO movie_genres (movie_id, genre_id) VALUES
-(3, 1), (3, 5), (3, 7);
-
--- Pulp Fiction: Crime, Drama
-INSERT INTO movie_genres (movie_id, genre_id) VALUES
-(4, 5), (4, 7);
-
--- Forrest Gump: Drama, Romance
-INSERT INTO movie_genres (movie_id, genre_id) VALUES
-(5, 7), (5, 12);
-
--- Inception: Ação, Ficção Científica, Thriller
-INSERT INTO movie_genres (movie_id, genre_id) VALUES
-(6, 1), (6, 9), (6, 11);
-
--- The Matrix: Ação, Ficção Científica
-INSERT INTO movie_genres (movie_id, genre_id) VALUES
-(7, 1), (7, 9);
-
--- Interstellar: Aventura, Drama, Ficção Científica
-INSERT INTO movie_genres (movie_id, genre_id) VALUES
-(8, 2), (8, 7), (8, 9);
-
--- The Lion King: Animação, Aventura, Drama, Família
-INSERT INTO movie_genres (movie_id, genre_id) VALUES
-(9, 3), (9, 2), (9, 7), (9, 14);
-
--- Toy Story: Animação, Aventura, Comédia, Família
-INSERT INTO movie_genres (movie_id, genre_id) VALUES
-(10, 3), (10, 2), (10, 4), (10, 14);
-
--- ==================== 8. INSERIR FAVORITOS ====================
--- Miguel: The Shawshank Redemption, Inception, The Matrix
-INSERT INTO favorites (user_id, movie_id, title, poster_path) VALUES
-(2, 1, 'The Shawshank Redemption', '/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg'),
-(2, 6, 'Inception', '/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg'),
-(2, 7, 'The Matrix', '/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg');
-
--- Norberto: The Dark Knight, Pulp Fiction, Interstellar
-INSERT INTO favorites (user_id, movie_id, title, poster_path) VALUES
-(3, 3, 'The Dark Knight', '/qJ2tW6WMUDux911r6m7haRef0WH.jpg'),
-(3, 4, 'Pulp Fiction', '/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg'),
-(3, 8, 'Interstellar', '/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg');
-
--- Maria: Forrest Gump, The Lion King, Toy Story
-INSERT INTO favorites (user_id, movie_id, title, poster_path) VALUES
-(4, 5, 'Forrest Gump', '/arw2vcBveWOVZr6pxd9XTd1TdQa.jpg'),
-(4, 9, 'The Lion King', '/sKCr78MXSLixwmZ8DyJLrpMsd15.jpg'),
-(4, 10, 'Toy Story', '/uXDfjJbdP4ijW5hWSBrPrlKpxab.jpg');
-
--- ==================== 9. INSERIR WATCHLIST ====================
--- Miguel: The Godfather, Pulp Fiction
-INSERT INTO watchlist (user_id, movie_id, title, poster_path) VALUES
-(2, 2, 'The Godfather', '/3bhkrj58Vtu7enYsRolD1fZdja1.jpg'),
-(2, 4, 'Pulp Fiction', '/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg');
-
--- Norberto: The Shawshank Redemption, The Lion King
-INSERT INTO watchlist (user_id, movie_id, title, poster_path) VALUES
-(3, 1, 'The Shawshank Redemption', '/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg'),
-(3, 9, 'The Lion King', '/sKCr78MXSLixwmZ8DyJLrpMsd15.jpg');
-
--- João: Inception, Interstellar, The Matrix
-INSERT INTO watchlist (user_id, movie_id, title, poster_path) VALUES
-(5, 6, 'Inception', '/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg'),
-(5, 8, 'Interstellar', '/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg'),
-(5, 7, 'The Matrix', '/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg');
-
--- ==================== 10. INSERIR REVIEWS ====================
--- Miguel reviews
+-- ==================== 8. INSERIR REVIEWS ====================
 INSERT INTO reviews (user_id, movie_id, review_date, rating, comment) VALUES
-(2, 1, '2024-01-15', 10, 'Obra-prima absoluta! Melhor filme de todos os tempos.'),
-(2, 6, '2024-02-20', 9, 'Complexo e fascinante. Christopher Nolan no seu melhor.'),
-(2, 7, '2024-03-10', 9, 'Revolucionário e visionário. Mudou o cinema de ficção científica.');
-
--- Norberto reviews
-INSERT INTO reviews (user_id, movie_id, review_date, rating, comment) VALUES
-(3, 3, '2024-01-20', 10, 'Heath Ledger está fenomenal como Coringa. Obra-prima.'),
-(3, 4, '2024-02-15', 9, 'Diálogos brilhantes e narrativa não-linear perfeita.'),
-(3, 8, '2024-03-05', 10, 'Emocionante e cientificamente interessante. Adoro!');
-
--- Maria reviews
-INSERT INTO reviews (user_id, movie_id, review_date, rating, comment) VALUES
-(4, 5, '2024-01-25', 9, 'Emocionante e inspirador. Tom Hanks está incrível.'),
-(4, 9, '2024-02-10', 10, 'Clássico da Disney. Perfeito para toda a família.'),
-(4, 10, '2024-03-01', 9, 'Animação revolucionária. Toy Story é atemporal.');
-
--- João reviews
-INSERT INTO reviews (user_id, movie_id, review_date, rating, comment) VALUES
-(5, 2, '2024-01-30', 10, 'Melhor filme de gangsters de sempre. Marlon Brando épico.'),
-(5, 7, '2024-02-25', 9, 'Efeitos especiais incríveis. História envolvente.');
+(2, 1, '2024-01-15', 10, 'Obra-prima absoluta!'),
+(2, 6, '2024-02-20', 9, 'Complexo e fascinante.'),
+(2, 7, '2024-03-10', 9, 'Revolucionário!'),
+(3, 3, '2024-01-20', 10, 'Heath Ledger está fenomenal.'),
+(3, 4, '2024-02-15', 9, 'Diálogos brilhantes.'),
+(3, 8, '2024-03-05', 10, 'Emocionante!'),
+(4, 5, '2024-01-25', 9, 'Inspirador.'),
+(4, 9, '2024-02-10', 10, 'Clássico da Disney.'),
+(4, 10, '2024-03-01', 9, 'Animação revolucionária.'),
+(5, 2, '2024-01-30', 10, 'Melhor filme de gangsters.'),
+(5, 7, '2024-02-25', 9, 'Efeitos especiais incríveis.');
 
 -- ==================== 11. VERIFICAÇÃO FINAL ====================
 -- Ver estatísticas após populate
