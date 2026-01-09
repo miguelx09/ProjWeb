@@ -14,4 +14,4 @@ bcrypt.hash(password, 10).then(hash => {
 });
 
 
-UPDATE users SET password_hash = 'HASH_COPIADO_AQUI';
+
